@@ -1,7 +1,6 @@
 # NewFrontEnd
 
-Repository smlnj/NewFrontEnd
-
+Repository smlnj/NewFrontEnd  
 Created by David MacQueen, 2024.09.14 
 
 # A repository for the development of a new front end for (Standard/Successor) ML.
