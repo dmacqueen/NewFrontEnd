@@ -19,9 +19,13 @@ Standard ML '97.
 
 1.1. inference of binding points for expression-level type variables
 
-  This is hard to describe, implement, and remember how it works.
+  This feature is hard to describe, to implement, and to remember how it works.
   Variables, including type variables, should have an explicit binder construct
-  in the concrete syntax.
+  in the concrete syntax. This was addressed in SML '97, but in a rather ad hoc
+  way.
+
+  [This might be related to the possible introduction of some form of "1st-class"
+  polymorphism, e.g. for function arguments or data constructor arguments (as in Haskell?).]
 
 1.2. the "open" declaration form
 
@@ -41,7 +45,7 @@ Standard ML '97.
 
 1.4. Equality type variables 
 
-  How to deal with generic equality (or not)?
+  If these are removed, how would we deal with generic equality (or not)?
 
 
 3. Additions  
@@ -55,18 +59,28 @@ Standard ML '97.
   This allows for both addition of fields and functional updates of fields of a base
   record (r1).
 
-3.2. [Modules] Signature functors.
+3.2. Records vs tuples
+
+  Currently, tuples are just a special case of records, with successive numeric number
+  labels (symbols) "1", "2", ..., "<n>" for some positive n. The null tuple is treated
+  specially, and is the unique value of the type unit.
+
+3.3. [Modules] Signature functors.
 
   Signatures that are defined relative to structure parameters (or _a_ structure parameter)
 
-3.3. [Modules*] Higher order functors.
+3.4. [Modules*] Higher order functors.
 
   As implemented in SML/NJ since version 0.93 (1993.02?), but ...
 
-3.3. [Modules] Proper, native, concrete and abstract syntax for curried functors and partial
-  applications thereof.
+3.5. [Modules] Higher-order functor concrete and abstract syntax.
 
-3.4. [Modules*] "where structure" clauses modifying signatures (not just "where type").
+  Proper, native, concrete and abstract syntax for curried functors and partial
+  applications thereof.  I guess one might also introduce curried signature functors?
+  
+  [Note: currently SML/NJ does not provide a proper abstract syntax for the module level.]
+
+3.6. [Modules*] "where structure" clauses modifying signatures (not just "where type").
 
 
 4. Other Changes
