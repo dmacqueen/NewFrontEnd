@@ -1,11 +1,12 @@
 sml/Dev/github/NewFrontEnd/language.txt
 
 Notes on proposed language changes
+DBM, 2024.11.
 
 Let's use "MSML" as a working of the language we are working on, where MSML is an
-acronym for "MacQueen's Successor ML".  Note that here the capital S stands for
-"Successor", not "Standard".  This language would be a derivative or dialect of
-(Standard) ML, which is my preferred name for Standard ML (SML).
+acronym for "MacQueen's Successor ML". Note that here the capital S stands for
+"Successor", not "Standard". This language (MSML) should be considered a derivative
+or dialect of "(Standard) ML", which is my preferred name for Standard ML (SML).
 
 Below is my suggested list of changes, which could be interpreted as relative mainly
 to current SML/NJ or, alternatively, to the SML Definition (Revised), i.e. "official"
@@ -13,21 +14,28 @@ Changes are to the Core language unless annotated by "[Modules]" or "[Modules*]"
 the "[Modules*]" annotation indicates changes (from the Defintion (Revised)) that have
 already been made in SML/NJ.
 
-Standard ML '97.
+These proposals have not (yet) been "reconciled" with the Successor ML proposals in the
+Successor ML repository Wiki pages.
+
+Also need to consider the two Standard ML critique papers by Andrew Appel and myself.
+(and any other SML reviews/critiques?)
+
+I consider Standard ML '97 to be an incomplete revision based on 
 
 1. Deletions
 
-1.1. inference of binding points for expression-level type variables
+1.1. [Core] No inference of binding points for expression-level type variables
 
   This feature is hard to describe, to implement, and to remember how it works.
-  Variables, including type variables, should have an explicit binder construct
+  All variables, including type variables, should have an explicit binder construct
   in the concrete syntax. This was addressed in SML '97, but in a rather ad hoc
   way.
 
-  [This might be related to the possible introduction of some form of "1st-class"
-  polymorphism, e.g. for function arguments or data constructor arguments (as in Haskell?).]
+  [This might relate to the possible introduction of some form of "1st-class"
+  polymorphism, e.g. for function arguments or data constructor arguments
+  (as in Haskell?).]
 
-1.2. the "open" declaration form
+1.2. [Core+Modules] The "open" declaration form
 
   Deleting open declarations forces programmers not to use it (a good thing). The
   usual replacement is to introduce in each structure a bunch of short abbreviations
@@ -37,20 +45,29 @@ Standard ML '97.
   Also, deleting "open" means that it cannot be used within expressions, thus avoiding
   the implicit _declaration_ of types and structures within expreesions.
 
-1.3. static (type/module) declarations within expressions
+1.3. [Core] No static (type/module) declarations within expressions
 
   [Moto: Keep the core and module levels separate.]
   What does it, or should it, mean to have a (statically generative) datatype declaration
   in the body of a recursive function.
 
-1.4. Equality type variables 
+1.4. [Core+Modules] Equality type variables 
 
   If these are removed, how would we deal with generic equality (or not)?
 
+1.5. [Core] Lexically scoped infix declarations
+
+  These were a bad idea carried over from the POP 2 tradition.
+
+  What are other options for user defined infix operators?  Haskell style infixes?
+
+  [We dropped infix _specs_ in signatures a long time ago, as well as the export of
+  such specs from structures. Horrendous interaction with the open declaration.]
+  
 
 3. Additions  
  
-3.1. record combination (or "overlaying")
+3.1. [Core] record combination (or "overlaying")
 
   Let's initially introduce a syntax form e1 ++ e2 where e1 and e2 must have record types
 
@@ -59,19 +76,19 @@ Standard ML '97.
   This allows for both addition of fields and functional updates of fields of a base
   record (r1).
 
-3.2. Records vs tuples
+3.2. [Core] Records vs tuples
 
   Currently, tuples are just a special case of records, with successive numeric number
   labels (symbols) "1", "2", ..., "<n>" for some positive n. The null tuple is treated
   specially, and is the unique value of the type unit.
 
-3.3. [Modules] Signature functors.
-
-  Signatures that are defined relative to structure parameters (or _a_ structure parameter)
-
-3.4. [Modules*] Higher order functors.
+3.3. [Modules*] Higher order functors.
 
   As implemented in SML/NJ since version 0.93 (1993.02?), but ...
+
+3.4. [Modules] Signature functors.
+
+  Signatures that are defined relative to structure parameters (or _a_ structure parameter)
 
 3.5. [Modules] Higher-order functor concrete and abstract syntax.
 
@@ -80,7 +97,7 @@ Standard ML '97.
   
   [Note: currently SML/NJ does not provide a proper abstract syntax for the module level.]
 
-3.6. [Modules*] "where structure" clauses modifying signatures (not just "where type").
+3.6. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
 
 
 4. Other Changes
@@ -94,15 +111,28 @@ Standard ML '97.
 
 5. Other issues
 
-5.1 Symbols vs alternatives
+5.1. [General] Symbol and their representation
 
   Symbols are kind of hashed strings with the hash number also encoding a "name space".
   This may be a bit too clever. What are the simpler alternatives?
   
-5.2 Exceptions
+5.2. [General] "Dynamic" Exceptions
 
   The semantics of exceptions is rather naive and by now there might be a "better" way
   of defining exceptions. I've always thought that it would be better to have exception
   declarations be "static" in some sense, but it is not clear what this would mean.
   Have to look into "algebraic exceptions", whatever those are.
+
+5.3. Optimized data constructor representation vs (partial) abstraction
+
+  This is a known issue that could probably be solved by using "functor inlining", but
+  the interaction with higher-order functors is not clear. Functor inlining would probably
+  need to be _deep_ or _recursive_ inlining to deal with functor arguments (and results?).
+
+5.4. "Recursive" modules (signatures, structures, functors)
+
+  These have been studied (notably in Dreyer's PhD Thesis).
+
+  Payoff does not seem to justify the necessary added complexity.
+  
 
