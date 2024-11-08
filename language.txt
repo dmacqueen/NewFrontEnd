@@ -64,6 +64,26 @@ I consider Standard ML '97 to be an incomplete revision based on
   [We dropped infix _specs_ in signatures a long time ago, as well as the export of
   such specs from structures. Horrendous interaction with the open declaration.]
   
+1.6. [Modules, Controversial?] Sharing equations in signatures
+
+  I would like to drop sharing equations like
+
+     sharing A.t = B.s
+
+  in signatures, letting all required sharing be specified by
+
+  (a) definitional type and structure specifications (internal), and
+  (b) where clauses modifying signatures (external).
+
+  I my experience with the SML/NJ code, this is entirely feasible, but I know of
+  contrived examples where sharing equations seem to be required. The question is:
+  are there natural, non-contrived examples of module code where equational
+  "sharing" specs are necessary.
+
+  Getting rid of sharing equations would make the "instantiation" process in
+  module elaboration much simpler. It might also be the case that where clauses
+  are easier to understand than sharing equations for novice users of the language.
+
 
 3. Additions  
  
@@ -100,9 +120,10 @@ I consider Standard ML '97 to be an incomplete revision based on
 3.6. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
 
 
-4. Other Changes
+4. Other ChangesXQ
 
 4.1. [Modules] Replacement of open and include for defining extensions of structures/signatures.
+
    How about _extension_ functors and signature functors that add elements to their argument
    stuctures or signatures?  But not supporting any sort of "merging" of new
    declarations/specifications with existing ones in the parameter. [Viewing that as
@@ -134,5 +155,5 @@ I consider Standard ML '97 to be an incomplete revision based on
   These have been studied (notably in Dreyer's PhD Thesis).
 
   Payoff does not seem to justify the necessary added complexity.
-  
+
 
