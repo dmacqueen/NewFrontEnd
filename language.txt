@@ -1,4 +1,4 @@
-sml/Dev/github/NewFrontEnd/language.txt
+sml/Dev/github/dmacqueen/NewFrontEnd/language.txt
 
 Notes on proposed language changes
 DBM, 2024.11.
