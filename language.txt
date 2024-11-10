@@ -1,7 +1,10 @@
-https://github.com/dmacqueen/NewFrontEnd/language.txt
+repository: https://github.com/dmacqueen/NewFrontEnd 
+file: language.txt
 
 Notes on proposed language changes
 DBM, 2024.11.
+
+0. Introduction
 
 Let's use "MSML" as a working of the language we are working on, where MSML is an
 acronym for "MacQueen's Successor ML". Note that here the capital S stands for
@@ -16,16 +19,18 @@ already been made in SML/NJ.
 
 The point of these changes is not to produce a "more powerful" language, but to simplify
 where possible, improve some fairly obvious weaknesses or mistakes in the language
-design and add a small bit of convenient functionality (mainly record overlay and signature
-functors).
+design and add a small bit of functionality of proven utility (mainly record overlay
+and signature functors).
 
 These proposals have not (yet) been "reconciled" with the Successor ML proposals in the
 Successor ML repository Wiki pages.
 
 I consider Standard ML '97 to be an incomplete revision based on self-imposed restrictions
-and worries about resistance or objections from "commercial" entities
-[e.g. Abstract Hardware, Harlequin].
+and [Milner's] worries about resistance or objections from "commercial" entities
+[e.g. Abstract Hardware, later Harlequin].
 
+
+------------------------------------------------------------------------------------------ 
 1. Deletions
 
 1.1. [Core] No inference of binding points for expression-level type variables
@@ -92,7 +97,8 @@ and worries about resistance or objections from "commercial" entities
   are easier to understand than sharing equations for novice users of the language.
 
 
-3. Additions  
+------------------------------------------------------------------------------------------
+3. Additions
  
 3.1. [Core] record combination (or "overlaying")
 
@@ -136,7 +142,8 @@ and worries about resistance or objections from "commercial" entities
   in Haskell.
 
 
-4. Other ChangesXQ
+------------------------------------------------------------------------------------------
+4. Other Changes
 
 4.1. [Modules] Replacement of open and include for defining extensions of structures/signatures.
 
@@ -150,6 +157,7 @@ and worries about resistance or objections from "commercial" entities
    For example, the 2 shift/reduce ambiguities in the MLyacc grammar.
    
 
+------------------------------------------------------------------------------------------
 5. Other issues
 
 5.1. [General] Symbol and their representation
@@ -177,7 +185,7 @@ and worries about resistance or objections from "commercial" entities
 
 5.5. Marcros
 
-  No, because of bad interaction with the type system, type errors.
+  No, because of terrible interaction with the type system, type errors.
 
 5.6. Type variable notation
 
@@ -200,28 +208,66 @@ and worries about resistance or objections from "commercial" entities
   Should we use a "manual", e.g. recursive descent, style of parser (e.g. maybe the
   smlfmt parser, apropriately modified?)?
 
-5.8. The problem of combining clausal and curried function definitions.
+5.8. [Core] The problem of combining clausal and curried function definitions.
+
+5.9. Types only structures and their signatures.
+
+  Some structures contain only type declarations. Often in this case their signatures
+  are entirely redundant, so their signatures are not necessary or useful?
 
 
+------------------------------------------------------------------------------------------
 6. General Discussion
 
-Are the suggested changes "backward compatibe"?  No. Too limiting.
+6.1. Are the suggested changes "backward compatibe"?  No. Too limiting.
 
-What is the impact of the changes on the Basis and SMLNJ libraries?
+6.2. What is the impact of the changes on the Basis and SMLNJ libraries?
 
-What about formal definition of the modified language?
+6.3. What about formal definition of the modified language?
 
-What was wrong with the original (Standard) ML design and the underlying methodology.
-See [MacQueen94].
+  There should be a formal definition of the modified language. This could be achieved
+  in various ways:
 
-Are there good ideas from OCaml or Haskell (or ?) that should be considered for
-inclusion in the list of proposed changes?
+  (a) Modifying the existing Definition (Revised), as in the Successor ML repository.
+      [What about the LaTeX macros? Missing index?]
+
+  (b) Modifying the existing TWELF formalization written by Harper and Crary.
+
+  (c) Using a new semantic definition technology?
+
+  What does Bob say?
+
+6.4. What (else?) was wrong with the original (Standard) ML design and its methodology?
+
+  See, for instance, [MacQueen94].
+
+  Are there good ideas from OCaml or Haskell (or whatever) that should be considered for
+  inclusion in the list of proposed changes?  Infix operators, for instance?
+
+6.5. The "open" declaration and "include" specifications
+
+  These have long been known to be problematic. The original designs should be viewed
+  as initial failed attempts to provide some sort of module or signature "calculus",
+  meaning constructs or operations for combining or extending previously defined
+  structures and signatures.  Need some new ideas.
+
+6.6. Curried functors.
+
+  These were original added as somewhat clumsy "derived forms" or syntactic sugar. Then
+  the FLINT group made the scheme more complicated in their revision of module elaboration.
+  Perhaps curried functors are not worth supporting (given that most of the SML implementations
+  never implemented higher-order functors, which were left out of the 1997 revision).
 
 
+------------------------------------------------------------------------------------------
 7. Bibliography
 
 [Appel94]: Andrew Appel, A Critique of Standard ML, 1994. [full info in SML History bib]]
 
 [MacQueen94]: David MacQueen, Reflections on Standard ML, 1994. [full info in SML History bib]]
+
+[The above papers are available in the SML History archive, in the design/critiques directory.]
+
+[Harper*]: Type classes in ML (paraphrased).
 
 [What else?]
