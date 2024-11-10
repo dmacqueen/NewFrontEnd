@@ -14,13 +14,17 @@ Changes are to the Core language unless annotated by "[Modules]" or "[Modules*]"
 the "[Modules*]" annotation indicates changes (from the Defintion (Revised)) that have
 already been made in SML/NJ.
 
+The point of these changes is not to produce a "more powerful" language, but to simplify
+where possible, improve some fairly obvious weaknesses or mistakes in the language
+design and add a small bit of convenient functionality (mainly record overlay and signature
+functors).
+
 These proposals have not (yet) been "reconciled" with the Successor ML proposals in the
 Successor ML repository Wiki pages.
 
-Also need to consider the two Standard ML critique papers by Andrew Appel and myself.
-(and any other SML reviews/critiques?)
-
-I consider Standard ML '97 to be an incomplete revision based on 
+I consider Standard ML '97 to be an incomplete revision based on self-imposed restrictions
+and worries about resistance or objections from "commercial" entities
+[e.g. Abstract Hardware, Harlequin].
 
 1. Deletions
 
@@ -29,7 +33,7 @@ I consider Standard ML '97 to be an incomplete revision based on
   This feature is hard to describe, to implement, and to remember how it works.
   All variables, including type variables, should have an explicit binder construct
   in the concrete syntax. This was addressed in SML '97, but in a rather ad hoc
-  way.
+  way.  What is a better notation for expression level type variable binders?
 
   [This might relate to the possible introduction of some form of "1st-class"
   polymorphism, e.g. for function arguments or data constructor arguments
@@ -49,11 +53,13 @@ I consider Standard ML '97 to be an incomplete revision based on
 
   [Moto: Keep the core and module levels separate.]
   What does it, or should it, mean to have a (statically generative) datatype declaration
-  in the body of a recursive function.
+  in the body of a recursive function.  [Karl won't like this!]
 
-1.4. [Core+Modules] Equality type variables 
+1.4. [Core+Modules] Equality type variables (equality polymorphism)
 
   If these are removed, how would we deal with generic equality (or not)?
+
+  See [Appel94], Section 4.
 
 1.5. [Core] Lexically scoped infix declarations
 
@@ -62,7 +68,8 @@ I consider Standard ML '97 to be an incomplete revision based on
   What are other options for user defined infix operators?  Haskell style infixes?
 
   [We dropped infix _specs_ in signatures a long time ago, as well as the export of
-  such specs from structures. Horrendous interaction with the open declaration.]
+  such specs from structures. Horrendous interaction with the open declaration. Would
+  it be a terrible thing if we did not support user-defined infix operators at all?]
   
 1.6. [Modules, Controversial?] Sharing equations in signatures
 
@@ -119,6 +126,15 @@ I consider Standard ML '97 to be an incomplete revision based on
 
 3.6. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
 
+3.7. [Core] Adding a "variable type declaration" construct.
+ 
+  This would allow "pre-declaration" of a variable before the definition of the variable.
+  Mainly justified by its use for code self-documentation, but it would also support
+  simple and efficient "polymorphic recursion".
+
+  This was actually a feature of Burstall's NPL, an early precursor of SML. Also supported
+  in Haskell.
+
 
 4. Other ChangesXQ
 
@@ -129,6 +145,10 @@ I consider Standard ML '97 to be an incomplete revision based on
    declarations/specifications with existing ones in the parameter. [Viewing that as
    a separate dimention of _extension_ or _refinement_ of an existing structure/signature.
 
+4.2. Correct errors in the concrete syntax.
+
+   For example, the 2 shift/reduce ambiguities in the MLyacc grammar.
+   
 
 5. Other issues
 
@@ -152,11 +172,14 @@ I consider Standard ML '97 to be an incomplete revision based on
 
 5.4. "Recursive" modules (signatures, structures, functors)
 
-  These have been studied (notably in Dreyer's PhD Thesis).
+  These have been studied (notably in Dreyer's PhD Thesis), but the payoff does not seem
+  to justify the added complexity involved, both static and dynamic.
 
-  Payoff does not seem to justify the necessary added complexity.
+5.5. Marcros
 
-5.5. Type variable notation
+  No, because of bad interaction with the type system, type errors.
+
+5.6. Type variable notation
 
   I've never been fond of the 'a type variable notation. I think it would have been
   better to use initial letter case to distinguish between type constructor names and
@@ -169,3 +192,36 @@ I consider Standard ML '97 to be an incomplete revision based on
 
   The Standard ML notation lead to the ''a equality type variable variant. We would not
   need this distinction if we drop equality polymorphism.
+
+5.7. Technologies for lexical analysis and parsing.
+
+  Should we continue to use MLlex and MLyacc, or are there better tools to replace them?
+
+  Should we use a "manual", e.g. recursive descent, style of parser (e.g. maybe the
+  smlfmt parser, apropriately modified?)?
+
+5.8. The problem of combining clausal and curried function definitions.
+
+
+6. General Discussion
+
+Are the suggested changes "backward compatibe"?  No. Too limiting.
+
+What is the impact of the changes on the Basis and SMLNJ libraries?
+
+What about formal definition of the modified language?
+
+What was wrong with the original (Standard) ML design and the underlying methodology.
+See [MacQueen94].
+
+Are there good ideas from OCaml or Haskell (or ?) that should be considered for
+inclusion in the list of proposed changes?
+
+
+7. Bibliography
+
+[Appel94]: Andrew Appel, A Critique of Standard ML, 1994. [full info in SML History bib]]
+
+[MacQueen94]: David MacQueen, Reflections on Standard ML, 1994. [full info in SML History bib]]
+
+[What else?]
