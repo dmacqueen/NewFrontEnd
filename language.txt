@@ -272,7 +272,143 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 
 ------------------------------------------------------------------------------------------
-7. Bibliography
+7. Successor ML proposed changes
+
+  Here I am using
+
+    https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
+
+  as the reference document for proposed Successor ML changes.
+  Note that several of the links to the descriptions of changes on this page are dead.
+
+  Here are my reactions to the proposed Successor ML changes.
+  Generally I would prefer not to make changes that add features and complexity.
+  Keep it simple!
+
+7.1. Line comments
+
+  OK. Don't much care, but probably it would be useful and popular.
+
+7.2. Excapes in strings
+
+  OK. Don't much care. Minor bullet-proofing.
+
+7.3. Extended syntax for literals.
+
+  OK. Don't much care. Would not affect me.
+
+7.4. Funtional record extension and row capture
+
+  I much prefer a single record overlay "operator" (syntax form) as suggested in 3.1 above.
+  This captures the useful functionality in a much simper way. Originally suggested by
+  Wand many years ago and studied by others (R\'emy, ...).
+
+  I don't like the introduction of another special class of variables, namely row variables.
+
+  I guess a parallel form for record type overlays might be useful, but I would not consider
+  it necessary.
+
+7.5. Functional record update
+
+  Same as 7.4.
+
+7.6. Record labels and fields (?)
+
+  Don't like. Too "cute".
+
+7.7. Disjuctive patterns
+
+  OK. Already in SML/NJ for many years.
+
+7.8. Generalized layered patterns to conjuntive patterns
+
+  No. Added complexity with little gained.
+
+7.9. Match guards.
+
+  No. Messes up the simplicity of pattern matching.
+
+7.10. Simplifying val rec syntax
+
+  OK, but even better, lets just get rid of val rec, etc.  (I never use it!)
+
+7.11. Withtype in signatures.
+
+  Done (in SML/NJ).
+
+7.12. Fixed scoping for manifest type specifications
+
+  OK. Seems to fix an obvious, unintended, design bug.
+
+7.13. Degrade abstype to derived form
+
+  No. Just get rid of abstype.
+  It has effectively been abandoned in practice.
+
+7.14. Haskell-like declaration prootypes/signatures
+
+  The description seems to have been lost!
+
+  If this is actually 3.7 above, I'm for it.
+
+7.15. Option bar before first match clause
+
+  A small concrete syntax tweak for editing convenience.
+  Don't particularly like.
+  What is the general principal?
+
+7.16. Disallow non-exhaustive patterns in polymorphic bindings
+
+  OK.  Could also just make non-exhaustive pattern matches an error, period.
+
+7.17. More liberal type sharing
+
+  Description of the change is missing (dead link). 
+
+  Don't know what this refers to.
+
+7.18. "where" constraints for structures
+
+  Description of the change is missing (dead link). 
+
+  I think this has already been implemented in SML/NJ since around 1996.
+
+7.19. Drop "and" in "where type" constraints
+
+  OK. Fixes a syntax design bug.
+  Is this the shift/reduce conflict in the  module syntax?
+
+7.20 Derived "do" declarations
+
+  OK. Already implemented in SML/NJ as a Successor ML extension.
+
+  Doesn't do much, but probably would be better to consider "do e" as syntactic
+  sugar for
+
+     val () = e
+
+  where we would have to use the ignore function in cases where e returns a non
+  unit value.
+
+7.21. Fixing various minor issues with the formal syntax.
+
+  Sure. Milner and the rest of us didn't know how to properly define a syntax.
+  This whole issue needs to be rethought and brought into the 21st century.
+
+7.22. Fixing various minor issues with the formal semantics.
+
+  Not clear that retaining the Definition's semantic formalism is the best
+  course. How would an expert do this with today's knowledge and formalisms?
+
+7.23. Quoting/anti-quoting
+
+  OK? Need to consult with actual users of the feature.
+
+  This should also apply to the "lazy" extension.
+
+
+------------------------------------------------------------------------------------------
+8. Bibliography
 
 [Appel94]: Andrew Appel, A Critique of Standard ML, 1994. [full info in SML History bib]]
 
