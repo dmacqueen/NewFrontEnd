@@ -6,10 +6,10 @@ DBM, 2024.11.
 
 0. Introduction
 
-Let's use "MSML" as a working of the language we are working on, where MSML is an
-acronym for "MacQueen's Successor ML". Note that here the capital S stands for
+Let's use "MSML" as a working name for the language we are working toward, where MSML is
+an acronym for "MacQueen's Successor ML". Note that here the capital S stands for
 "Successor", not "Standard". This language (MSML) should be considered a derivative
-or dialect of "(Standard) ML", which is my preferred name for Standard ML (SML).
+or dialect of "(Standard) ML", which is my preferred name for Standard ML (SML or (S)ML).
 
 Below is my suggested list of changes, which could be interpreted as relative mainly
 to current SML/NJ or, alternatively, to the SML Definition (Revised), i.e. "official"
@@ -35,7 +35,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 1.1. [Core] No inference of binding points for expression-level type variables
 
-  This feature is hard to describe, to implement, and to remember how it works.
+  The existing feature is hard to describe, to implement, and to remember how it works.
   All variables, including type variables, should have an explicit binder construct
   in the concrete syntax. This was addressed in SML '97, but in a rather ad hoc
   way.  What is a better notation for expression level type variable binders?
@@ -96,6 +96,15 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   module elaboration much simpler. It might also be the case that where clauses
   are easier to understand than sharing equations for novice users of the language.
 
+1.7. [core] The "abstype" declaration
+
+  Which is redundant given structures with opaque signature ascription.
+
+1.8. [Core] The "while" expression form
+
+  Redundant. Use recursion instead for iteration. Same reason we don't have a "loop"
+  expession form.
+  
 
 ------------------------------------------------------------------------------------------
 3. Additions
@@ -154,7 +163,8 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 4.2. Correct errors in the concrete syntax.
 
-   For example, the 2 shift/reduce ambiguities in the MLyacc grammar.
+   For example, the 2 shift/reduce ambiguities in the MLyacc grammar: (1) nested matches,
+   and (2) somewhere in the module system grammar.
    
 
 ------------------------------------------------------------------------------------------
@@ -217,9 +227,11 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 
 ------------------------------------------------------------------------------------------
-6. General Discussion
+6. Discussion
 
 6.1. Are the suggested changes "backward compatibe"?  No. Too limiting.
+
+   Maintaining backward compatibility is not one of my goals.
 
 6.2. What is the impact of the changes on the Basis and SMLNJ libraries?
 
@@ -253,10 +265,10 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 6.6. Curried functors.
 
-  These were original added as somewhat clumsy "derived forms" or syntactic sugar. Then
+  These were originally added as somewhat clumsy "derived forms" or syntactic sugar. Then
   the FLINT group made the scheme more complicated in their revision of module elaboration.
   Perhaps curried functors are not worth supporting (given that most of the SML implementations
-  never implemented higher-order functors, which were left out of the 1997 revision).
+  never implemented higher-order functors, since they were left out of the 1997 revision).
 
 
 ------------------------------------------------------------------------------------------
