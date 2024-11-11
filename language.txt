@@ -270,6 +270,10 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   Perhaps curried functors are not worth supporting (given that most of the SML implementations
   never implemented higher-order functors, since they were left out of the 1997 revision).
 
+  Programmers who really need to define and use curried functors can do it (more
+  cumbersomely) using the basic syntax (i.e. the ability to declare functors as
+  components of structures).  Currying is just syntactic sugar, after all.
+
 
 ------------------------------------------------------------------------------------------
 7. Successor ML proposed changes
