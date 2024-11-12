@@ -301,7 +301,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
   OK. Don't much care. Would not affect me.
 
-7.4. Funtional record extension and row capture
+7.4. Functional record extension and row capture
 
   I much prefer a single record overlay "operator" (syntax form) as suggested in 3.1 above.
   This captures the useful functionality in a much simper way. Originally suggested by
@@ -320,11 +320,11 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
   Don't like. Too "cute".
 
-7.7. Disjuctive patterns
+7.7. Disjunctive patterns
 
   OK. Already in SML/NJ for many years.
 
-7.8. Generalized layered patterns to conjuntive patterns
+7.8. Generalized layered patterns to conjunctive patterns
 
   No. Added complexity with little gained.
 
