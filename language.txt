@@ -6,8 +6,8 @@ DBM, 2024.11.
 
 0. Introduction
 
-Let's use "MSML" as a working name for the language we are working toward, where MSML is
-an acronym for "MacQueen's Successor ML". Note that here the capital S stands for
+Let's use "MsML" as a working name for the language we are working toward, where MSML is
+an acronym for "MacQueen's Successor ML". Note that here the lower-case "s" stands for
 "Successor", not "Standard". This language (MSML) should be considered a derivative
 or dialect of "(Standard) ML", which is my preferred name for Standard ML (SML or (S)ML).
 
@@ -18,12 +18,15 @@ the "[Modules*]" annotation indicates changes (from the Defintion (Revised)) tha
 already been made in SML/NJ.
 
 The point of these changes is not to produce a "more powerful" language, but to simplify
-where possible, improve some fairly obvious weaknesses or mistakes in the language
-design and add a small bit of functionality of proven utility (mainly record overlay
-and signature functors).
+where possible, improve some fairly obvious weaknesses or mistakes in the language design
+and add a small bit of functionality of proven utility (mainly record overlay and
+signature functors).  What I am suggesting could be thought of as "micro" language
+(re)design, in comparison to "macro" language design, which would fundamentally change the
+character of the language.  I am not soliciting "buy in" to these changes, but would
+appreciate comments, criticisms, and suggestions that might influence future revisions.
 
-These proposals have not (yet) been "reconciled" with the Successor ML proposals in the
-Successor ML repository Wiki pages.
+In Section 7 below, I have some preliminary discussion of my ideas with existing language
+proposals for "Successor ML".
 
 I consider Standard ML '97 to be an incomplete revision based on self-imposed restrictions
 and [Milner's] worries about resistance or objections from "commercial" entities
@@ -98,7 +101,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 1.7. [core] The "abstype" declaration
 
-  Which is redundant given structures with opaque signature ascription.
+  Which is redundant given structures with opaque signature ascription (Harper's "sealing").
 
 1.8. [Core] The "while" expression form
 
@@ -118,30 +121,24 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   This allows for both addition of fields and functional updates of fields of a base
   record (r1).
 
-3.2. [Core] Records vs tuples
-
-  Currently, tuples are just a special case of records, with successive numeric number
-  labels (symbols) "1", "2", ..., "<n>" for some positive n. The null tuple is treated
-  specially, and is the unique value of the type unit.
-
-3.3. [Modules*] Higher order functors.
+3.2. [Modules*] Higher order functors.
 
   As implemented in SML/NJ since version 0.93 (1993.02?), but ...
 
-3.4. [Modules] Signature functors.
+3.3. [Modules] Signature functors.
 
   Signatures that are defined relative to structure parameters (or _a_ structure parameter)
 
-3.5. [Modules] Higher-order functor concrete and abstract syntax.
+3.4. [Modules] Higher-order functor concrete and abstract syntax.
 
   Proper, native, concrete and abstract syntax for curried functors and partial
   applications thereof.  I guess one might also introduce curried signature functors?
   
   [Note: currently SML/NJ does not provide a proper abstract syntax for the module level.]
 
-3.6. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
+3.5. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
 
-3.7. [Core] Adding a "variable type declaration" construct.
+3.6. [Core] Adding a "variable type declaration" construct.
  
   This would allow "pre-declaration" of a variable before the definition of the variable.
   Mainly justified by its use for code self-documentation, but it would also support
@@ -158,8 +155,10 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
    How about _extension_ functors and signature functors that add elements to their argument
    stuctures or signatures?  But not supporting any sort of "merging" of new
-   declarations/specifications with existing ones in the parameter. [Viewing that as
-   a separate dimention of _extension_ or _refinement_ of an existing structure/signature.
+   declarations/specifications with existing ones in the parameter (no overriding, no
+   mutually recursive definitions involving old and new specifications).
+   [Viewing that as a separate dimention of _extension_ or _refinement_ of an existing
+    structure/signature.]
 
 4.2. Correct errors in the concrete syntax.
 
@@ -182,22 +181,22 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   declarations be "static" in some sense, but it is not clear what this would mean.
   Have to look into "algebraic exceptions", whatever those are.
 
-5.3. Optimized data constructor representation vs (partial) abstraction
+5.3. [Modules] Optimized data constructor representation vs (partial) abstraction
 
   This is a known issue that could probably be solved by using "functor inlining", but
   the interaction with higher-order functors is not clear. Functor inlining would probably
   need to be _deep_ or _recursive_ inlining to deal with functor arguments (and results?).
 
-5.4. "Recursive" modules (signatures, structures, functors)
+5.4. [Modules] "Recursive" modules (signatures, structures, functors)
 
   These have been studied (notably in Dreyer's PhD Thesis), but the payoff does not seem
   to justify the added complexity involved, both static and dynamic.
 
-5.5. Marcros
+5.5. Marcros [General]
 
-  No, because of terrible interaction with the type system, type errors.
+  No, because of terrible interactions with the type system, type errors in particular.
 
-5.6. Type variable notation
+5.6. [Core+Modules] Type variable notation
 
   I've never been fond of the 'a type variable notation. I think it would have been
   better to use initial letter case to distinguish between type constructor names and
@@ -220,10 +219,19 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 5.8. [Core] The problem of combining clausal and curried function definitions.
 
-5.9. Types only structures and their signatures.
+5.9. [Modules] Types only structures and their signatures.
 
   Some structures contain only type declarations. Often in this case their signatures
   are entirely redundant, so their signatures are not necessary or useful?
+
+5.10. [Core] Records vs tuples
+
+  Currently, tuples are just a special case of records, with successive numeric number
+  labels (symbols) "1", "2", ..., "<n>" for some positive n. The null tuple is treated
+  specially, and is the unique value of the type unit. Is there a case
+  for treating tuples separately?  This  would add a lot of new
+  "tuple" cases throughout the elaborator, so it would need to be
+  worth it.  What are potential payoffs?
 
 
 ------------------------------------------------------------------------------------------
@@ -289,6 +297,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   Generally I would prefer not to make changes that add features and complexity.
   Keep it simple!
 
+
 7.1. Line comments
 
   OK. Don't much care, but probably it would be useful and popular.
@@ -326,7 +335,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 7.8. Generalized layered patterns to conjunctive patterns
 
-  No. Added complexity with little gained.
+  No. Added complexity with little gained.  Happy with just <variable> as <pattern>.
 
 7.9. Match guards.
 
