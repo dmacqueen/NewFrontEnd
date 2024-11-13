@@ -3,20 +3,22 @@ as rwh1. This file is dbm-on-rwh1.txt, and contains my initial responses
 to rwh1. I've done some reformatting (wrapping at column 90) for my
 editing convenience.
 
-Lines containing my comments will start with "## ".
+Lines containing my (DBM) comments will start with "## ". Others could preface
+their comment lines by other strings, like "$$ " for JHR?
 
 ------------------------------------------------------------------------------------------
 Some rwh responses, in no particular order:
 
-0a. Karl's version of smlyacc and smllex is far better than the original because it avoids
+a. Karl's version of smlyacc and smllex is far better than the original because it avoids
 writing disembodied fragments of code that manage to be stitched together to a coherent
 whole. It's very nice, and should be adopted, period.
 
-## Sounds interesting. JHR also has a version of improved lexer and parser generating
+## Sounds interesting. JHR also has a version of better lexer and parser generating
 ## tools in the ml-lpt. Exactly what is "far better" about Karl's versions?  Where does
-## one find these?
+## one find these?  I've always thought that some of these vary early tools like mllex
+## mlyacc could be improved -- seems obvious.
 
-0b. Karl's KML variant of SML has lots of interesting ideas that could/should be adopted, and
+b. Karl's KML variant of SML has lots of interesting ideas that could/should be adopted, and
 the code base may prove useful for writing a reference implementation. It compiles to
 Standard ML, but uses module declarations in the core language, and hence requires Moscow
 ML to compile the generated code. It would be great if SML/NJ could be linked to KML as
@@ -24,12 +26,12 @@ its backend.
 
 ## Sound interesting. Where does one find a description of KML?
 
-0c. The Sterling-Harper paper on modules provides what I now think is the definitive "core
+c. The Sterling-Harper paper on modules provides what I now think is the definitive "core
 type theory" for SML, and we should build around that as the intended internal language.
 
 ## Sounds like I should look at this. Citation?
 
-0d. The name sML = successor ML is a good working name, and we should use that for the time
+d. The name sML = successor ML is a good working name, and we should use that for the time
 being. The language needs a name. The earlier efforts on sML were squashed in an ugly
 manner by Robin's intervention, no doubt goaded by others, but the ideas are still there,
 by and large.
@@ -83,7 +85,7 @@ eliminate the ability to write infix applications!
 ## Semi agree.  I could live without user-defined infix operators entirely.
 
 ## ---------------------------------------------------------------------------------------
-## incomplete -- more to come
+## DBM: incomplete -- more to come
 ## ---------------------------------------------------------------------------------------
 
 
