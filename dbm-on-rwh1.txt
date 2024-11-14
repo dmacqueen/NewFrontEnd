@@ -9,38 +9,42 @@ their comment lines by other strings, like "$$ " for JHR?
 ------------------------------------------------------------------------------------------
 Some rwh responses, in no particular order:
 
-a. Karl's version of smlyacc and smllex is far better than the original because it avoids
+A. Karl's version of smlyacc and smllex is far better than the original because it avoids
 writing disembodied fragments of code that manage to be stitched together to a coherent
 whole. It's very nice, and should be adopted, period.
 
 ## Sounds interesting. JHR also has a version of better lexer and parser generating
 ## tools in the ml-lpt. Exactly what is "far better" about Karl's versions?  Where does
 ## one find these?  I've always thought that some of these vary early tools like mllex
-## mlyacc could be improved -- seems obvious.
+## mlyacc could be improved -- seems obvious.  I have also always been annoyed with
+## MLyacc because at the end one has to apply some functors to build the parser -- this
+## should not be necessary. Why the "cmtool" name? "cm" = "Carnegie-Mellon"?
+## http://www.cs.cmu.edu/~crary/cmtool/
+## https://github.com/kcrary/cmtool
 
-b. Karl's KML variant of SML has lots of interesting ideas that could/should be adopted, and
+B. Karl's IML [KML] variant of SML has lots of interesting ideas that could/should be adopted, and
 the code base may prove useful for writing a reference implementation. It compiles to
 Standard ML, but uses module declarations in the core language, and hence requires Moscow
-ML to compile the generated code. It would be great if SML/NJ could be linked to KML as
-its backend.
+ML to compile the generated code. It would be great if SML/NJ could be linked to IML [KML] as
+its backend. [what?]
 
-## Sound interesting. Where does one find a description of KML?
+## Sounds interesting. See http://istarilogic.org/iml.html for details.
 
-c. The Sterling-Harper paper on modules provides what I now think is the definitive "core
+C. The Sterling-Harper paper on modules provides what I now think is the definitive "core
 type theory" for SML, and we should build around that as the intended internal language.
 
-## Sounds like I should look at this. Citation?
+## Sounds like I should look at this. Citation? Is it in the SML History archive?
 
-d. The name sML = successor ML is a good working name, and we should use that for the time
+D. The name sML = successor ML is a fine working name, and we can use that for the time
 being. The language needs a name. The earlier efforts on sML were squashed in an ugly
 manner by Robin's intervention, no doubt goaded by others, but the ideas are still there,
 by and large.
 
-## Too early to decide. "sML" seems plausible, but I will stick with MSML (or MsML?) as my
+## Too early to decide. "sML" seems plausible, but I will stick with MsML as my
 ## working name for what I am aiming for.
 
 ## ---------------------------------------------------------------------------------------
-## List of mistakes that could be fixed
+## Harper's List of mistakes that could be fixed
 ## ---------------------------------------------------------------------------------------
 
 Thare are many mistakes and poor choices that ruin the experience for many people. I can
@@ -53,18 +57,20 @@ I would have to see how it looks. But watch out: "type t" in a signature is decl
 type variable for use in the remainder of that signature; the "t" used here should not be
 in any way at variance with other uses of type variables.
 
-## If we always have explicit binders introducing type variables, then I agree that they
+## Agree (my point 5.6)
+## If we always have explicit binders introducing type variables, then they
 ## don't need to be lexically distinguished, but some form of lexical distinction such as
 ## initial capital letters would seem to be convenient. Not sure we need to introduce
 ## binders for the implicitly prenex-bound type variables in polymorphic types (e.g.
-## K : [X,Y]. X -> Y -> X). That seems rather heavy.
+## K : [X,Y]. X -> Y -> X). That seems rather heavy, but if we exend the contexts where
+## a polymophic type can be specified (e.g. for 
 
 
 2. Eliminate piss-poor equality types and equality type variables entirely, period. If we
 want a module inference mechanism, see the Chakravarty-Dreyer-Harper-Keller paper on
 modular type classes. We should either do it properly, or not at all.
 
-## Agree (my point 1.4).
+## Agree (my point 1.4). But I don't agree on modular type classes. No type classes for me!
 
 
 3. Fix stupid shift-shift and shift-reduce conflicts in the grammar. These are due to the
@@ -82,12 +88,8 @@ entirely, or migrate it into the "fn" notation but with a name for "self" to all
 4. Eliminate infix. The Haskell solution, in some form, is the best option, but do not
 eliminate the ability to write infix applications!
 
-## Semi agree (my point 1.5). I think I could live without user-defined infix operators
+## Partially agree (my point 1.5). I think I could live without user-defined infix operators
 ## entirely, and I don't think I would use the Haskell convention for infix operators.
-
-## ---------------------------------------------------------------------------------------
-## DBM: incomplete -- more to come
-## ---------------------------------------------------------------------------------------
 
 
 5. Pre-specificy values that will eventually (what is the region of interest?) be
@@ -108,9 +110,10 @@ much like constructors of unit type in the static case of a datatype, are what y
 calling "symbols". Moreover, these provide bullet-proof confidentiality and integrity
 guarantees in code that uses them for security-motivated applications.
 
-## Partially agree. The way the exception type, with its separate and open-ended
+## Partially agree. The exception type, with its separate and open-ended
 ## declaration of exception "constructors", could be generalized as a kind of extensible
-## tagged union ("open datatype"?).
+## tagged union ("open datatype"?) [This actually existed in Burstall's NPL, and was the
+## default way of defining a type as I recall.]
 
 
 7. Integrate modules and core language more thoroughly to allow local structure, functor,
@@ -248,3 +251,36 @@ first vertical bar is optional, but can always be there to initiate a series of 
 excessive parenthesization; these could be reconsidered.
 
 ## Not sure what you have in mind.
+
+
+------------------------------------------------------------------------------------------
+Further Discussion
+
+* Flattening SML
+
+We know that the SML language (generally speaking) can be mapped into F-omega.
+
+So a macro design project might be to define an SML replacement language as a
+sugared version of F-omega (just as ISWIM was a sugared version of lambda-calculus).
+
+One question then would be how much type inference could we achieve, and how simple would
+that type inference be? [Principle: One ought to be able to do ML type inference in one's
+head while reading code (though this can sometimes be like playing blindfold chess).]
+
+There was originally a point in having a module system as a separate level of language,
+namely to isolate features that are mainly intended to support "programming in the large".
+Experience with CM and ML Base have lead to a realization that there is more to
+structuring and building very large programs (like compilers, theorem provers, etc.) than
+is address in the SML module system.  So it appears that more work is needed.
+
+But flattening or merging the Core and Module systems (like in F-ing Modules, 1 ML) is
+throwing out the constructs that were intended to support large-scale programs.
+
+There are also lots of technical problems that come up if we makes steps toward a
+flattened language, like allowing modules within Core expressions. One of these problems
+is dynamic initialization of a module (which was kind of taken to be a simple thing in
+the original module design, but would now not be so simple.  [Beware! Initialization in
+OO languages, like Java.]
+
+[Actually, the proposals for recursive modules involve similar initialization
+problems.]  
