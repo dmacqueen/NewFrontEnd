@@ -263,7 +263,7 @@ We know that the SML language (generally speaking) can be mapped into F-omega.
 So a macro design project might be to define an SML replacement language as a
 sugared version of F-omega (just as ISWIM was a sugared version of lambda-calculus).
 
-One question then would be how much type inference could we include, and how simple would
+One question then would be how much type inference could we achieve, and how simple would
 that type inference be? [Principle: One ought to be able to do ML type inference in one's
 head while reading code (though this can sometimes be like playing blindfold chess).]
 

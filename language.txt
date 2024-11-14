@@ -152,6 +152,8 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   This was actually a feature of Burstall's NPL, an early precursor of SML. Also available
   (mandatory) in Haskell.
 
+3.7. [Core] "try <exp> handle <match> endt" syntax for handled expressions.
+
 
 ------------------------------------------------------------------------------------------
 4. Other Changes
