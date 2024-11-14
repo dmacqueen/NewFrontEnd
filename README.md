@@ -18,3 +18,5 @@ with a future "library-ized" version of SML/NJ.  It is likely that CM, or a revi
 libraries [compile and build infrastructure].
 
 This is essentially a fresh, "from scratch" implementation, but it is expected to borrow extensively from the current SML/NJ front end.
+
+This NewFrontEnd project may at some point be moved to the smlnj github project. 

@@ -1,15 +1,16 @@
 repository: https://github.com/dmacqueen/NewFrontEnd 
 file: language.txt
 
-Notes on proposed language changes
+MsML: Notes on proposed language changes
 DBM, 2024.11.
 
 0. Introduction
 
-Let's use "MsML" as a working name for the language we are working toward, where MSML is
+Let's use "MsML" as a working name for the language we are working toward, where MsML is
 an acronym for "MacQueen's Successor ML". Note that here the lower-case "s" stands for
-"Successor", not "Standard". This language (MSML) should be considered a derivative
+"Successor", not "Standard". This language (MsML) should be considered a derivative
 or dialect of "(Standard) ML", which is my preferred name for Standard ML (SML or (S)ML).
+Section 7 lists proposed Successor ML changes and my comments on them.
 
 Below is my suggested list of changes, which could be interpreted as relative mainly
 to current SML/NJ or, alternatively, to the SML Definition (Revised), i.e. "official"
@@ -25,7 +26,7 @@ signature functors).  What I am suggesting could be thought of as "micro" langua
 character of the language.  I am not soliciting "buy in" to these changes, but would
 appreciate comments, criticisms, and suggestions that might influence future revisions.
 
-In Section 7 below, I have some preliminary discussion of my ideas with existing language
+In Section 7 below, I have some preliminary comments on the existing language
 proposals for "Successor ML".
 
 I consider Standard ML '97 to be an incomplete revision based on self-imposed restrictions
@@ -123,20 +124,24 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 3.2. [Modules*] Higher order functors.
 
-  As implemented in SML/NJ since version 0.93 (1993.02?), but ...
+  As implemented in SML/NJ since version 0.93 (1993.02?), but maybe dropping support for
+  curried functor declarations and partial application of such curried functors.
 
 3.3. [Modules] Signature functors.
 
-  Signatures that are defined relative to structure parameters (or _a_ structure parameter)
+  Signatures that are defined relative to structure parameters (or _a_ structure parameter).
 
 3.4. [Modules] Higher-order functor concrete and abstract syntax.
 
   Proper, native, concrete and abstract syntax for curried functors and partial
   applications thereof.  I guess one might also introduce curried signature functors?
-  
+  Probably better to remove the support for curried functors and their partial application.
+
   [Note: currently SML/NJ does not provide a proper abstract syntax for the module level.]
 
 3.5. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
+
+  This has been available in SML/NJ for many years, i.e. since the late 1990s.
 
 3.6. [Core] Adding a "variable type declaration" construct.
  
@@ -144,8 +149,8 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   Mainly justified by its use for code self-documentation, but it would also support
   simple and efficient "polymorphic recursion".
 
-  This was actually a feature of Burstall's NPL, an early precursor of SML. Also supported
-  in Haskell.
+  This was actually a feature of Burstall's NPL, an early precursor of SML. Also available
+  (mandatory) in Haskell.
 
 
 ------------------------------------------------------------------------------------------
@@ -183,9 +188,10 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 5.3. [Modules] Optimized data constructor representation vs (partial) abstraction
 
-  This is a known issue that could probably be solved by using "functor inlining", but
-  the interaction with higher-order functors is not clear. Functor inlining would probably
-  need to be _deep_ or _recursive_ inlining to deal with functor arguments (and results?).
+  This is a known issue that could probably be solved by using "functor inlining", but the
+  interaction with higher-order functors is not clear to me. Functor inlining would
+  probably need to be _deep_ or _recursive_ inlining to deal with functor arguments (and
+  results?).
 
 5.4. [Modules] "Recursive" modules (signatures, structures, functors)
 
@@ -415,9 +421,11 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 7.23. Quoting/anti-quoting
 
-  OK? Need to consult with actual users of the feature.
+  OK? Need to consult with actual users of the feature about whether it does the right
+  thing.
 
-  This should also apply to the "lazy" extension.
+  This should also apply to the "lazy" extension, which has a rather shallow, ad hoc
+  implementation.
 
 
 ------------------------------------------------------------------------------------------
@@ -427,8 +435,16 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 [MacQueen94]: David MacQueen, Reflections on Standard ML, 1994. [full info in SML History bib]]
 
-[The above papers are available in the SML History archive, in the design/critiques directory.]
+[Harper, Mitchell]: ML and Beyond, 19??. 
 
-[Harper*]: Type classes in ML (paraphrased).
+[The above papers are available in the SML History archive, in design/critiques.]
+
+[Chakravarty-Dreyer-Harper-Keller]: Modular Type Classes.
+
+[Successor ML]: https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
+
+[Karl Crary]: http://istarilogic.org/iml.html (Karl Crary's IML)
+
+* Other SML dialects with their own language innovations? [Which?/What?]
 
 [What else?]
