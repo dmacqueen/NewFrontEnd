@@ -75,6 +75,10 @@ What do we need to know about a variable?
   (like a leading apostrophy) is needed for type variables.  We could have a convention
   that they be capitalized alphanumeric (and a corresponding convention that tycons be
   alphanumeric with an initial lower case letter).
+
+- Question: What is the concrete syntax for type variable bindings in expressions
+  and, in particular, in value bindings (val and fun)?  SML '97 has a rather "quick
+  and dirty" solution to this issue.
   
 
 ------------------------------------------------------------------------------------------
