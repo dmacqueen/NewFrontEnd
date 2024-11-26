@@ -82,7 +82,9 @@ What do we need to know about a variable?
 
 In current SML/NJ, all the name spaces are encoded in a single variable type, and
 environments map that single variable type to "bindings", which is a tagged union
-corresponding to the different name spaces (currently to many name spaces).
+corresponding to the different name spaces (currently to many name spaces). [Presumably
+this choice (around 1986) was thought to be more efficient than a per-namespace record
+of environments.]   
 
 Value variables can have two different bindings in scope at a given point: the normal
 bound variable, and a "fixity" binding with an different, independent scope. This
