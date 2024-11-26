@@ -71,6 +71,11 @@ What do we need to know about a variable?
   - if variable has closed scope, are there any applied occurrences in its scope?
     if not, generate a warning message.
 
+- Note that if type variables have explicit binding points, no lexical distinction
+  (like a leading apostrophy) is needed for type variables.  We could have a convention
+  that they be capitalized alphanumeric (and a corresponding convention that tycons be
+  alphanumeric with an initial lower case letter).
+  
 
 ------------------------------------------------------------------------------------------
 * (Static) Environments
