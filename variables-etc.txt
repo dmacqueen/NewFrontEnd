@@ -1,0 +1,101 @@
+variables-etc.txt
+
+Some thoughts on variables, namespaces, environments, scopes, etc.
+
+------------------------------------------------------------------------------------------
+* Name Spaces
+
+We use various flavors of variables (expressions, tycons, type variables, modules, signatures)
+
+    datatype namespace
+     = Value (* variables appearing in value expressions, notionally bound to values *)
+     | Tycon (* or simply "Type"? - variables bound to a tycon *)
+     | Tyvar (* type variables - used within type decls, type expressions, and value expressions *)
+     | Module (* structures and functors share a namespace *)
+     | Signature
+
+- not clear whether we need separate name spaces for modules and signatures. Pretty sure
+  we do _not_ need separate name spaces for structures and functors, especially with HOF.
+
+- Principle: every variable should belong to exactly one namespace
+- Principle: every variable should have a binding occurrence (appear in a "binding")
+
+
+* Variables
+
+- all variables are bound ("there ain't no such thing as a free variable"), and have
+  a unique binding occurrence; e.g. the subject of a let or fun declaraion, variables in
+  patterns)
+
+- occurrences of a variable in its scope are called "applied occurrences"
+
+What do we need to know about a variable? 
+
+- its name, a string (atom?)
+
+- what namespace it belongs to 
+
+- its scope
+  -- Open or Closed
+  -- if Closed, then an expression (or declaration?) that constitutes the scope
+     (e.g. of a let-bound or local-bound variable)
+
+  -- value variables exported by a structure are assumed to have Open scope
+  -- value variables bound at top level in the REPL have Open scope
+  -- pattern variables (occurrence in the pattern is a binding occurrence) have their
+     normal scope (e.g. rhs of a rule, body of a function)
+  -- variables bound in the local part of a local-in-end decl have the body decl as their
+     scope
+  -- if a value variable is bound at top level in a structure, but not exported, it has
+     Open scope (not the remaining sequence of decls in the structure)
+  -- variables exported from a structure have Open scope
+
+- Assume we need equality on variables, which may be based on a hash value for efficiency.
+  The hash value would also (involved in) the key for environment mappings. Would it
+  suffice to have the variable name be an atom rather than a string?
+  
+- Value variables and module variables will (probably) have an assoiciated unique
+  _dynamic_ variable used to refer to the runtime value to which it is bound during
+  execution.
+
+- We assume that tycon and signature variables will not have a runtime representation
+  but will be relevant only during elaboration and probably, in some altered form,
+  during middle-end optimization.
+
+- Programming point: We want a variable with a closed scope to have the smallest
+  possible scope.
+
+- other information that would be useful (to a programmer)
+  - source location of the binding occurrence of a variable
+  - source locations of the applied occurrences of a variable, if any
+  - if variable has closed scope, are there any applied occurrences in its scope?
+    if not, generate a warning message.
+
+
+------------------------------------------------------------------------------------------
+* (Static) Environments
+
+In current SML/NJ, all the name spaces are encoded in a single variable type, and
+environments map that single variable type to "bindings", which is a tagged union
+corresponding to the different name spaces (currently to many name spaces).
+
+Value variables can have two different bindings in scope at a given point: the normal
+bound variable, and a "fixity" binding with an different, independent scope. This
+is messy, but static infix bindings should be dropped anyway.
+
+So lets assume that an environment is a record of separate environment mappings for
+each name space, as in
+
+datatype senv  (* static environment *)
+  = {value : variable --> valueVar,
+     tycon : variable --> tycon,  (* static semantics tycon *)
+     tyvar : variable --> tyvar,  (* static semantics tyvar *)
+     module : variable --> structure + functor,
+     signature : variable --> signature + funsignature}
+
+So to find the binding of a variable v in a static environment e, we:
+
+   (1) access its namespace, (ns = v.namespace)
+   (2) use the name space to access the appropriate binding mapping, (b = e.<ns>)
+   (3) apply the binding mapping to the variable (binding = b v)
+
