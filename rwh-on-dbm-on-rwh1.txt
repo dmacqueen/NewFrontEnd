@@ -1,0 +1,355 @@
+%%% RH responses to DBM's responses
+
+I am going to refer to Bob's initial response file (rh-response.txt)
+as rwh1. This file is dbm-on-rwh1.txt, and contains my initial responses
+to rwh1. I've done some reformatting (wrapping at column 90) for my
+editing convenience.
+
+Lines containing my (DBM) comments will start with "## ". Others could preface
+their comment lines by other strings, like "$$ " for JHR?
+
+------------------------------------------------------------------------------------------
+Some rwh responses, in no particular order:
+
+A. Karl's version of smlyacc and smllex is far better than the original because it avoids
+writing disembodied fragments of code that manage to be stitched together to a coherent
+whole. It's very nice, and should be adopted, period.
+
+## Sounds interesting. JHR also has a version of better lexer and parser generating
+## tools in the ml-lpt. Exactly what is "far better" about Karl's versions?  Where does
+## one find these?  I've always thought that some of these vary early tools like mllex
+## mlyacc could be improved -- seems obvious.  I have also always been annoyed with
+## MLyacc because at the end one has to apply some functors to build the parser -- this
+## should not be necessary. Why the "cmtool" name? "cm" = "Carnegie-Mellon"?
+## http://www.cs.cmu.edu/~crary/cmtool/
+## https://github.com/kcrary/cmtool
+
+%%% I don't know about JHR's parser generator.  Yes, cm = Carnegie Mellon.  Just read Karl's
+%%% synopsis, the goal is to avoid dangling identifiers that are ascii-hacked into (one hopes)
+%%% a coherent whole.  Instead it makes good use of modules.  I would have no idea why you,
+%%% of all people, would oppose creating a parser (or anything) by functor instantiation??
+
+B. Karl's IML [KML] variant of SML has lots of interesting ideas that could/should be adopted, and
+the code base may prove useful for writing a reference implementation. It compiles to
+Standard ML, but uses module declarations in the core language, and hence requires Moscow
+ML to compile the generated code. It would be great if SML/NJ could be linked to IML [KML] as
+its backend. [what?]
+
+## Sounds interesting. See http://istarilogic.org/iml.html for details.
+
+%%% I meant IML when I said KML, btw.  NB: he cannot compile IML with SML/NJ because the latter
+%%% for some unknown reason disallows structure bindings in expressions.  He uses MosML.
+
+C. The Sterling-Harper paper on modules provides what I now think is the definitive "core
+type theory" for SML, and we should build around that as the intended internal language.
+
+## Sounds like I should look at this. Citation? Is it in the SML History archive?
+
+%%% Published in JACM, linked on my web page.  This is, imo, the correct internal core
+%%% language for ML; it absolutely is NOT "System F".
+
+D. The name sML = successor ML is a fine working name, and we can use that for the time
+being. The language needs a name. The earlier efforts on sML were squashed in an ugly
+manner by Robin's intervention, no doubt goaded by others, but the ideas are still there,
+by and large.
+
+## Too early to decide. "sML" seems plausible, but I will stick with MsML as my
+## working name for what I am aiming for.
+
+## ---------------------------------------------------------------------------------------
+## Harper's List of mistakes that could be fixed
+## ---------------------------------------------------------------------------------------
+
+Thare are many mistakes and poor choices that ruin the experience for many people. I can
+name a few here, but I am certain that I am forgetting a whole bunch more.
+
+1. Eliminate 'a requirement [lexical convention] for type variables. We lexically
+distinguish identifiers that need no lexical distinction and lexically clash identifiers
+that need distinction (constructors vs values). We can try upper case for type variables,
+I would have to see how it looks. But watch out: "type t" in a signature is declaring a
+type variable for use in the remainder of that signature; the "t" used here should not be
+in any way at variance with other uses of type variables.
+
+## Agree (my point 5.6)
+## If we always have explicit binders introducing type variables, then they
+## don't need to be lexically distinguished, but some form of lexical distinction such as
+## initial capital letters would seem to be convenient. Not sure we need to introduce
+## binders for the implicitly prenex-bound type variables in polymorphic types (e.g.
+## K : [X,Y]. X -> Y -> X). That seems rather heavy, but if we exend the contexts where
+## a polymophic type can be specified (e.g. for 
+
+%%% There's no need to always have explicit binders; there is the need to allow explicit
+%%% binders when needed or wanted.
+
+%%% I wish to make a point about identifiers that I'll put here, but it's a global issue.
+%%% First, when we write val x : tau in a signature or val x = e in a structure, the "x"
+%%% is the label of a tuple component, not a variable per se.  When "x" is used within the
+%%% scope of the binding, it refers to an underlying variable introduced to express the
+%%% possible dependency of subsequent spec's and dec's on "x".  Thus, val x = 3 val y = x+x
+%%% is really < x ~ 3; x. y ~ x+x > where the twiddle marks the labelling of components, and 
+%%% the "x." is a binder so that the tuple is in effect a combination of a let and a pair.
+%%% Similarly, in a spec, type t type u = txt val x : u is the dependent sums type
+%%% t ~ TYPE * t. u ~ {TYPE|=txt} * u. x ~ u, where t. binds a variable, the twiddle indicates a
+%%% field name, and braces indicate a singleton kind.  Whenever one writes a "variable name" in SML
+%%% it is actually a projection label that accesses ta component of a tuple; variables exist
+%%% only in the internal language, with proper binding, scope, and substitution.  All issues
+%%% of identifier scope resolution, shadowing, etc are done by elaboration into the internal
+%%% language (of modules, more on which below).  I really should use a different type face in
+%%% the above to distinguish labels from variables, but all I have here is ascii.
+
+2. Eliminate piss-poor equality types and equality type variables entirely, period. If we
+want a module inference mechanism, see the Chakravarty-Dreyer-Harper-Keller paper on
+modular type classes. We should either do it properly, or not at all.
+
+## Agree (my point 1.4). But I don't agree on modular type classes. No type classes for me!
+
+%%% They are of marginal utility, but provide a "now please shut up" to the Haskell crowd.
+
+3. Fix stupid shift-shift and shift-reduce conflicts in the grammar. These are due to the
+no-closing indicator on cases's that could be fixed easily, perhaps case match end.
+Relatedly, using "=" for the clauses of a fun declaration causes needless pain when
+editing code. Make these "=>" just like any other match. Even better, do away with "fun"
+entirely, or migrate it into the "fn" notation but with a name for "self" to allow
+(mutual) recursion. eg, val fact = fun f 0 = 1 | f n = n * f (n-1).
+
+## Agree. I am tentatively thinking of adding ending keywords for the three flavors of
+## matches, namely "endc" (case), "endh" (handle), "endf" (fn).  Or there could be a
+## single "endm" keyword for ending any match? ["esac" etc. not an option.]
+
+4. Eliminate infix. The Haskell solution, in some form, is the best option, but do not
+eliminate the ability to write infix applications!
+
+## Partially agree (my point 1.5). I think I could live without user-defined infix operators
+## entirely, and I don't think I would use the Haskell convention for infix operators.
+
+5. Pre-specificy values that will eventually (what is the region of interest?) be
+declared, so that one can write val x : X -> X and later (not too far in some sense) write
+val x = fn y => y, or similar.
+
+## Agree (my point 3.6).
+## I tend to think of the type specification part as the _declaration_, with the current
+## notion of value declaration (val and fun) as the _definition_ of the bound variables.
+
+%%% So what is the format?  Is it just allowing a compound declaration of the form
+%%% "val x : tau val x = exp"?  ie, they must be paired up like that?  Or what?
+
+6. The "exception" declaration should be renamed "extension", a la KML for introducing a
+dynamically new class in the type clsfd of classified values with dynamically generated
+classifiers. See PFPL for discussion. This is the right thing to do, period. There is no
+such thing as a "static exception", btw. Leroy stupidly shoved this into O'Caml to be
+different, and (a) it is unsound and cannot be fixed, and (b) has been overridden by
+Garrigue with a proper generative exception mechanism. Incidentally, classes of unit type,
+much like constructors of unit type in the static case of a datatype, are what you're
+calling "symbols". Moreover, these provide bullet-proof confidentiality and integrity
+guarantees in code that uses them for security-motivated applications.
+
+## Partially agree. The exception type, with its separate and open-ended
+## declaration of exception "constructors", could be generalized as a kind of extensible
+## tagged union ("open datatype"?) [This actually existed in Burstall's NPL, and was the
+## default way of defining a type as I recall.]
+
+%%% God gave us a generic abstraction mechanism for a reason: we can use modules (you've
+%%% heard of them, surely?) to define abstract types that happen to be implemented by
+%%% the one and only dynamic classification type.
+
+7. Integrate modules and core language more thoroughly to allow local structure, functor,
+and even signature declarations. There is no reason not to do this.
+
+## Don't agree. I do not want to "flatten" or "unify" the Core and Module parts of the
+## language (see discussion at end).  This I regard as a bit of "macro" language design.
+
+%%% I must be loud and clear here: I DO NOT IN ANY WAY ADVOCATE FLATTENING OF MODULES,
+%%% FOR EITHER SEMANTIC OR IMPLEMENTATION REASONS.  I refer to the "flattening" approach,
+%%% used in The Defn and by Russo et al to be "phase separation" because it separates
+%%% modules into two parts, the types/static part and the values/dynamic part.  I advocate
+%%% "phase distinction" using the mechanisms introduced in the Sterling-Harper paper that
+%%% DOES NOT FLATTEN ANYTHING.
+
+8. Eliminate the pathetic imperative programming syntax that no one ever ever ever uses or
+used for anything, period. However, the Haskell-like syntax for sequencing is rather nice,
+passing along both a value and the effect generated by the sequence in turn.
+
+## What does this refer to other than the "while" expression construct?
+
+%%% I mostly have in mind the "bind" syntax, x <- e; e'  and similar, "semi-colon with a value".
+
+9. Integrate datatypes and modules properly using my "data signatures" and "data
+structures" proposal. eg, one may write "signature LIST = data type A list con nil : A
+list con cons : A * A list -> A list end", then write "data structure List : LIST" to get
+the default implementation. No more redundancy between dec's and spec's of data types.
+
+## Intriguing, but I would like to understand what notational alternatives are possible.
+## Also not my opposition to merging Core and Module languages.
+
+10. Integrate lazy data types in a natural way such that pattern matching is the means of
+forcing evaluation of arguments to lazy constructors. Does not require "by name"
+variables! Does not ruin the rest of the language! It's an isolatable notion that
+could/should/would be adopted.
+
+## My inclination would be to remove the experimental "lazy" extension of SML/NJ as a frill.
+## In any case, Taha's rather superficial implementation of the extension would need
+## to be redone.
+
+%%% Well, something should be done.  It cannot be hard to integrate "forcing" into
+%%% pattern matching and to permit constructors to be selectively declared lazy.
+
+11. Integrate letcc/throw, no excuses, no regrets, it's the right thing to do.
+
+## Keeping 1st class continuations is ok with me.
+## But what does this suggestion mean in detail? New concrete syntax supporting the use
+## of continuations?
+
+%%% Could we not have a "valbind" of the form "cc k", so that let cc x in ... end does what you
+%%% would think it does?  Then "throw" is something like "raise", an expression former that
+%%% disrupts the control flow.  Btw, I think we both agree that we want something like
+%%% try exp ow match end?
+
+12. Definitely allow type definitions in signatures, where and sharing clauses modifying
+signatures. Note that there is not much difference between treating where's and share's as
+signature modifiers and as structure components, because two sub-structures with a
+where/share modifier on their signature(s) is nothing more than a where/share as a
+component of the surrounding structure.
+
+## Sharing equations are currently a form of internal specifications occurring within the
+## bodies of signatures. I claim they are largely, if not completely redundant if we have
+## definitional specifications, both directly and internally, and "afterward" through
+## where clauses modifying existing signatures. A mistake in the SML '97 design was not to
+## support both type specifications and structure definitional specifications.
+## (My points 1.6, 3.5).
+
+%%% Agreed.  And the '97 version messed up the semantics of sharing, rendering it officially
+%%% useless and remains a point of incompatibility.
+
+13. I agree with eliminating "val rec", let alone "val rec rec rec x = exp and rec y =
+exp'", etc The real issue is that values are not recursive, only functions and lazy data
+structures such as streams are recursive. rec is not a modifier of val. Rather the syntax
+for functions introduces recursion as necessary, similarly for co-data-types.
+
+## Agree (my point 7.10 from Successor ML proposal).
+
+
+14. Syntax for compilation units, but whatever name they may be called. These are not
+replaced by modules, and do not replace modules.
+
+## Huge issue! Matthias and I once submitted a grant proposal on this problem. I still
+## consider this an open research problem. Probably should be considered "macro" design.
+
+%%% I'd like to see it.  Why would it be "huge" at this stage?
+
+15. Dropping open makes good sense to me. I prefer structure X = BigStructureName to open
+BigStructureName, and writing X.t, etc. Dropping include makes sense.
+
+## I think we agree. Some alternative and better way of building on existing structures
+## and signatures is worth thinking about, but it I see it as an open problem.
+
+16. Families of signatures are signatures with structure components, there is no
+difference, but one could support notation such as SIG (structure X = MyXModule), which is
+the same as SIG with structure X = MyXModule. Done.
+
+## I don't understand.
+
+%%% Sometimes one wants structure-indexed families of signatures, which are the same thing,
+%%% fundamentally, as a signature with the indexes as substructures---instantiation becomes 
+%%% "where structure".  eg, signature DICT (structure Key:ORD) = sig ... Key.t ... end, which
+%%% is instantiated in, for example, functor Dict (structure Key:ORD):DICT(Key) = ...,
+%%% is alternate syntax for signature DICT = sig structure Key:ORD ...Key.t ... end, with
+%%% instantiation by writing DICT where Key=Key, etc.  There is no difference, just one of
+%%% "feel"/"perspective".
+
+17. Is "sealing" after all a good idea or not? I can never make up my mind, to be honest.
+
+## I think it is a good idea. How else to define abstract types? A special variant of
+## structure/functor declaration?
+
+%%% The only issue with sealing is how to relate it to sealed datatypes.  If we redo datatypes
+%%% as I suggest, then we only need sealing, period, and datatype declarations are a derived form.
+
+18. Karl's and my Twelf formulation of SML is the way to go. Precise, verified,
+maintainable.
+
+## What is the footprint of trained "maintainers"?  May be too small?
+
+%%% Well, right now it's Karl and me, but the entire point is that its a body of code with
+%%% a proof checker, making maintenance easy because it will tell you what is lacking in an
+%%% incomplete extension.  It's not reliant on people!
+
+19. Just like the "semicolon-as-separator vs semicolon-as-terminator" dispute, we can make
+"vertical-bar-as-initiator" instead of "vertical-bar-as separator" and we're good. The
+first vertical bar is optional, but can always be there to initiate a series of clauses.
+
+## May be ok, but I would not have the first vertical bar be optional, since it seems the
+## main motivation is to have the clauses ("equations") line up vertically for code
+## editing convenience.
+
+
+20. "do e" would be handy.
+
+## Agree. But should it include the ignore functionality, or should it expand to
+## "val () = e"?
+
+
+21. Agreed with dumping abstype, which I advocated 40 years ago.
+
+## Agree (my point 1.7).
+
+
+22. Disjunctive patterns are essential in some circumstances, and should be supported (as now).
+
+## Agree (my point 7.7, Successor ML proposal implemented in SML/NJ a long time ago).
+
+
+23. Calculi of records are not all that important, if you ask me.
+
+## I would find record overlay very useful and have plenty of examples in my code where
+## I would use it.
+
+%%% But see my remarks re field labels vs proper variables.
+
+24. Line comments would be helpful imo.  Also nested bracketed comments.
+
+## OK. A convenience for those who are used to it, which is a lot of programmers.
+
+
+25. There are precedence issues with parsing fun patterns and fn patternss that lead to
+excessive parenthesization; these could be reconsidered.
+
+## Not sure what you have in mind.
+
+
+------------------------------------------------------------------------------------------
+Further Discussion
+
+* Flattening SML
+
+We know that the SML language (generally speaking) can be mapped into F-omega.
+
+So a macro design project might be to define an SML replacement language as a
+sugared version of F-omega (just as ISWIM was a sugared version of lambda-calculus).
+
+One question then would be how much type inference could we achieve, and how simple would
+that type inference be? [Principle: One ought to be able to do ML type inference in one's
+head while reading code (though this can sometimes be like playing blindfold chess).]
+
+There was originally a point in having a module system as a separate level of language,
+namely to isolate features that are mainly intended to support "programming in the large".
+Experience with CM and ML Base have lead to a realization that there is more to
+structuring and building very large programs (like compilers, theorem provers, etc.) than
+is address in the SML module system.  So it appears that more work is needed.
+
+But flattening or merging the Core and Module systems (like in F-ing Modules, 1 ML) is
+throwing out the constructs that were intended to support large-scale programs.
+
+There are also lots of technical problems that come up if we makes steps toward a
+flattened language, like allowing modules within Core expressions. One of these problems
+is dynamic initialization of a module (which was kind of taken to be a simple thing in
+the original module design, but would now not be so simple.  [Beware! Initialization in
+OO languages, like Java.]
+
+[Actually, the proposals for recursive modules involve similar initialization
+problems.]  
+
+%%% I won't shout this time, but I reiterate: I am against flattening, and (here I'll
+%%% shout again) THE INTERNAL LANGUAGE IS NOT AND CANNOT BE SYSTEM F(-omega).  They
+%%% say the same shit about Haskell's internal language, and it is ABSOLUTELY FALSE
+%%% and CANNOT BE MADE TRUE.  I had this out with SPJ 15 years ago; all their talk is, 
+%%% as usual, bullshit.
