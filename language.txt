@@ -172,6 +172,17 @@ and [Milner's] worries about resistance or objections from "commercial" entities
    For example, the 2 shift/reduce ambiguities in the MLyacc grammar: (1) nested matches,
    and (2) somewhere in the module system grammar.
    
+4.3. Consider changing record selection notation.
+
+   Would it be possible to use (re-use) the conventional "dot"
+   selection notation for projecting fields of a record, as in "r.a"?
+   Not the #a is not really a function (can only be instantiated at a
+   particular record type). I've never felt comfortable with the SML
+   notation.
+
+   If we need a field selector function, say for mapping, we can always just
+   write "(fn r: rty => r.a).
+   
 
 ------------------------------------------------------------------------------------------
 5. Other issues

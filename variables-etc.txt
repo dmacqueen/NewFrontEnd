@@ -104,9 +104,28 @@ datatype senv  (* static environment *)
      module : variable --> structure + functor,
      signature : variable --> signature + funsignature}
 
-So to find the binding of a variable v in a static environment e, we:
+So to find the binding of a variable symbol v in a static environment e, we:
 
    (1) access its namespace, (ns = v.namespace)
-   (2) use the name space to access the appropriate binding mapping, (b = e.<ns>)
-   (3) apply the binding mapping to the variable (binding = b v)
+   (2) use the name space to access the appropriate binding mapping, (b = e.<ns>,
+       where <ns> is the label associated with the namespace ns).
+   (3) apply the binding mapping to the variable symbol (binding = b v)
 
+
+------------------------------------------------------------------------------------------
+* Symbols
+
+  - the _name_ of a symbol should be an atom
+    This means we don't have to deal with a hash of a string name.
+    We also can define finite atom sets and finite mappings using the Atom structure
+    together with set and map functors from the smlnj-lib library.
+
+  - thus, equality of symbols is defined to be atom equality on the name.
+
+  - A symbol should have an associated name space.
+    Two symbols in different name spaces may have the same name, but this is
+    harmless -- there is no ambiguity.
+
+  - A symbol should have at most one binding in a given name space.
+    This means we can use library finite map functors for the components of the environment
+    record.
