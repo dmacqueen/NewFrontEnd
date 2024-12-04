@@ -35,7 +35,7 @@ whole. It's very nice, and should be adopted, period.
 %%% functor instantiation??
 
 ### I just don't see any point in having a functor that is only applied once - one may as
-### well have a structure. Of course, David Tarditi implemented his mlyacc tools very
+### well have a structure. Of course, David Tarditi implemented his mlyacc tool very
 ### early in the development of SML/NJ; 1986, I think, so I wouldn't criticize his
 ### approach. I'm sure that what Karl did is right and much better, and I hope that the
 ### he provides the parser as a simple structure. If not, this can probably be fixed
