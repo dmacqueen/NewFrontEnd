@@ -1,5 +1,6 @@
 // dbm-rwh-2.txt
 // Another round of DBM responses to RWH's responses.
+// Using "###" to preface DBM's 2nd round responses.
 
 %%% RH responses to DBM's responses
 
