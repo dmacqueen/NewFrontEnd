@@ -1,3 +1,7 @@
+// RWH rwh-background.txt -> discussion/rwh3.txt
+// Bob Harper background discussion
+// 2024.12.05
+
 It seems like it would be helpful to separately specify some of my suggestions, if only to clarify what I am suggesting.
 
 1. It is not possible to compile ML to (an imperative extension of) System F, period.  This is a fallacy of long standing that has been encouraged by the same fallacy often stated about Haskell.  There are several issues.  One, impredicativity is totally unnecessary and unwanted for SML.  Even if it were wanted in some extension, it can be selectively introduced in a predicate framework as may be appropriate.  The claimed interpretations into System F rely on a whole program transformation that amounts to CPS conversion, whereas a compositional/modular account is what is necessary for (true) separate compilation (ie, not separate type-checking, but compilation to object code).  The reason is that System F only provides types-as-arguments to terms, and cannot model modules that produce types-as-components of structures or types-as-outputs of functors.  Just forget you ever heard about System F, and you are far better off and in any case in a more general, flexible, expressive setting.

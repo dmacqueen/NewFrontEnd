@@ -1,3 +1,7 @@
+// discussion/rwh1.txt (originally rh-response.txt)
+// Bob Harper's [RWH] initial response to proposals/language.txt
+// 2024.11.13 (?)
+
 Some responses, in no particular order:
 
 Karl's version of smlyacc and smllex is far better than the original because it avoids writing disembodied fragments of code that manage to be stitched together to a coherent whole.  It's very nice, and should be adopted.
