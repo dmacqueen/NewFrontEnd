@@ -38,4 +38,6 @@ This NewFrontEnd repository may at some point be moved to the smlnj github proje
 
 - dbm2.txt: DBM's response to discussion/rwh2.txt (originally dbm-rwh-2.txt)
 
-- rwh3.txt: RWH's background discussion on SML module semantics and design (originally rwh-background.txt)
+- rwh3.txt: RWH's background discussion of SML module semantics and design (originally rwh-background.txt).
+
+- dbm3.txt: DBM's comments on discussion/rwh3.txt.
