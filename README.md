@@ -41,3 +41,7 @@ This NewFrontEnd repository may at some point be moved to the smlnj github proje
 - rwh3.txt: RWH's background discussion of SML module semantics and design (originally rwh-background.txt).
 
 - dbm3.txt: DBM's comments on discussion/rwh3.txt.
+
+- rwh4.txt: RWH's further explanation of the Sterling-Harper model.
+
+- dbm4.txt: DBM's comments on discussion/rwh4.txt.

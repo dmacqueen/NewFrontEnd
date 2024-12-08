@@ -199,4 +199,12 @@ proof (covers all cases, is not circular).
 ### clearly be considered obsolete!
 
 
-
+------------------------------------------------------------------------------------------
+### Here is a thought!  The current SML/NJ abstract syntax is ad hoc
+### and incomplete.  There in fact is no proper abstract syntax for modules.
+### Perhaps you can help with this part of the new abstract syntax, capturing
+### the information that is needed by a middle-end as client, either by translation
+### the old FLINT _or_ by translation to the sort of "internal language" you have in
+### mind. But with the requirement that eventually we'll produce something that
+### can be used by an existing back end (of which there are currently two: MLRISC-based
+### and LLVM-based).
