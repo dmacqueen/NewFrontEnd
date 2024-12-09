@@ -1,5 +1,5 @@
 repository: https://github.com/dmacqueen/NewFrontEnd 
-file: language.txt
+file: proposals/language.txt
 
 MsML: Notes on proposed language changes
 DBM, 2024.11.
@@ -60,7 +60,8 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 1.3. [Core] No static (type/module) declarations within expressions
 
-  [Moto: Keep the core and module levels separate.]
+  [Moto: "Keep the core and module levels separate", or "no static declarations within
+  dynamic expressions".]
   What does it, or should it, mean to have a (statically generative) datatype declaration
   in the body of a recursive function.  [Karl won't like this!]
 
@@ -108,7 +109,13 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
   Redundant. Use recursion instead for iteration. Same reason we don't have a "loop"
   expession form.
-  
+
+1.9. [Core] Eliminate the "and" connector for nonrecursive val and type declarations,
+  using it only where it makes sense, i.e. for multiple, mutually recursive fun and
+  datatype declarations. If, sometime in the future, we want to consider adding recursive
+  val declarations for other than functions, we could introduce a new "valrec" declaration
+  keyword.
+
 
 ------------------------------------------------------------------------------------------
 3. Additions
@@ -167,7 +174,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
    [Viewing that as a separate dimention of _extension_ or _refinement_ of an existing
     structure/signature.]
 
-4.2. Correct errors in the concrete syntax.
+4.2. [Core+Modules] Correct errors in the concrete syntax.
 
    For example, the 2 shift/reduce ambiguities in the MLyacc grammar: (1) nested matches,
    and (2) somewhere in the module system grammar.
@@ -252,6 +259,36 @@ and [Milner's] worries about resistance or objections from "commercial" entities
   "tuple" cases throughout the elaborator, so it would need to be
   worth it.  What are potential payoffs?
 
+5.11. [Core+Moduels] Shadowing of variable bindings
+
+  (S)ML is liberal respecting shadowing of variables, so things like
+
+     val x = 3
+     val x = x+1
+
+  and
+
+     datatype d = A | B
+     datatype d = C | D
+
+  are allowed, as are related declarations like
+
+     local
+       datatype d = A
+     in
+       val x = A
+     end
+
+  (This last example relates to what is called "type explicitness" in the Commentary.)
+ 
+  Should we continue this liberal policy re shadowing?  And re "type explicitness"?
+
+  Having a REPL seems to present a fairly strong argument for liberal shadowing, as we
+  often reload (repeatedly "use") a souce file (usually after editing), which rebinds the
+  variables bound when the file was last loaded.  So it seems we would at least want to
+  allow shadowing (rebinding) in the REPL.  But we might have a different policy within
+  a basic structure expression ("struct <decl> end").
+
 
 ------------------------------------------------------------------------------------------
 6. Discussion
@@ -310,7 +347,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
     https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
 
   as the reference document for proposed Successor ML changes.
-  Note that several of the links to the descriptions of changes on this page are dead.
+  Note that a couple of the links to the descriptions of changes on this page are dead.
 
   Here are my reactions to the proposed Successor ML changes.
   Generally I would prefer not to make changes that add features and complexity.
@@ -331,38 +368,41 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 7.4. Functional record extension and row capture
 
-  I much prefer a single record overlay "operator" (syntax form) as suggested in 3.1 above.
-  This captures the useful functionality in a much simper way. Originally suggested by
-  Wand many years ago and studied by others (R\'emy, ...).
+  I much prefer a single record overlay "operator" (expression syntax form) as suggested
+  in 3.1 above.  This captures the useful functionality in a much simper way. Originally
+  suggested by Wand many years ago and studied by others (R\'emy, ...).
 
-  I don't like the introduction of another special class of variables, namely row variables.
+  I don't like the introduction of another special class of variables, namely row
+  variables.
 
-  I guess a parallel form for record type overlays might be useful, but I would not consider
-  it necessary.
+  I guess a parallel form for record type overlays might be useful, but I would not
+  consider it necessary.
 
 7.5. Functional record update
 
-  Same as 7.4.
+  See my comments on 7.4. above.
 
 7.6. Record labels and fields (?)
 
-  Don't like. Too "cute".
+  Don't like. Too "cute". Part of this has been considered and rejected in the past.
 
 7.7. Disjunctive patterns
 
-  OK. Already in SML/NJ for many years.
+  OK. Already supported in SML/NJ for many years.
 
 7.8. Generalized layered patterns to conjunctive patterns
 
-  No. Added complexity with little gained.  Happy with just <variable> as <pattern>.
+  No. Added complexity with little gained. Happy with just <variable> as <pattern>.
 
 7.9. Match guards.
 
-  No. Messes up the simplicity of pattern matching.
+  No. Messes up the simplicity of pattern matching; complicates match compilation.
 
 7.10. Simplifying val rec syntax
 
-  OK, but even better, lets just get rid of val rec, etc.  (I never use it!)
+  OK, but even better, let's just get rid of val rec, etc.  (I never use it!)  Use "fun"
+  only for recursive function definitions. Introduce a "valrec" keywords for other
+  recursive value declarations, if we ever want to support them.
 
 7.11. Withtype in signatures.
 
@@ -375,7 +415,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 7.13. Degrade abstype to derived form
 
   No. Just get rid of abstype.
-  It has effectively been abandoned in practice.
+  It has effectively been abandoned in practice [I haven't used it in decades.]
 
 7.14. Haskell-like declaration prootypes/signatures
 
@@ -391,17 +431,17 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 7.16. Disallow non-exhaustive patterns in polymorphic bindings
 
-  OK.  Could also just make non-exhaustive pattern matches an error, period.
+  OK. Could also just make non-exhaustive pattern matches an error, period.
 
 7.17. More liberal type sharing
 
-  Description of the change is missing (dead link). 
+  Description of the change is missing [dead link]. 
 
   Don't know what this refers to.
 
 7.18. "where" constraints for structures
 
-  Description of the change is missing (dead link). 
+  Description of the change is missing [dead link]. 
 
   I think this has already been implemented in SML/NJ since around 1996.
 
@@ -444,11 +484,11 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 ------------------------------------------------------------------------------------------
 8. Bibliography
 
-[Appel94]: Andrew Appel, A Critique of Standard ML, 1994. [full info in SML History bib]]
+[Appel94]: Andrew Appel, A Critique of Standard ML, 1994. [full info in SML History bib file]
 
-[MacQueen94]: David MacQueen, Reflections on Standard ML, 1994. [full info in SML History bib]]
+[MacQueen94]: David MacQueen, Reflections on Standard ML, 1994. [full info in SML History bib]
 
-[Harper, Mitchell]: ML and Beyond, 19??. 
+Robert Harper, John Mitchell: ML and Beyond, ACM Computing Surveys, 28, 4es, p 219, 1996. 
 
 [The above papers are available in the SML History archive, in design/critiques.]
 
