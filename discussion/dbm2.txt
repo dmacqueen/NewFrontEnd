@@ -71,9 +71,7 @@ type theory" for SML, and we should build around that as the intended internal l
 ### I will study that paper.
 
 D. The name sML = successor ML is a fine working name, and we can use that for the time
-being. The language needs a name. The earlier efforts on sML were squashed in an ugly
-manner by Robin's intervention, no doubt goaded by others, but the ideas are still there,
-by and large.
+being.
 
 ## Too early to decide. "sML" seems plausible, but I will stick with MsML as my
 ## working name for what I am aiming for.
@@ -171,13 +169,7 @@ val x = fn y => y, or similar.
 
 6. The "exception" declaration should be renamed "extension", a la KML for introducing a
 dynamically new class in the type clsfd of classified values with dynamically generated
-classifiers. See PFPL for discussion. This is the right thing to do, period. There is no
-such thing as a "static exception", btw. Leroy stupidly shoved this into O'Caml to be
-different, and (a) it is unsound and cannot be fixed, and (b) has been overridden by
-Garrigue with a proper generative exception mechanism. Incidentally, classes of unit type,
-much like constructors of unit type in the static case of a datatype, are what you're
-calling "symbols". Moreover, these provide bullet-proof confidentiality and integrity
-guarantees in code that uses them for security-motivated applications.
+classifiers. See PFPL for discussion.
 
 ## Partially agree. The exception type, with its separate and open-ended
 ## declaration of exception "constructors", could be generalized as a kind of extensible
@@ -432,12 +424,6 @@ OO languages, like Java.]
 
 [Actually, the proposals for recursive modules involve similar initialization
 problems.]  
-
-%%% I won't shout this time, but I reiterate: I am against flattening, and (here I'll
-%%% shout again) THE INTERNAL LANGUAGE IS NOT AND CANNOT BE SYSTEM F(-omega).  They
-%%% say the same shit about Haskell's internal language, and it is ABSOLUTELY FALSE
-%%% and CANNOT BE MADE TRUE.  I had this out with SPJ 15 years ago; all their talk is, 
-%%% as usual, bullshit.
 
 ### Bit it still seems to me that having structures inside expressions (e.g. in the
 ### body of a recursive function) is some kind of "flattening" or merging of the

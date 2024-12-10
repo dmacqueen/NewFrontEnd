@@ -6,9 +6,8 @@
 It seems like it would be helpful to separately specify some of my suggestions, if only to
 clarify what I am suggesting.
 
-1. It is not possible to compile ML to (an imperative extension of) System F, period. This
-is a fallacy of long standing that has been encouraged by the same fallacy often stated
-about Haskell. There are several issues. One, impredicativity is totally unnecessary and
+1. It is not possible to compile ML to (an imperative extension of) System F, period. 
+There are several issues. One, impredicativity is totally unnecessary and
 unwanted for SML. Even if it were wanted in some extension, it can be selectively
 introduced in a predicate framework as may be appropriate. The claimed interpretations
 into System F rely on a whole program transformation that amounts to CPS conversion,
@@ -143,13 +142,11 @@ not sure. What I care about, though, is that continuations be embraced, not deni
 and integrated into the language.
 
 
-6. Haskell favors the "cute notational device" that works only in small examples, perhaps
-only at top level. We don't want that. As a case in point, whereas I fully agree that some
+6. I fully agree that some
 sort of pre-declaration of the types of val's is useful (and essential in the recursive
 polymorphic case) it is not clear to me what exactly is the proposal. Whereas let val x :
 int val x = 3 in .. end seems to make sense, let val x : int in .. end does not make
-sense. Capeesh? I'd like to see a proposal. The Haskell kludges are just that, and do not
-scale.
+sense.
 
 ### Here I agree that the "proposal" is rather vague, and the syntax is not yet worked out.
 
