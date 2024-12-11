@@ -1,82 +1,146 @@
-variables-etc.txt
+NewFrontEnd/proposals/variables-etc.txt
 
 Some thoughts on variables, namespaces, environments, scopes, etc.
 
-------------------------------------------------------------------------------------------
-* Name Spaces
+Terms/concepts to be defined or understood:
 
-We use various flavors of variables (expressions, tycons, type variables, modules, signatures)
+  - identifier
+
+  - symbol
+
+  - variables
+
+  - name spaces
+
+  - (static) environment
+
+  - bindings, binding and applied occurrences of variables
+
+  - scope of a variable
+
+  - shadowing
+
+------------------------------------------------------------------------------------------
+Name Spaces
+
+* A source language phrase is made up of various kinds of lexical tokens.
+
+  - punctuation symbols or characters (like "comma", "colon", "semicolon")
+  - bracketing characters, like parentheses, normally coming in opening (left) and closing
+    (right) pairs
+  - identifiers, which include names of things (values, types, modules, signatures) and
+    also record labels. Most identifiers are internally represented by a "symbol" type.
+
+* We use various flavors of variables (values, tycons, type variables, modules, signatures).
 
     datatype namespace
-     = Value (* variables appearing in value expressions, notionally bound to values *)
+     = Value (* variables appearing in value expressions, notionally bound to values,
+              * and data constructors *)
      | Tycon (* or simply "Type"? - variables bound to a tycon *)
      | Tyvar (* type variables - used within type decls, type expressions, and value expressions *)
      | Module (* structures and functors share a namespace *)
      | Signature
 
-- not clear whether we need separate name spaces for modules and signatures. Pretty sure
+* Every identifier except record labels is used to name something, and these are the
+  various flavors of "variables".  Each variable identifier should belong to a unique
+  namespace, which tells you what kind of thing the variable _names_.
+
+* We need to be able to do two things with a variable:
+
+    1. bind them to something
+    2. look them up in an environment (to interpret them; to find out what they are bound to)
+
+  These operations relate to the notion of the "scope" of a variable, which is roughly the
+  logical portion of a program in which their binding applies.
+
+* Principle: every variable should belong to exactly one namespace 
+
+* Principle: every variable should have an explicit binding occurrence (appear in a "binding") 
+
+  Currently in SML, type variables occurring in expressions may not have an explicit
+  binding occurrence, but I view this as a mistake.
+
+* Should record labels belong to their own "label" namespace? 
+  Labels can be considered as a means of accessing internal components of a
+  record. Whether this means that they should be treated as variables is debatable,
+  since we do not normally view records as "environments", for the sake of efficient
+  access (we want to treat them as offsets in a compound value).
+  
+* It's not clear whether we need separate name spaces for modules and signatures. Pretty sure
   we do _not_ need separate name spaces for structures and functors, especially with HOF.
 
-- Principle: every variable should belong to exactly one namespace
-- Principle: every variable should have a binding occurrence (appear in a "binding")
+* Sometimes we want to distinguish classes of identifier lexically. For instance, we might
+  use the convention that ordinary value variables have initial lower case while data
+  constructor names have initial upper case. Such lexical conventions may, or may not, be
+  inforced. But such lexical distinctions do not necessarily imply distinct name spaces.
+  E.g. we usually assign value variables and data constructor names to the same "value"
+  namespace.  But this is not _necessary_, just an option.
 
 
-* Variables
+Variables
 
-- all variables are bound ("there ain't no such thing as a free variable"), and have
-  a unique binding occurrence; e.g. the subject of a let or fun declaraion, variables in
+* All variables are bound ("there ain't no such thing as a free variable"), and have
+  a unique binding occurrence; e.g. the subject of a val or fun declaraion, variables in
   patterns)
 
-- occurrences of a variable in its scope are called "applied occurrences"
+* Occurrences of a variable in its scope are called "applied occurrences".
 
-What do we need to know about a variable? 
+* What do we need to know about a variable? 
 
-- its name, a string (atom?)
+  - its name, a string (atom?)
 
-- what namespace it belongs to 
+  - what namespace it belongs to 
 
-- its scope
-  -- Open or Closed
-  -- if Closed, then an expression (or declaration?) that constitutes the scope
-     (e.g. of a let-bound or local-bound variable)
+  - its scope
+    -- the idea of scope of a variable described here is incomplete, and the scope
+       of a variable is not usually an _explicit_ attribute of a variable.
+    -- the scope of a variable is probably not an attribute that needs to be a concrete
+       attribute of the variable's representation
+    -- Open or Closed scopes? [not clear how useful/important this distinction is]
+      # if Closed, then an expression (or declaration?) that constitutes the scope
+	 (e.g. of a let-bound or local-bound variable)
+      # value variables exported by a structure are assumed to have Open scope
+      # value variables bound at top level in the REPL have Open scope
+      # pattern variables (occurrence in the pattern is a binding occurrence) have their
+	 normal scope (e.g. rhs of a rule, body of a function)
+      # the scope of variables bound in the local part of a local-in-end decl include the
+	 body decl, in addition to their normal scope within the local declaration
+      # if a value variable is bound at top level in a structure, but not exported, it has
+	 Open scope (not the remaining sequence of decls in the structure) (?)
+      # variables exported from a structure have Open scope (?)
+    -- the scope of a variable naming a function that is part of a family of recursively
+       defined functions includes the function bodies of the definitions in the family
+    -- etc. (e.g. holes in scopes due to shadowing of a binding)
 
-  -- value variables exported by a structure are assumed to have Open scope
-  -- value variables bound at top level in the REPL have Open scope
-  -- pattern variables (occurrence in the pattern is a binding occurrence) have their
-     normal scope (e.g. rhs of a rule, body of a function)
-  -- variables bound in the local part of a local-in-end decl have the body decl as their
-     scope
-  -- if a value variable is bound at top level in a structure, but not exported, it has
-     Open scope (not the remaining sequence of decls in the structure)
-  -- variables exported from a structure have Open scope
-
-- Assume we need equality on variables, which may be based on a hash value for efficiency.
-  The hash value would also (involved in) the key for environment mappings. Would it
-  suffice to have the variable name be an atom rather than a string?
+* We assume we need equality on variables, which may be based on a hash value for efficiency.
+  The hash value would also (involved in) the key for environment mappings. It would
+  seem to suffice to have the variable name be an atom rather than a string, since the
+  notion of an atom is motivated by the desire to have efficient equality.
   
-- Value variables and module variables will (probably) have an assoiciated unique
+* Value variables and module variables will (probably) have an assoiciated unique
   _dynamic_ variable used to refer to the runtime value to which it is bound during
-  execution.
+  execution. These associated dynamic variables play no role in elaboration, and perhaps
+  should not be part of the static representation of variables (as they are in SML/NJ).
 
-- We assume that tycon and signature variables will not have a runtime representation
+* We assume that tycon and signature variables will not have a runtime representation
   but will be relevant only during elaboration and probably, in some altered form,
   during middle-end optimization.
 
-- Programming point: We want a variable with a closed scope to have the smallest
+* Programming point: We want a variable with a closed scope to have the smallest
   possible scope.
 
-- other information that would be useful (to a programmer)
+* other information that would be useful (to a programmer)
   - source location of the binding occurrence of a variable
   - source locations of the applied occurrences of a variable, if any
   - if variable has closed scope, are there any applied occurrences in its scope?
     if not, generate a warning message.
 
-- Note that if type variables have explicit binding points, no lexical distinction
+* Note that if type variables have explicit binding points, no lexical distinction
   (like a leading apostrophy) is needed for type variables.  We could have a convention
   that they be capitalized alphanumeric (and a corresponding convention that tycons be
   alphanumeric with an initial lower case letter).
 
-- Question: What is the concrete syntax for type variable bindings in expressions
+* Question: What is the concrete syntax for type variable bindings in expressions
   and, in particular, in value bindings (val and fun)?  SML '97 has a rather "quick
   and dirty" solution to this issue.
   
@@ -113,7 +177,24 @@ So to find the binding of a variable symbol v in a static environment e, we:
 
 
 ------------------------------------------------------------------------------------------
-* Symbols
+The question of _shadowing_ of bindings
+
+* The policy in (S)ML toward shadowing is quite liberal (perhaps because of the REPL).
+
+* Could it, should it, be more strict in certain cases, e.g. for the body of a basic
+  structure expression?
+
+* Relation with the "type explicitness" question. E.g.
+
+    local
+      datatype d = A
+    in
+      val x = A
+    end
+
+
+------------------------------------------------------------------------------------------
+Symbols (the concrete representation of identifiers)
 
   - the _name_ of a symbol should be an atom
     This means we don't have to deal with a hash of a string name.
