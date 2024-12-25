@@ -2,21 +2,23 @@ repository: https://github.com/dmacqueen/NewFrontEnd
 file: proposals/language.txt
 
 MsML: Notes on proposed language changes
-DBM, 2024.11.
+DBM, 2024.11-12.
 
 0. Introduction
 
-Let's use "MsML" as a working name for the language we are working toward, where MsML is
-an acronym for "MacQueen's Successor ML". Note that here the lower-case "s" stands for
-"Successor", not "Standard". This language (MsML) should be considered a derivative
-or dialect of "(Standard) ML", which is my preferred name for Standard ML (SML or (S)ML).
-Section 7 lists proposed Successor ML changes and my comments on them.
+Let's use "MsML" as a working name for the language we are working toward, that is, the
+subject of this note, where MsML is an acronym for "MacQueen's Successor ML". Note that
+here the lower-case "s" stands for "Successor", not "Standard". This language (MsML)
+should be considered a derivative or dialect of "(Standard) ML 97", which is my preferred
+name for Standard ML (SML or (S)ML).  Section 7 lists proposed Successor ML changes and my
+comments on them.
 
-Below is my suggested list of changes, which could be interpreted as relative mainly
-to current SML/NJ or, alternatively, to the SML Definition (Revised), i.e. "official"
-Changes are to the Core language unless annotated by "[Modules]" or "[Modules*]". where
-the "[Modules*]" annotation indicates changes (from the Defintion (Revised)) that have
-already been made in SML/NJ.
+Below is my suggested list of changes, which could be interpreted as relative mainly to
+current SML/NJ or, alternatively, to the SML Definition (Revised), i.e. "official" Changes
+are to either the Core language (annotated by "[Core] unless annotated by "[Modules]" or
+"[Modules*]". where the "[Modules*]" annotation indicates changes (from the Defintion
+(Revised)) that have already been made in SML/NJ. Changes relevant to both Core and
+Modules are annotated by "[Core+Modules]".
 
 The point of these changes is not to produce a "more powerful" language, but to simplify
 where possible, improve some fairly obvious weaknesses or mistakes in the language design
@@ -29,9 +31,9 @@ appreciate comments, criticisms, and suggestions that might influence future rev
 In Section 7 below, I have some preliminary comments on the existing language
 proposals for "Successor ML".
 
-I consider Standard ML '97 to be an incomplete revision based on self-imposed restrictions
-and [Milner's] worries about resistance or objections from "commercial" entities
-[e.g. Abstract Hardware, later Harlequin].
+Standard ML '97 is, in my opinion, an incomplete revision based on self-imposed restrictions
+and [Milner's] worries about resistance or objections from "commercial" entities such
+as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
 
 ------------------------------------------------------------------------------------------ 
@@ -39,16 +41,19 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 1.1. [Core] No inference of binding points for expression-level type variables
 
-  The existing feature is hard to describe, to implement, and to remember how it works.
-  All variables, including type variables, should have an explicit binder construct
+  The existing feature of automatic inference of bindings of explicit type variables in
+  expressions and value declarations is hard to describe and to implement. (I myself have
+  trouble remembering how it works.)
+
+  All variables, including type variables, should have an explicit binding construct
   in the concrete syntax. This was addressed in SML '97, but in a rather ad hoc
-  way.  What is a better notation for expression level type variable binders?
+  way. I hope that there is a better notation for expression level type variable binders.
 
-  [This might relate to the possible introduction of some form of "1st-class"
-  polymorphism, e.g. for function arguments or data constructor arguments
-  (as in Haskell?).]
+  [This might relate to, or concievably lead to, the introduction of some form of
+  "1st-class" polymorphism, e.g. for function arguments or data constructor arguments (as
+  in Haskell?).]
 
-1.2. [Core+Modules] The "open" declaration form
+1.2. [Core+Modules] Drop the "open" declaration form
 
   Deleting open declarations forces programmers not to use it (a good thing). The
   usual replacement is to introduce in each structure a bunch of short abbreviations
@@ -60,10 +65,19 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
 1.3. [Core] No static (type/module) declarations within expressions
 
-  [Moto: "Keep the core and module levels separate", or "no static declarations within
-  dynamic expressions".]
+  Moto: "Keep the core and module levels separate", or "no static declarations within
+  dynamic expressions".
+
   What does it, or should it, mean to have a (statically generative) datatype declaration
-  in the body of a recursive function.  [Karl won't like this!]
+  in the body of a recursive function. [Karl (and Bob?) won't like this, since definition
+  of modules within expressions is a feature of his dialect of (S)ML. It also appears to
+  be supported in Moscow ML. The CMU (Harper, Crary, etc.) view of the static semanatics
+  of (S)ML seems to base on some fundamental "type theoretic" notion of a _module_ that
+  seems to be different from my own intuitive understanding of the module system of (S)ML.
+  Their ideas are described in papers such as Harper-Stone and Sterling-Harper (?). In
+  their view, modules are fundamental and the Core 
+  
+  Crary talks about "old" and "new" type theoretic definitions of the semantics of (S)ML.]
 
 1.4. [Core+Modules] Equality type variables (equality polymorphism)
 
@@ -179,7 +193,7 @@ and [Milner's] worries about resistance or objections from "commercial" entities
    For example, the 2 shift/reduce ambiguities in the MLyacc grammar: (1) nested matches,
    and (2) somewhere in the module system grammar.
    
-4.3. Consider changing record selection notation.
+4.3. [Core] Consider changing record selection notation.
 
    Would it be possible to use (re-use) the conventional "dot"
    selection notation for projecting fields of a record, as in "r.a"?
@@ -189,6 +203,28 @@ and [Milner's] worries about resistance or objections from "commercial" entities
 
    If we need a field selector function, say for mapping, we can always just
    write "(fn r: rty => r.a).
+
+   This is a change to a Core language notation, but it will _interact_ with the Module
+   syntax.  For instance, the notation "A.x.r" might refer to the "x" component of a
+   structure named by the path (qualified identifier) "A.x", or it might denote the
+   selection of the "r" field of a record value component "A.x".  Is this ambiguity a
+   problem? It can be reliably disambiguated by "type checking" in the general sense, but
+   might we need to disambiguate the notation _before_ type checking in some situations?
+   One could approach this by establishing strict, enforced, rules that would distinguish
+   structure and value names, e.g. by requiring structure names to be capitalized while
+   value names must be uncapitalized.  We could also consider using a character other than
+   period (".") for record field selection. The characters "@", "#", or "$" come to mind
+   as possible alternatives, but what is the impact on the definition of "symbolic"
+   identifiers?
+   
+4.4. [Core] (Cf. 1.1) We need to think about other possible options for binding type
+   variables in expressions and value declarations (i.e., "val" and "fun" declarations).
+
+   How about something like
+
+      val [A] x : A list = nil ?
+ 
+   But the ramifications of this choice are not clear to me at this point.
    
 
 ------------------------------------------------------------------------------------------
@@ -497,6 +533,11 @@ Robert Harper, John Mitchell: ML and Beyond, ACM Computing Surveys, 28, 4es, p 2
 [Successor ML]: https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
 
 [Karl Crary]: http://istarilogic.org/iml.html (Karl Crary's IML)
+
+[Harper, Stone] "A Type-Theoretic Interpretation of Standard ML", Proof, Language,
+Interaction (Milner commemoration volume), MIT Press, 2000, pp. 341-387.
+
+[Sterling, Harper] "Logical Relations as Types, ..."
 
 * Other SML dialects with their own language innovations? [Which?/What?]
 

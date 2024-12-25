@@ -1,0 +1,25 @@
+NewFrontEnd/proposals/harperismus.txt
+
+This note is concerned with understanding the Harper (etc.) school of "type-theoretic" interpretation
+(or semantic definition) of (Standard) ML, and what it has to offer in terms of compiler front end
+design.
+
+The two main papers (that I know about so far) seem to be
+
+1. [Harper, Stone] "A Type-Theoretic Interpretation of Standard ML", Proof, Language,
+Interaction (Milner commemoration volume), MIT Press, 2000, pp. 341-387.
+
+2. [Sterling, Harper] "Logical Relations as Types, ..."
+
+This approach has a mechanized expression in TWELF (citation?) developed by Harper and
+Crary.  Crary has also used this approach in his HOT compiler course (15-407?), but I need
+to obtain the SML code for that.
+
+Starting late Dec 2024 I plan to spend even-numbered days working through the papers and
+other documention to understand this material, and I will attempt to understand it by
+implementing the ideas (or studying Crary's implemenntation).  I estimate this may take
+around 3 months.
+
+
+
+
