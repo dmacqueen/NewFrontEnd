@@ -281,7 +281,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
 5.8. [Core] The problem of combining clausal and curried function definitions.
 
-5.9. [Modules] Types only structures and their signatures.
+5.9. [Modules] Types only structures and their signatures ("data modules"?).
 
   Some structures contain only type declarations. Often in this case their signatures
   are entirely redundant, so their signatures are not necessary or useful?
@@ -293,7 +293,9 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
   specially, and is the unique value of the type unit. Is there a case
   for treating tuples separately?  This  would add a lot of new
   "tuple" cases throughout the elaborator, so it would need to be
-  worth it.  What are potential payoffs?
+  worth it. What are potential payoffs?  (e.g. get rid of "bogus" tuple-like records
+  like {1=2, 3=4}, record labels symplified (alphanumeric symbols rather than either
+  symbols or positive integers) (note that labels don't have _bindings_))
 
 5.11. [Core+Moduels] Shadowing of variable bindings
 
