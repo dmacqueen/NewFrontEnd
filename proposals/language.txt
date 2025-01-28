@@ -609,7 +609,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
 7.47. Recursive modules?
 
-  No. Does not simplify the module system.  See Dryer's thesis.
+  No. Definitely does not simplify the module system. See, e.g., Dryer's thesis.
 
 7.48. More expressive signature language?
 
