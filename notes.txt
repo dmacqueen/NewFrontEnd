@@ -1,2 +1,0 @@
-Karl Crary's course 15-417 at CMU: HOT compilers
-http://www.cs.cmu.edu/~crary/hotc/

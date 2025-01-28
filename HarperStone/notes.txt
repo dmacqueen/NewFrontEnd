@@ -1,0 +1,32 @@
+1. Karl Crary's course 15-417 at CMU: HOT compilers
+   http://www.cs.cmu.edu/~crary/hotc/
+
+
+------------------------------------------------------------------------------------------
+
+2. My notes on "A Type-Theoretic Interpretation of Standard ML", Harper & Stone,
+(in Proof, Language, and Interaction, 2000).
+[Full version in CMU-CS-97-147. Is this roughly the same as Stone's thesis?]
+[DBM, 2024.12.31].
+
+* "interpretation" seems to correspond to "elaboration" plus "translation", where the
+abstract syntax (absyn) serves as an intermediate form.  The resulting representation is
+an "internal typed language" IL instead of FLINT's plambda.  What about the static
+environment that is also a product of elaboration?
+
+- How does this IL differ from plambda?
+- Is there any advantage in going direct to a "typed IL", skiping the production of an
+  abstract syntax?
+
+Presumably the IL is "better" in certain ways than plambda is.  But possibly it is better
+than the "semantic objects" of the definition.  It's superiority may be less clear wrt a
+representation such as plambda which is designed as a basis for a certain class of
+optimizations.
+
+* I assume that the Harper-Stone "interpretation" is (1) a source for the design of the
+TILT compiler, and (2) the basis for the TWELF mechanized formalization done by Harper and
+Crary.
+
+* IL has 2 levels: core and module. But core expressions can contain module declarations.
+So which is more "basic", core or modules, or are they mutually recursive notions?
+

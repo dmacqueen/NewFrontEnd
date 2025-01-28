@@ -389,6 +389,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
   Generally I would prefer not to make changes that add features and complexity.
   Keep it simple!
 
+[Immediate changes]
 
 7.1. Line comments
 
@@ -515,6 +516,124 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
   This should also apply to the "lazy" extension, which has a rather shallow, ad hoc
   implementation.
+
+[Short-term]
+
+7.24. Unicode support
+
+  Would be nice.  What does it entail?
+
+7.25. Javadoc style comments?
+
+  Why?  No.
+
+7.26. Improve grammar so fewer parens are required?
+
+  How exactly?
+
+7.29. Eliminate ref patterns? (mark as non-exhaustive?)
+
+  Ok.
+
+7.30. Mutable records?
+
+  No.
+
+7.31. Polymorphic recursion?
+
+  Yes, in conjunction with _val declarations_.
+
+7.32. Sharing constraints vs n-ary where type clauses?
+
+  What?
+
+7.33. Higher-order modules?
+
+  Yes.  As in SML/NJ, but probably with no "derived forms" like curried functors.
+
+7.34. Unified compilation/build technology?
+
+  Yes, but what does it mean?  CM 2 + simplified, rationalized build/boot.
+
+[Medium-term]
+
+7.35. Views
+
+  But what, how?
+
+7.36. "(. ... .)" comments, line comments?
+
+  Why?
+
+7.37. Re-think syntax.
+
+  What? Why?
+
+7.38. Weakening the value restriction?
+
+  Been there, done that.  Gave up.
+
+7.39. Higher-order polymorphism and type constructors?
+
+  Sure, if this can be done while _simplifying_ the type system.  How? 
+  [Beware the slippery slope that Haskell has gone down.]
+
+7.40. First-class polymorphism?
+
+  Sure, if this can be done while _simplifying_ the type system.  How? 
+
+7.41. Existential datatypes?
+
+  Sure, if this can be done while _simplifying_ the type system.  How? 
+
+7.42. Polymorphic records?
+
+  What? Does this simplify the type system?
+
+7.43. Polymorphic variants?
+
+  See 7.42.
+
+7.44. Type classes ...
+
+  No, quite the reverse -- get rid of the sole existing "type class" of equality
+  polymorphism.
+
+7.45. Data signatures?
+
+  What?
+
+7.46. GADTs?
+
+  No. Does not simplify the type system.
+
+7.47. Recursive modules?
+
+  No. Does not simplify the module system.  See Dryer's thesis.
+
+7.48. More expressive signature language?
+
+  Maybe, e.g. signature functors, signature extension (replacing "include").
+
+7.49. Proof obligations?
+
+  Extra-linguistic?  What? How?
+
+7.50. An sML-IL?
+
+  What? Not part of the language.
+
+[Long-term]
+
+7.51. An "effect system".
+
+  Future research projects, thesis idea.  Not for now.
+
+[Other]
+
+7.52. Separate compilation [Harper, Crary, et al]
+
+  Possibly relates to CM-build-boot redesign.
 
 
 ------------------------------------------------------------------------------------------
