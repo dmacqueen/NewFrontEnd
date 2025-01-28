@@ -1,0 +1,4 @@
+https://github.com/JohnReppy/gspec
+
+  See examples/standard-ml.gspec.
+
