@@ -1,0 +1,11 @@
+NewFrontEnd/work/bug319.txt
+
+Record of work on legacy issue #319 (and #344 from Crary and smlnj issue #278)
+
+Problem: Functor with opaque result signature is not producing abstract result structure.
+  - in Elaborator/elaborate/elabmod.sml, constrStr is not called correctly because of the value
+    of the "curried" argument of elabFct.
+
+Have to get rid of obscuring FLINT constructions (internal "derived" forms) that may have originally
+been introduced to support curried functor syntax.
+

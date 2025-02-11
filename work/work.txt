@@ -1,0 +1,13 @@
+NewFrontEnd/work/work.txt
+
+Documentation of work on the New Front End project.
+
+Review and (re)learning of Harperism, the CMU work represented by
+
+1. Harper and Mitchell: XML  (The Essence of SML paper)
+2. Harper and Stone: CMU Tech Report version of the Harper-Stone paper "An Interpretation of Standard ML in Type Theory"
+3. Sterling and Harper: the advanced version
+4. the TILT compiler
+5. Crary's compiler course elaborator  (basic vs "advanced")
+
+

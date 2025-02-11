@@ -1,0 +1,8 @@
+NewFrontEnd/work/journal.txt
+
+* Monday, 2025l.2.10
+
+Chat with John at noon.
+
+Worked on legacy issue (bug) 338, noticing that bug requires no semicolon between the two declarations.
+
