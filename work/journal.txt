@@ -1,8 +1,16 @@
 NewFrontEnd/work/journal.txt
 
-* Monday, 2025l.2.10
+* Monday, 2025.2.10
 
 Chat with John at noon.
 
 Worked on legacy issue (bug) 338, noticing that bug requires no semicolon between the two declarations.
+
+* Tuesday, 2025.2.11
+
+Worked on bug 319. Wrote up notes in bug319.txt. Working on getting rid of or moving tycpath (ElabData/types/types.sml), which, along with TKind (ElabData/basics/tkind.sml), is only used in Elaborator/modules.
+
+Worked a bit on removing curried functors (Ast, elabmod-fix.sml).  Will continue this.
+
+* Wednesday, 2025.2.12
 
