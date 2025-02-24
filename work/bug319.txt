@@ -1,17 +1,19 @@
 NewFrontEnd/work/bug319.txt
 
-Record of work on legacy issue #319 (and #344 from Crary and smlnj issue #278)
-The approach is to do a deep clean-up of module elaboration (elabmod.sml, sigmatch.sml, instantiate.sml, evalent.sml, etc.) to remove last vestiges of FLINT modifications.  As a side issue, we can also move
-typcath (types.sml) and TKind (ElabData/basics/tkind.sml) into the Elaborator/modules directory, where they
-are used.  TKind could possibly be moved somewhere where it could be shared by the elaborator and by FLIINT.
+Record of work on legacy issue #319 (and #344 from Crary and smlnj issue #278) The
+approach is to do a deep clean-up of module elaboration (elabmod.sml, sigmatch.sml,
+instantiate.sml, evalent.sml, etc.) to remove last vestiges of FLINT modifications.  As a
+side issue, we can also move typcath (types.sml) and TKind (ElabData/basics/tkind.sml)
+into the Elaborator/modules directory, where they are used.  TKind could possibly be moved
+somewhere where it could be shared by the elaborator and by FLIINT.
 
-Problem: Functor with opaque result signature is not producing abstract ("sealed") result structure.
-  - in Elaborator/elaborate/elabmod.sml, constrStr (constrainStr) is not called correctly because of
-    the value of the "curried" argument of elabFct.  Planned fix.  Get rid of curried functors as a
-    form of syntactic sugar, derived form.
+Problem: Functor with opaque result signature is not producing abstract ("sealed") result
+structure.  - in Elaborator/elaborate/elabmod.sml, constrStr (constrainStr) is not called
+correctly because of the value of the "curried" argument of elabFct.  Planned fix.  Get
+rid of curried functors as a form of syntactic sugar, derived form.
 
-Have to get rid of obscuring FLINT constructions (internal "derived" forms) that may have originally
-been introduced to support curried functor syntax.
+Have to get rid of obscuring FLINT constructions (internal "derived" forms) that may have
+originally been introduced to support curried functor syntax.
 
 ** What are the basic elements of module elaboration?
 
@@ -36,12 +38,13 @@ been introduced to support curried functor syntax.
       (how "orthogonal" or "separable" is this stuff to the basic line of module elaboration?)
     "special" symbols (internal derived forms) -- can we eliminate all these?
 
-CONJECTURE: the tycpath type in Types defines roughly the types of entity expressions (and hence the
-  types of entities?).  Similarly, the type TKind.tkind may correspond to the kinds of entity variables
-  (TP_VAR tycpaths).  In the elaborator, TKind is referenced only in the Instantiate
-  (Elaborator/modules/instantiate.sml) module.
+CONJECTURE: the tycpath type in Types defines roughly the types of entity expressions (and
+  hence the types of entities?).  Similarly, the type TKind.tkind may correspond to the
+  kinds of entity variables (TP_VAR tycpaths).  In the elaborator, TKind is referenced
+  only in the Instantiate (Elaborator/modules/instantiate.sml) module.
 
-  The tycpath constructors appear in the front end only in enteval.sml, sigmatch.sml, instantiate.sml
+  The tycpath constructors appear in the front end only in enteval.sml, sigmatch.sml, instantiate.sml:
+
     tycpath in Elaborator/elabmod.sml, evalent.sml, instantiate.sml, sigmatch.sml 
       in ElabData/modules.sml, absyn.sml, types.sml
     TP_VAR in instantiate.sml
@@ -49,6 +52,7 @@ CONJECTURE: the tycpath type in Types defines roughly the types of entity expres
     TP_FCT in evalent.sml, sigmatch.sml
     TP_APP in evalent.sml
     TP_SEL in instantiate.sml
+
   In FLINT:
     TKind in transtkind.sml
     tycpath in transtypes.sml
@@ -58,18 +62,144 @@ CONJECTURE: the tycpath type in Types defines roughly the types of entity expres
     TP_APP in transtypes.sml 
     TP_SEL in transtypes.sml 
     
-Probably, at least, or as a first step, TKind and tycpath could me moved into Elaborate/modules?  The special generative tycons (GENtyc) with tyckind=FLEXTYC could be modeled as an alternative form of tycon (tycon', which would only have a tycpath as contents) in instantiate.sml? This would allow the removal of tycpath from earlier, non-module parts of elaboration (and in particular from types.sml).  This is because tycpath and hance TKind seem only relevant to instantiate.sml and perhaps sigmatch.sml and evalent.sml.
+Probably, at least, or as a first step, TKind and tycpath could be moved into
+Elaborate/modules?  The special generative tycons (GENtyc) with tyckind=FLEXTYC could be
+modeled as an alternative form of tycon (tycon', which would only have a tycpath as
+contents) in instantiate.sml? This would allow the removal of tycpath from earlier,
+non-module parts of elaboration (and in particular from types.sml). This is because
+tycpath and hance TKind seem only relevant to instantiate.sml and perhaps sigmatch.sml and
+evalent.sml.
 
-tkind.sml (defining structure TKind) and be moved from ElabData/basics to Basics/?.
+tkind.sml (defining structure TKind) could be moved from ElabData/basics to Basics/?.
+How to avoid having both TKind and FLINT's version of the same thing for FLINT types?
 
+Basic elements:
+
+  module static representations (defined by default in ElabData/modules/modules.sml)
+    Structure, Functor, Signatures
+    spec [type spec], static specification of a structure element
+      includes an entVar + info for tycon, structure, functor elements, type for val and con elements
+      static info is Signature for structures and functors, tycSpecInfo for tycons
+    elements [type elements]; components of a signature (symbol, spec pair)
+    entities [type entity] (for tycons, structures, functors)
+      aka "realization" of a structure or functor (or tycon)
+    entity variables [type entVar; ElabData/modules/entpath.sml]
+      Essential use: parameter of a functor closue.
+    entity paths [types entpath, rEntPath; ElabData/modules/entpath.sml]
+      access static elements through a structure heirarchy
+    entity expressions [types entityExp, tycExp, strExp, fctExp]
+      Essential use: body of a functor closure.
+    entity environments [type entityEnv; ElabData/modules/entityenv.sml]
+      maps entvars to entities
+      Essential use: body of a structure (static representation)
+    modtree, stubinfo [types modtree, stubinfo]
+    
+  epcontext (entity path context, structure EntPathContext; ElabData/modules/epcontext.sml)
+
+    An epcontext is a linked list of "layers" (dcon LAYER) with outermost layer last
+    Each layer has
+      (1) a "locals", ref to environment (pathmap) that maps moduleIDs to reverse entityPaths
+      (2) an entity path called the lookContext 
+      (3) a reverse entity path called the bind Context 
+    How does it work? How are the parts of a LAYER used? What is the "extent" of a layer?
+    
+
+  moduleId (module IDs)
+
+    There are generalizations of a stamp that are used to identify static structures
+    (tycId for tycons, sigId for signatures, strId for structures, fctId for functors, and
+    also envId for (portions of) static environments.These are used to cross-reference
+    static stuff accross separate compilations (static linking, static "patching") using
+    two kinds of collections of maps over moduleIds: tmap and umap.
+
+    There are lookup and insert (bind) functions for each kind of of module ID
+
+  pickling
+
+    Serialization of static environments and their components is used to generate
+    persistant stamps that are used to implement cutoff recompilation.  The static
+    environments in question are those generated by compiling a compilation unit
+    (typically an SML source file containing module-level declarations.
+
+  modtrees, stubinfo, and moduleIds are assumed relevant only to "stubification", i.e.
+  linking static representations across compilation units. I hope this is orthogonal to
+  the main line of module elaboration.
+
+  There are fields (e.g. prim in strrec) related to managing primops in structures.
+  These (presumably) relate to special cases that arrise during bootstrapping.
+
+  There is also the question of whether elaboration has been modified (by FLINT) to
+  precompute information that is needed in FLINT representation and optimizations. The
+  most obvious instance of this is the tycpath type and FLEXtyc generative type constructors,
+  and the related TKind structure.
+
+* module Ids (ModuleId: MODULE_ID, Elaborator/modules/moduleid.sml)
+
+* epcontext [structure EntPathContext :> ENT_PATH_CONTEXT, Elaborator/modules/epcontext.sml]
+
+* Stamps vs entVars: need to distinguish between when to use stamps and when to use entVars,
+  which are equivalent to stamps. Related question: should entVar be abstract?
 
 ** Curried functors (to be removed for simplification)
 
-* Ast:  BaseFct can represent a curried functor in the case where the parameter list has lengh > 1.
-  We can simplify by simply supposing/requiring (without changing Ast) that the BaseFct parameter list is
-  always of length 1 (the non-curried functor case).  So Ast remains unchanged for the time being, but
-  later we could simplify by making the functor parameter be a parameter instead of a list of parameters.
-  where a parameter is a parameter name and a signature.s
+* Ast: BaseFct can represent a curried functor in the case where the parameter list has
+  lengh > 1.  We can simplify by simply supposing/requiring (without changing Ast) that
+  the BaseFct parameter list is always of length 1 (the non-curried functor case).  So Ast
+  remains unchanged for the time being, but later we could simplify by making the functor
+  parameter be a parameter instead of a list of parameters.  where a parameter is a
+  parameter name and a signature.s
 
 * elabmod-fix.sml:
   
+
+------------------------------------------------------------------------------------------
+We might achieve a slight simplification if we require functors to always have a named
+parameter. Then we wouldn't support the syntactic sugar for an "opened" parameter signature.
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------ 
+NOTE:
+  Type function application minimizing allocation of new structure:
+  (\t.ty ty'): assuming that in many cases much of the structure of ty is not dominating
+  occurences of type variable t, we don't want to reconstruct copies of this structure.
+  E.g. \t. (ty1 * ty2) where ty1 is a big type expression in which t does not occur --> we don't copy ty1
+  The substitution function (t, ty1, ty2) could be defined in terms of an auxiliary function
+  subst0 : ty -> ty s where datatype s = New of ty | Old of ty, where New flags that its argument
+  had to be copied because of an occurrence of t. Only constructions one of whose subtypes was New
+  need produce a New result.  If all subtypes produced OLD, just return the original ty unchained,
+  wrapped in Old (Old ty)
+
+  This might be a better alternative to the approach used in ordinary front-end type substitution
+  where an exception is raised to indicate that the old structure does not need to be copied. It
+  replaces setting up exception handlers with temporarily wrapping intermediate results with Old or
+  New.
+
+  Can generalize to case where several type variables are being substituted in parallel (e.g. when
+  applying n-ary type functions, or instantiating n-ary polymorophic types.
+
+  Might combine this with "lazy" application or instantiation, where the instantiation is a substitution
+  vector kept on the side. This might be a much simpler variation on Nadathur closures, possibly similar
+  to lambda calculus with "explicit substitutions".
+------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------
+NOTE: [DBM, 2025.02.22]
+ Something to ask Karl about: If we allow modules within expressions, it seems that a module
+ declaration could apprear in the scope of a polymorphic type varialbe binding, in which case
+ that polymorphic type variable could appear free in the module:
+
+    fun f ['a] (x: 'a) =
+
+	let structure A = struct type t = 'a list val x: t = nil end
+	 in A.x
+	end
+
+    val y = f 1   (so y : int list)
+
+  Is this ok? In this case the instantiation of 'a is determined by type checking in a context
+  where f is called.
+
+  Thus types in such an expression-embedded structure may be determined by polymorphic type
+  inference.
+------------------------------------------------------------------------------------------
