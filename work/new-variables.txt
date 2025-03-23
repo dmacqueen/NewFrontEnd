@@ -122,9 +122,14 @@ both the tycpath type and TKind structure.)
 
 ------------------------------------------------------------------------------------------ 
 Meta Question:
-How does all this relate to Harperism? Are these ideas already implicit or explicit
-in that scheme?  Have to investige this and discuss with Harper and Crary.
-In other words, could much or all of this be just rediscovery or reinvention of CMU stuff?
+
+How does all this relate to Harperism? Are these ideas already implicit or explicit in
+that scheme?  Have to investige this and discuss with Harper and Crary.  In other words,
+could much or all of this be just rediscovery or reinvention of CMU stuff?  Does the CMU
+type theory handle higher-order functors?
+
+Also need to see how this relates to F-ing Modules and 1-ML (Rossberg
+et al).
 ------------------------------------------------------------------------------------------
 
 Another question: how does this relate to "entity" variables and expressions in
@@ -142,3 +147,7 @@ aspects of modules can naturally be derived.
 This also can be related to the problem of designing and implementing a simpler
 FLINT type system, though the main problem is still to get rid of the "over-engineered"
 parts of FLINT types like hash consing and Nadathur closures and reduction.
+
+Special issues relating to the interactive REPL use of the language?
+
+Impact on the internals of CM (or CM 2)?
