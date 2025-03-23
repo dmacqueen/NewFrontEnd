@@ -149,17 +149,119 @@ Basic elements:
   parameter be a parameter instead of a list of parameters.  where a parameter is a
   parameter name and a signature.s
 
+
+** LambdaVar revised
+  ElabData/basics/lambdavar.s??
+  Lambda vars represented by a record
+
+    {name: string option, prefix: name option, index: word}
+
+  where the name field is SOME if the lambda var is created with a name, otherwise, if
+  prefix is SOME p, then p is prefixed to the string for the index to create the print
+  string (where at most one of name and prefix should be SOME).  The index word is used to
+  identify the variable (equality, comparison) and is used for hashing.
+
+  The LambdaVar structure has Set, Map, and Tbl substructures for sets, finite maps, and
+  hash tables of lambda variables. The SortedList structure was redundant given the Set
+  structure, so the SortedList structure is eliminated. This affects a bunch of files in
+  FLINT and CPS, where SortedList was used for lambdavar sets (and also "type variable"
+  sets in FLINT).  So there are a bunch of type errors introduced in CPS/ bacause of
+  confusion between lvar sets and lvar (sorted?) lists.
+
+  At the request of JHR, returned dupLvar, toID, and fromID to LambdaVar and its signature.
+
+  The following obsolete/redundant functions have been dropped from the LAMBDA_VAR interface:
+     sameName -- replaced by a dummy function that does nothing
+     namedLvar -- replaced by LambdaVar.mkLvar
+     lvarSym -- removed, not needed
+     lvarName -- replaced by LambdaVar.toString
+
+** TyconVar: TYCON_VAR structure added.
+
+  In FLINT/kernel/lty.sml, there are two flavors of "type" variables, that represent
+  tycons and functor generalizations of tycons. One flavor are the "named" tycon
+  variables, "tvar" which were defined in terms of lambda variables (LambdaVar.lvar).
+  I've added a TyconVar structure, similar to LambdaVar, to represent such variables
+  (TyconVar.tycvar), and their sets (and possibly maps and hash tables).
+
+  We want to get rid of the other flavor "enc_tvar" based on DeBriun indices, and use the
+  "named" form (tvar) only throughout elaboration. Note that in FLINT, one of the first
+  processing phases (deb2names phase in main/flint-opt.sml) replaces the enc_tvars
+  with tvars using the "debIndex2names" function in the TvarCvt (FLINT/flint/tvarcvt.sml)
+  structure.
+
+
+** Module Elaboration
+
 * elabmod-fix.sml:
   
 
 ------------------------------------------------------------------------------------------
-We might achieve a slight simplification if we require functors to always have a named
+We can achieve a slight simplification if we require functors to always have a named
 parameter. Then we wouldn't support the syntactic sugar for an "opened" parameter signature.
+This would also eliminate the need for the ParamId special symbol that is used where a functor
+parameter is not named.
 ------------------------------------------------------------------------------------------
 
+==========================================================================================
+The new scheme!!!  ("back to the drawing board")
 
------------------------------------------------------------------------------------------- 
-NOTE:
+* svars: static variables representing the identity of tycons and things that carry tycons,
+  like structures (and also functors, which only involve "potential" tycons)
+
+* kinds for svars
+  relationship to Types.tycpath and the TKind structure
+
+* relationship between svars and stamps (and pids)
+
+* relationship between svars and entity vars (entvars)?
+
+* parameter tycon identities: symbolic paths relative to a structure (functor parameter) svar
+   parameter tycons do not have an identity independent of their containing parameter
+   structure. Possibility of "secondary" svars for components.
+
+* svars for functors?
+
+* treatment of "anonymous" functor parameter structures
+  parameter name derived from functor name? (e.g. "F" -> "F_P", or "F.P", or ...)
+
+* instantiation and sharing - major change, and hopefully major simplification
+
+* efficiency of tycon identity for type checking [engineering]
+
+* translation of new module model to (simplified) FLINT plambda
+  -- elimination of deBruin indexed "type variables" (enc_tvars) from module elaboration.
+
+* Development and exploration of the new scheme using a toy implementation
+  including h.o. functors, signature matching and instantiation, a bit of core type checking
+
+* the static skeleton of a module (entities?)  
+
+PRINCIPLE: functors are not macros
+PRINCIPLE: Landin's "Principle of correspondence"
+  If you can declare a name, you can (lambda-) abstract with respect to such a name.
+   ==> functors can have functors as parameters
+
+Some Slogans or catch-phrases
+  From experience maintaining ancient code.
+
+* dealing with code that was developed for research purposes rather than for use
+    and maintenance
+* loss of intellectual ownership (through ephemeral authors, or just time passing)
+* "thinking gets captured or limited by legacy code"
+  * "design through debuggiing does not work well"
+  * "local or partial code clean-ups are dangerous"
+  * "the danger of (local or small-scale) backward-compatibility"
+
+
+==========================================================================================
+
+
+==========================================================================================
+NOTES
+==========================================================================================
+
+[engineering, type checking]
   Type function application minimizing allocation of new structure:
   (\t.ty ty'): assuming that in many cases much of the structure of ty is not dominating
   occurences of type variable t, we don't want to reconstruct copies of this structure.
@@ -181,16 +283,14 @@ NOTE:
   Might combine this with "lazy" application or instantiation, where the instantiation is a substitution
   vector kept on the side. This might be a much simpler variation on Nadathur closures, possibly similar
   to lambda calculus with "explicit substitutions".
-------------------------------------------------------------------------------------------
 
-------------------------------------------------------------------------------------------
-NOTE: [DBM, 2025.02.22]
+
+[DBM, 2025.02.22]
  Something to ask Karl about: If we allow modules within expressions, it seems that a module
  declaration could apprear in the scope of a polymorphic type varialbe binding, in which case
  that polymorphic type variable could appear free in the module:
 
     fun f ['a] (x: 'a) =
-
 	let structure A = struct type t = 'a list val x: t = nil end
 	 in A.x
 	end
@@ -203,3 +303,27 @@ NOTE: [DBM, 2025.02.22]
   Thus types in such an expression-embedded structure may be determined by polymorphic type
   inference.
 ------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+Changed files:
+
+ElabData/
+
+  main/
+
+    edcontrol.s??: the saveLvarNames flag is removed
+
+  basics
+
+    lambdavar.s.. --> old-lambdavar.s..
+
+    new lambdavar.s.. replacing the old versions
+
+    new tyconvar.s.. (for abstract generalized tycon variables)
+
+TopLevel
+
+  main/
+
+    control.s??: The saveit flag (defined in terms of ElabControl.saveLvarNames) is removed.

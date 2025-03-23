@@ -1,0 +1,144 @@
+NewFrontEnd/work/new-variables.txt
+
+NEW IDEA: tycon, and module variables and their kinds
+[DBM, 2025.03.23, 4:36am]
+
+This is a very preliminary sketch of some new ideas relative to the existing (S)ML module system as modified during the 1990s by the FLIINT group. Needs to be fleshed out both theoretically and in terms of implemtation details, and more fully explained with concrete examples. These ideas
+originate from many hours of puzzling over how the current implementation (including FLINT
+modifications) actually works.
+
+These ideas represent something missing from the 4th generation module implemtation (1993) and the modified version produced by the FLINT work (199x - 2002?). But trying to figure out the FLINT _tycpath_ notion introduced as an atribute of a special kind (FLEXtyc) of tycon, lead me to realize that this tycpath idea should be associated with something that was missing, i.e. is should be viewed as a kind for a missing sort of static variable. (a "tycon variable" or,
+generally, a "module variable").  Such variables exist ("entity variables") but at the wrong
+level, somehow.
+
+* tycon variables (tvar: int plus kind = tycVar)
+   *kinds* (tycKind) for tycons could provide
+     - arity
+     - value representation related info
+       datatype "signature" related to computing representations
+         derived from the datacon signature (e.g. datacons and their types)
+       "abstract" types of "unknown rep" (e.g. whether boxed or not)
+
+   distinct from type variables for polymorphism, which have a single
+    simple kind T (the simple (0-order) types), predicativity
+
+   deftypes (defined types, type t = tyexp) do not "count"
+
+   but both abstract (flexible) types and datatypes deserve tycon variables that
+   are indirectly abstracted over in functors
+     -- posibility of "direct" abstraction over tycon variables
+        first-class polymophism
+
+* module variables (mvars: int plus kinds = modVar)
+  representing both structures and functors
+  *kinds* for modules
+    - static skeleton of signatures
+        omitting value specs and defined tycons
+        relates to old "rigid" vs "flexible" distinction
+    - named components, ordered components, or named and ordered components of structures
+       (1) do we need to deal with dependency order, where one static entity depends on
+           "earlier" ones that were "in scoped" at its declaration.
+	   Maybe not, in which case order may not be significant or can be arbitrary
+	   (e.g. alphabetical by name).  Maybe structures are "static" records, or even
+	   tuples (as in FLINT higher-order kinds).
+    - higher order:
+        a component of a structure kind may be a functor kind (indirect via structures)
+	the "result" kind of a functor can directly be a functor kind, with no
+	  intermediary structure required. Similarly, the abstracted argument of
+	  a functor, represented as a modVar could have a functor kind directly, not
+	  just a structure kind.
+	
+
+    (2) namespace issues (related to (1))
+      Should tycons and modules (structures and functors) names be in the same name space?
+      could it cause a problem having a tycon "t" and a structure named "t"?
+
+    Possibility of representing and propagating information that is used for
+    determining datacon representations in the tycon and module kinds.
+      - static "inlining" of datacon representations related to functor applications
+        (no need to "actually" inline expand the functor definition as in MLton)
+      - some sort of "kind reduction" process leading to more accurate or "optimized"
+        datacon representations.
+
+------------------------------------------------------------------------------------------ 
+Discussion
+------------------------------------------------------------------------------------------
+
+Both mvars and tvars would be identified by a generated index (int or word) like
+the lvars that are used to identify (for equality) VALvars, i.e., expression-level 
+bound variables like "f" and "x" in the declaration "fun f x = x".
+
+It is possible that static identities of subsidiary elements could be represented
+by symbolic paths relative to a structure's modVar.  This would involve derived
+"static identifiers" rooted at a modVar. The same thing could in principle be done
+for 
+
+For tycons, tycVars would be like tyvars (tvar index plus kind)
+  These would be clearly distinguished from polymorphic type variables (inferred
+  or explicit), which range over (basic, or ground) types (all having a single kind T),
+  while tycVars range over (or represent "indefinite" or "flexible" to be determined or
+  instantiated in the future through functor application (and static reduction) tycons.
+  These "polymorphic" _type_ variables are currently represented in two ways in the
+  Types structure, by IBOUND n : ty (for generalized tyvars) and ref (UBOUND *) : tyvar
+  for explicit polymoprhic type variables in declarations.
+
+With new types of "variables" (tycVars, modVars), there is the possibility of defining
+new types of environments (tycon environments, module environments).  Or would it
+work better if both tycVars and modVars.
+
+Analogy between lvars vs VALvars (where an lvar is used as one form of dynamic access
+spec) and tvars vs tycVars and mvars and modVars.
+
+The basis for forming functors is abstraction over a modVar, which can have any
+module kind (structure or functor).
+
+Segregation (level or universe distinction) between tycVars and modVars?
+  Could imagine a tycVar(tycon) being a "degenerate" structure, where tycVar
+  and modVar might merge into one.  Then tycKind and modKind would merge into
+  one sort of kind. But this seems premature at this point, or possibly wrong.
+
+A module kind is an _abstraction_ from a signature, stripping out value-related
+specifications and also "derived" static information such as defined tycons
+(the DEFtyc form of tycons or "translucent" tycons?).
+
+
+------------------------------------------------------------------------------------------ 
+Meta thought:
+I am maintaining a somewhat ambiguous "theory" vs "engineering" point of view (e.g.
+datacon representation issue is "engineering").
+------------------------------------------------------------------------------------------
+
+A new variant of Structure and Functor types (in the Types module) would be
+appropriately kinded modVars. This leads to separate strVar and
+fctVar variable forms, but both could contain the same modVar "variables".
+The full signatures would still be needed somewhere.
+
+The tycVar and modVar notions would map to FlINT type variables of higher kinds in the
+translation from Absyn to Flint plambda.  This would replace tycpaths and the related
+FLEXtyc form of tycon (introduced mainly or only? in Instantiate). Presumably the
+TKind structure would also be replaced (still don't understand why FLINT introduced
+both the tycpath type and TKind structure.)
+
+
+------------------------------------------------------------------------------------------ 
+Meta Question:
+How does all this relate to Harperism? Are these ideas already implicit or explicit
+in that scheme?  Have to investige this and discuss with Harper and Crary.
+In other words, could much or all of this be just rediscovery or reinvention of CMU stuff?
+------------------------------------------------------------------------------------------
+
+Another question: how does this relate to "entity" variables and expressions in
+the current (4th geneation) module implementation?  entity variables seem related
+to modVars, but do modVars supercede them?  I don't think they do, entirely, because
+there is still the "operational" issue of propagating static stuff during module
+application (the static functional language).  Have to study how to integrate
+these ideas. modKinds presumably form the types of structure and functor entities.
+
+This may allow or support the creation of a proper "abstract syntax" for the module
+level of (S)ML, which is kind of missing in the current module implementation.
+There is the issue of having a syntax from which both the dynamic and static
+aspects of modules can naturally be derived.
+
+This also can be related to the problem of designing and implementing a simpler
+FLINT type system, though the main problem is still to get rid of the "over-engineered"
+parts of FLINT types like hash consing and Nadathur closures and reduction.
