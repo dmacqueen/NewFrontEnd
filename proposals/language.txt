@@ -53,6 +53,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
   "1st-class" polymorphism, e.g. for function arguments or data constructor arguments (as
   in Haskell?).]
 
+
 1.2. [Core+Modules] Drop the "open" declaration form
 
   Deleting open declarations forces programmers not to use it (a good thing). The
@@ -62,6 +63,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
   Also, deleting "open" means that it cannot be used within expressions, thus avoiding
   the implicit _declaration_ of types and structures within expreesions.
+
 
 1.3. [Core] No static (type/module) declarations within expressions
 
@@ -79,15 +81,17 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
   
   Crary talks about "old" and "new" type theoretic definitions of the semantics of (S)ML.]
 
+
 1.4. [Core+Modules] Equality type variables (equality polymorphism)
 
   If these are removed, how would we deal with generic equality (or not)?
 
   See [Appel94], Section 4.
 
+
 1.5. [Core] Lexically scoped infix declarations
 
-  These were a bad idea carried over from the POP 2 tradition.
+  These were a bad idea carried over from the POP-2 tradition in Edinburgh.
 
   What are other options for user defined infix operators?  Haskell style infixes?
 
@@ -95,6 +99,25 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
   such specs from structures. Horrendous interaction with the open declaration. Would
   it be a terrible thing if we did not support user-defined infix operators at all?]
   
+  Here is a proposal: We drop fixity declarations and have a fixed set of predefined infix
+  operators. These predefined operators would be the usual arithmetic and relational ones
+  (+, *, /, <, ...). In addition, for unspecified use by "users", we could predefine a
+  finite number "uncommitted" infix value symbols that could be defined by the user. I
+  would suggest: ++, **, //, $, $$, &, &&, %, %%, @@, all with some default precedence and
+  associativity. I don't want to encourage use of infix identifiers, so ten would seem to
+  be plenty. Some of these standard infix operators might be claimed as replacements for
+  alphanumeric infix operators like "mod", "div", "quot", "rem", and also for alphanumeric
+  infix _keywords_ like "orelse" and "andalso", which I have never felt good about.
+  Precedence and associativity should be either conventional or default.
+ 
+  Parsing of these fixed infix identitiers could either be wired into the grammar, or we
+  could have a finite, predefined, fixed, "fixity" environment that would map these infix
+  identifiers to their "fixities" and that would be available during parsing.
+
+  I prefer this proposal to the approaches used in Haskell and OCaml, and of course, to
+  the anomalous infix declarations currently supported in (S)ML.
+
+
 1.6. [Modules, Controversial?] Sharing equations in signatures
 
   I would like to drop sharing equations like
@@ -281,6 +304,9 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
 5.8. [Core] The problem of combining clausal and curried function definitions.
 
+  This has always felt like a "messy" bit in the language design. Is there anything new
+  to explore?
+
 5.9. [Modules] Types only structures and their signatures ("data modules"?).
 
   Some structures contain only type declarations. Often in this case their signatures
@@ -290,12 +316,12 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
   Currently, tuples are just a special case of records, with successive numeric number
   labels (symbols) "1", "2", ..., "<n>" for some positive n. The null tuple is treated
-  specially, and is the unique value of the type unit. Is there a case
-  for treating tuples separately?  This  would add a lot of new
-  "tuple" cases throughout the elaborator, so it would need to be
-  worth it. What are potential payoffs?  (e.g. get rid of "bogus" tuple-like records
-  like {1=2, 3=4}, record labels symplified (alphanumeric symbols rather than either
-  symbols or positive integers) (note that labels don't have _bindings_))
+  specially, and is the unique value of the type unit. Is there a case for treating tuples
+  separately?  This would add a lot of new "tuple" cases throughout the elaborator, so it
+  would need to be worth it. What are potential payoffs?  (e.g. get rid of "bogus"
+  tuple-like records like {1=2, 3=4}, record labels symplified (alphanumeric symbols
+  rather than either symbols or positive integers) (note that labels don't have
+  _bindings_))
 
 5.11. [Core+Moduels] Shadowing of variable bindings
 
