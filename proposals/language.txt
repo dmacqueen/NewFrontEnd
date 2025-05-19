@@ -112,10 +112,13 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
  
   Parsing of these fixed infix identitiers could either be wired into the grammar, or we
   could have a finite, predefined, fixed, "fixity" environment that would map these infix
-  identifiers to their "fixities" and that would be available during parsing.
-
-  I prefer this proposal to the approaches used in Haskell and OCaml, and of course, to
-  the anomalous infix declarations currently supported in (S)ML.
+  identifiers to their "fixities" and that would be available during parsing. In addition,
+  there would be a few (e.g. 6?) predefined symbolic symbols (e.g. ++, **, $, $$, ...) of
+  lower precedence that could be defined by users.  The parser would use a function
+  mapping such infix symbols to their precedence.  Instead of wiring the treatement of
+  infix operators into the grammar, the parser could invoke a precedence parser to parse
+  general application forms for patterns and expressions, at the time of parsing. So the
+  use of the current "partial parsiing" and "reparsing" approach could be avoided.
 
 
 1.6. [Modules, Controversial?] Sharing equations in signatures
