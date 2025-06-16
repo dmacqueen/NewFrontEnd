@@ -715,7 +715,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
 
 ------------------------------------------------------------------------------------------
-8. A Preliminary Bibliography
+7. A Preliminary Bibliography
    (For most of these, see full bibtex info in SML History bib file)
 
 [Milner, Tofte, Harper, MacQueen, 1997] "The Defintion of Standard ML (Revised)", MIT
