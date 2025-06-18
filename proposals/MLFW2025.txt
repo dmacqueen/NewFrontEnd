@@ -1,0 +1,10 @@
+Remote Presentation Proposal for 2025 ML Family Workshop
+Title: MsML: A Proposal for a successor ML
+Author: David MacQueen, Computer Science, University of Chicago (Emeritus)
+
+PREFACE: I will be unable to physically attend the Workshop in Singapore, so this is a proposal for a potential remote presentation, either live via FaceTime, Zoom, or some such, or possibly as prerecorded presentation.
+
+ABSTRACT: MsML (MacQueen's successor ML) is proposed as a successor ML. MsML is an exercise in micro language design, being a dialect of (Standard) ML. It carries on from the language revisions included in the 1997 Definition of Standard ML (Revised), but is more radical and less backward compatible with SML '90. MsML developed as the target language to be implemented in a personal project to write a new front end for the SML/NJ compiler.
+
+About a decade after the completion of the informal design of Standard ML and the development of a corresponding formal definition [Milner, Tofte, Harper, MacQueen, 1997]. This revision was
+rather limited, largely because of concerns for backward compatibility with the then existing SML '90 version of the language. But after additional decades of experience with the use and implementation of the language, and extensive discussios over the years, first about a hypothetical "ML 2000" and later "successor ML", now seems an appropriate time to consider further revisions of (Standard) ML. 

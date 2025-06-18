@@ -725,6 +725,8 @@ Press, 1997.
 
 [MacQueen, 1994]: David MacQueen, Reflections on Standard ML, 1994.
 
+[Riecke, et al., ???] ML 2000
+
 [Harper, Mitchell, 1996] Robert Harper, John Mitchell: ML and Beyond, ACM Computing
 Surveys, 28, 4es, p 219, 1996.
 
