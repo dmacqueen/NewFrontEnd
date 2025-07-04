@@ -15,3 +15,5 @@ Plan for removing infix declaraions
 3 Infix predeclarations can be removed from bootstrapping code that constructs the
   pervasive static environment
 
+4 Replace old infix declarations (and their uses) with selected new infix identifiers
+  E.g. "++", "--", etc. See list in proposals/new-infixes.txt.
