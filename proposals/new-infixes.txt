@@ -36,6 +36,13 @@ differently from "quot", "rem"?  It would be good to eliminate the two
 alphanumeric infix identifiers and restrict infix operators to be
 symbolic.
 
+Note that in the syntax of type terms, "->" and "*" are infix
+operators, with "*" being _variadic_ and of higher precedence than
+"->". But types have a separate syntax.  Here we are only concerned
+with core expressions and declarations.  But infix operator
+identifiers can be used as the names of datatype constructors.
+
+
 ------------------------------------------------------------------------------------------
 Infix symbolic identifiers declared in the SML/NJ compiler sources (base/compiler).
 (15, only 1 of which is right associative)
