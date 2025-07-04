@@ -4,8 +4,8 @@ Proposed New treatment of infix operators in MsML
 Basis predefined infix operators (12):  [Basis, p. 23]
 
 *   7
-div 7  (or "//")
-mod 7  (or "/!")
+div 7  (or symbol "//")
+mod 7  (or symbol "%", using the name from C)
 
 +   6
 -   6
@@ -21,6 +21,10 @@ mod 7  (or "/!")
 <=  4
 <>  4
 
+There is the question of whether "div" and "mod" should be infix at
+all, since the "quot" and "rem" functions are not infix (in fact, they
+are not bound in the pervasive environment at all, and have to be
+referred to as Int.quot and Int.rem).
 
 ------------------------------------------------------------------------------------------
 Infix symbolic identifiers declared in compiler sources
