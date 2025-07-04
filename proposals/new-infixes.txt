@@ -108,7 +108,7 @@ the form
 
    id: ty1 * ty2 -> ty3
 
-that is, its argument should have a pair type.
+that is, its argument should have a pair type and it should not be curried.
 
 The result type ty3 is unrestricted, and so may be higher-order, but
 
