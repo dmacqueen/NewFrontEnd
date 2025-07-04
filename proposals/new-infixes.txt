@@ -80,7 +80,7 @@ Comment 0:
   fixity : identifier -> precedence * associativity
 
 Comment 1:
-  Should we predeclare some subset at right associative?
+  Should we predeclare some subset as right associative?
   If so, how many and which ones?
   Should any such right-associative identifiers be visually or
   sylistically distinguished?
