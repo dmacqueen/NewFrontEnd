@@ -1,5 +1,12 @@
 Proposed New treatment of infix operators in MsML
 
+Note that infix operators are not necessary. The main motivation for
+providing them is the common usage of infix arithmetic operators
+"+", "-", "*", and "/".  It is convenient to have an infix operator
+for list "cons" and the list and string concatentation operators "@"
+and are
+reasonable 
+
 ------------------------------------------------------------------------------------------
 Basis predefined infix operators (12):  [Basis, p. 23]
 
@@ -24,11 +31,14 @@ mod 7  (or symbol "%", using the name from C)
 There is the question of whether "div" and "mod" should be infix at
 all, since the "quot" and "rem" functions are not infix (in fact, they
 are not bound in the pervasive environment at all, and have to be
-referred to as Int.quot and Int.rem).
+referred to as Int.quot and Int.rem). Why should "div", "mod" be treated
+differently from "quot", "rem"?  It would be good to eliminate the two
+alphanumeric infix identifiers and restrict infix operators to be
+symbolic.
 
 ------------------------------------------------------------------------------------------
-Infix symbolic identifiers declared in compiler sources
-(15, 1 right assoc)
+Infix symbolic identifiers declared in the SML/NJ compiler sources (base/compiler).
+(15, only 1 of which is right associative)
 
 infix 6 ++
 infix -- infix 5 -- infix 6 --  (3 times)
@@ -53,7 +63,7 @@ infix 9 sub
 infix plus times 
 
 ------------------------------------------------------------------------------------------
-Proposed extra (to Basis) predefined infix identifiers:
+Proposed extra  predefined infix identifiers (beyond those in the Basis):
 [similar to Ada treatment of infix operators?]
 
 --  (maybe this should be reserved for line comments?)
@@ -61,15 +71,20 @@ Proposed extra (to Basis) predefined infix identifiers:
 **
 $$
 %%
+@@  (r?)
 ||  (possibly used to replace "div")
 &&
 !!
-//
+//  (but not \\, because of the use of "\" as an escape char)
 <<
 >>
 
-All symbolic, 2 characters long.
-All of precedence 8, left-associative.
+1. All infix identifiers are symbolic
+2. All infix identifiers are 2 characters long.
+3. All are of precedence 8.
+4  All are left-associative.
+  (could designate a couple operators as right aasociative operators,
+   but which ones?)
 
 Comment 0:
   The idea is that these identifiers would have predefined infix
@@ -103,15 +118,14 @@ Comment 3:
 ------------------------------------------------------------------------------------------
 Typing issue
 
-If an infix identifier is defined as a function, its type should be of
-the form
+All infix identifiers, if and when defined, should be binary
+functions, with types of the form:
 
    id: ty1 * ty2 -> ty3
 
-that is, its argument should have a pair type and it should not be curried.
+that is, their argument should have a pair type and it should not be curried.
 
-The result type ty3 is unrestricted, and so may be higher-order, but
-
+The result type ty3 is unrestricted, and so may be higher-order.
 
 ------------------------------------------------------------------------------------------
 Syntax issue
