@@ -96,3 +96,44 @@ Comment 3:
   perhaps "&&" and "||" (or some such) could replace them as keywords?
   
   
+------------------------------------------------------------------------------------------
+Typing issue
+
+If an infix identifier is defined as a function, its type should be of
+the form
+
+   id: ty1 * ty2 -> ty3
+
+that is, its argument should have a pair type.
+
+The result type ty3 is unrestricted, and so may be higher-order, but
+
+
+------------------------------------------------------------------------------------------
+Syntax issue
+
+The syntax of function declarations (their header or left-hand side in
+particular, does not provide special syntax for currying. Thus if id
+is an infix identifier, then
+
+   fun p1 id p2 = rhs_exp 
+
+and
+ 
+   fun (p1 id p2) = rhs_exp 
+
+are accepted and are equvalent to
+
+   fun (op id) (p1, p2) = rhs_exp 
+
+but curried forms like
+
+   fun p1 id p2 p3 = rhs_exp 
+
+or
+
+   fun (p1 id p2) p3 = rhs_exp 
+
+are not allowed, and should produce a syntax parsing error.
+
+This is a change from the syntax of SML as presented in the Definition (Revised).
