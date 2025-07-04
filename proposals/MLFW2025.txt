@@ -2,9 +2,793 @@ Remote Presentation Proposal for 2025 ML Family Workshop
 Title: MsML: A Proposal for a successor ML
 Author: David MacQueen, Computer Science, University of Chicago (Emeritus)
 
-PREFACE: I will be unable to physically attend the Workshop in Singapore, so this is a proposal for a potential remote presentation, either live via FaceTime, Zoom, or some such, or possibly as prerecorded presentation.
+PREFACE: I will not be able to attend the Workshop in Singapore, so this is a proposal for
+a potential remote presentation, either live via FaceTime, Zoom, or some such, or possibly
+as prerecorded video presentation.
 
-ABSTRACT: MsML (MacQueen's successor ML) is proposed as a successor ML. MsML is an exercise in micro language design, being a dialect of (Standard) ML. It carries on from the language revisions included in the 1997 Definition of Standard ML (Revised), but is more radical and less backward compatible with SML '90. MsML developed as the target language to be implemented in a personal project to write a new front end for the SML/NJ compiler.
+ABSTRACT: MsML (MacQueen's successor ML) is proposed as a successor ML. MsML is an
+exercise in micro language design, being a dialect of (Standard) ML. It carries on from
+the language revisions included in the 1997 Definition of Standard ML (Revised), but is
+more radical and less backward compatible with SML '90. MsML was developed as the target
+language to be implemented in a personal project to write a new front end for the SML/NJ
+compiler.
 
-About a decade after the completion of the informal design of Standard ML and the development of a corresponding formal definition [Milner, Tofte, Harper, MacQueen, 1997]. This revision was
-rather limited, largely because of concerns for backward compatibility with the then existing SML '90 version of the language. But after additional decades of experience with the use and implementation of the language, and extensive discussios over the years, first about a hypothetical "ML 2000" and later "successor ML", now seems an appropriate time to consider further revisions of (Standard) ML. 
+Half a decade after the completion of the informal design of Standard ML [Harper,
+MacQueen, Milner, 1986] and the development and publication of a corresponding formal
+definition [Milner, Tofte, Harper, 1990], a limited revision of the language definition
+was published [Milner, Tofte, Harper, MacQueen, 1997], The changes in this revision were
+rather limited, largely because of concerns for backward compatibility with SML ]90. But
+after additional decades of experience with the use and implementation of the language,
+and extensive discussios over the years, first about a hypothetical "ML 2000" [ML 2000
+Working Group, 1999] and later about a potential "successor ML", now seems an appropriate
+time to consider further revisions of (Standard) ML.
+
+The author is also in the early stages of work on a new project called the New Front End
+[github.com/dmacqueen/NewFrontEnd]. The goad of the New Front End project is to rewrite
+the front end of the Standard ML of New Jersey compiler from first principles to renew the
+code and make it more maintainable. The source language to be implemented by this new
+front end is a dialect of Standard ML, but 30 years after the publication of the
+Definition (Revised) I feel it is time to make some changes to correct and improve the
+language design, leading to a new dialect of successor ML that has the preliminary and
+temporary name MsML. The design of MsML is an exercise in what I call "micro language
+design", because most of the salient features of Standard ML are preserved (i.e. prenex
+polymorphic types, H-M type inference, algebraic data types, the module system). A
+preliminary sketch of MsML is provided in the Appendix below.
+
+
+------------------------------------------------------------------------------------------ 
+A Preliminary Bibliography
+   (For most of these, full bibtex info is found in the SML History bib file)
+
+[Harper, MacQueen, Milner, 1986] "Standard ML", Edinburgh LCFS Tech Report ECS-LFCS-86-2, 1986.
+
+[Milner, Tofte, Harper, 1990] "The Defintion of Standard ML", MIT Press, 1990.
+
+[Milner, Tofte, Harper, MacQueen, 1997] "The Defintion of Standard ML (Revised)", MIT
+Press, 1997.
+
+[Appel, 1994] "A Critique of Standard ML", 1994.
+
+[MacQueen, 1994] "Reflections on Standard ML", 1994.
+
+[Harper, Mitchell, 1996] Robert Harper, John Mitchell: ML and Beyond, ACM Computing
+Surveys, 28, 4es, p 219, 1996.
+
+[ML2000 Working Group (Jon Riecke), 1999] "Principles and a preliminary design for ML
+2000", [Unpublished: http://flint.cs.yale.edu/flint/publications/ml2000.pdf].
+
+[Successor ML]: https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
+
+[Mitchell, Harper, 1988] "The Essence of ML", POPL 88.
+
+[Harper, Stone] "A Type-Theoretic Interpretation of Standard ML", Proof, Language,
+Interaction (Milner commemoration volume), MIT Press, 2000, pp. 341-387.
+
+[Dryer, 2005] Derek Dryer, "Understanding and Evolving the ML Module System",
+  PhD Thesis, CMU, 2005.
+
+[Sterling, Harper, 2021] "Logical Relations as Types, Proof-Relevant Parametricity for
+Program Modules", JACM, 68,6, Article No. 41, pp 1-47, 2021.
+
+[Dreyer, Harper, Chakravarty, Keller 2007]: "Modular Type Classes", POPL 2007, pp 63-70.
+
+[Karl Crary]: "IML", http://istarilogic.org/iml.html.
+
+[MacQueen, 2025] "New Front End Project", github.com/dmacqueen/NewFrontEnd. 2025.
+
+* Other SML dialects with their own language innovations? [Alice? Cake?]
+
+* What else?  Language changes/deviations in Moscow ML, MLton, PolyML, ML Kit, etc?
+  OCAML description.
+
+------------------------------------------------------------------------------------------
+Appendix: MsML Sketch
+
+0. Introduction
+
+Let's use "MsML" as a working name for the language we are working toward, that is, the
+subject of this note, where MsML is an acronym for "MacQueen's Successor ML". Note that
+here the lower-case "s" stands for "Successor", not "Standard". This language (MsML)
+should be considered a derivative or dialect of "(Standard) ML 97", which is my preferred
+name for Standard ML (SML or (S)ML). Section 6 lists proposed Successor ML changes and my
+comments on them.
+
+Below is my suggested list of changes, which could be interpreted as relative mainly to
+current SML/NJ or, alternatively, to the SML Definition (Revised), i.e. "official" Changes
+are to either the Core language (annotated by "[Core] unless annotated by "[Modules]" or
+"[Modules*]". where the "[Modules*]" annotation indicates changes (from the Defintion
+(Revised)) that have already been made in SML/NJ. Changes relevant to both Core and
+Modules are annotated by "[Core+Modules]".
+
+The point of these changes is not to produce a "more powerful" language, but to simplify
+where possible, improve some fairly obvious weaknesses or mistakes in the language design
+and add a small bit of functionality of proven utility (mainly record overlay and
+signature functors).  What I am suggesting could be thought of as "micro" language
+(re)design, in comparison to "macro" language design, which would fundamentally change the
+character of the language.  I am not soliciting "buy in" to these changes, but would
+appreciate comments, criticisms, and suggestions that might influence future revisions.
+
+Standard ML '97 is, in my opinion, an incomplete revision based on self-imposed restrictions
+and [Milner's] worries about resistance or objections from "commercial" entities such
+as Forman's Abstract Hardware, and, later, Marx's Harlequin.
+
+
+------------------------------------------------------------------------------------------ 
+1. Deletions
+
+1.1. [Core] No inference of binding points for expression-level type variables
+
+  The existing feature of automatic inference of bindings of explicit type variables in
+  expressions and value declarations is hard to describe and to implement. (I myself have
+  trouble remembering how it works.)
+
+  All variables, including type variables, should have an explicit binding construct
+  in the concrete syntax. This was addressed in SML '97, but in a rather ad hoc
+  way. I hope that there is a better notation for expression level type variable binders.
+
+  [This relates to, and might concievably lead to, the introduction of some form of
+  "1st-class" polymorphism, e.g. for function arguments or data constructor arguments (as
+  in Haskell?).]
+
+
+1.2. [Core+Modules] Drop the "open" declaration form
+
+  The "open" declaration is an example of a language feature that whose semantics is
+  fairly obvious and which has obvious utility, but it enables and encourages a bad
+  programming habit, i.e. the wholesale import of multiple name spaces, making it more
+  difficult to see at a glance where a given identifier is bound.
+
+  Deleting open declarations prevents programmers from falling into thie bad habit (a good
+  thing). The usual replacement is to introduce in each structure a bunch of short
+  abbreviations for external modules that are used in that structure ("imported" by that
+  structure). This pattern could be codified in concrete syntax using some sort of
+  "import" declaration.
+
+  Also, deleting "open" means that it cannot be used within expressions, thus avoiding
+  the implicit _declaration_ of types and structures within expreesions.
+
+
+1.3. [Core] No static (type/module) declarations within expressions
+
+  Moto: "Keep the core and module levels separate", or "no static declarations within
+  dynamic expressions".
+
+  What does it, or should it, mean to have a (statically generative) datatype declaration
+  in the body of a recursive function.
+
+  [Karl Crary (and Bob Harper?) won't like this, since definition of modules within
+  expressions is a feature of his dialect of (S)ML. It also appears to be supported in
+  Moscow ML. The CMU (Harper, Crary, etc.) view of the static semanatics of (S)ML seems to
+  base on some fundamental "type theoretic" notion of a _module_ that seems to be
+  different from my own intuitive understanding of the module system of (S)ML. Their ideas
+  are described in papers such as Harper-Stone and Sterling-Harper (?). In their view,
+  modules are fundamental and the Core constructs are secondary or definable.
+  
+  Crary talks about "old" and "new" type theoretic definitions of the semantics of (S)ML,
+  but I don't yet know what he is referring to.]
+
+
+1.4. [Core+Modules] Equality type variables (equality polymorphism)
+
+  If these are removed, how would we deal with generic equality (or not)?
+
+  See [Appel94], Section 4.
+
+
+1.5. [Core] Lexically scoped infix declarations
+
+  These were a bad idea carried over from the POP-2 tradition in Edinburgh.
+
+  What are other options for user defined infix operators?  Haskell style infixes?
+
+  [We dropped infix _specs_ in signatures a long time ago, as well as the export of
+  such specs from structures. Horrendous interaction with the open declaration. Would
+  it be a terrible thing if we did not support user-defined infix operators at all?]
+  
+  Here is a proposal: We drop fixity declarations and have a fixed set of predefined infix
+  operators. These predefined operators would be the usual arithmetic and relational ones
+  (+, *, /, <, ...). In addition, for unspecified use by "users", we could predefine a
+  finite number "uncommitted" infix value symbols that could be defined by the user. I
+  would suggest: ++, **, //, $, $$, &, &&, %, %%, @@, all with some default precedence and
+  associativity. I don't want to encourage use of infix identifiers, so ten would seem to
+  be plenty. Some of these standard infix operators might be claimed as replacements for
+  alphanumeric infix operators like "mod", "div", "quot", "rem", and also for alphanumeric
+  infix _keywords_ like "orelse" and "andalso", which I have never felt good about.
+  Precedence and associativity should be either conventional or default.
+ 
+  Parsing of these fixed infix identitiers could either be wired into the grammar, or we
+  could have a finite, predefined, fixed, "fixity" environment that would map these infix
+  identifiers to their "fixities" and that would be available during parsing. In addition,
+  there would be a few (e.g. 6?) predefined symbolic symbols (e.g. ++, **, $, $$, ...) of
+  lower precedence that could be defined by users.  The parser would use a function
+  mapping such infix symbols to their precedence.  Instead of wiring the treatement of
+  infix operators into the grammar, the parser could invoke a precedence parser to parse
+  general application forms for patterns and expressions, at the time of parsing. So the
+  use of the current "partial parsiing" and "reparsing" approach could be avoided.
+
+
+1.6. [Modules, Controversial?] Sharing equations in signatures
+
+  I would like to drop sharing equations like
+
+     sharing A.t = B.s
+
+  in signatures, letting all required sharing be specified by
+
+  (a) definitional type and structure specifications (internal), and
+  (b) where clauses modifying signatures (external).
+
+  I my experience with the SML/NJ code, this is entirely feasible, but I know of
+  contrived examples where sharing equations seem to be required. The question is:
+  are there natural, non-contrived examples of module code where equational
+  "sharing" specs are necessary.
+
+  Getting rid of sharing equations would make the "instantiation" process in
+  module elaboration much simpler. It might also be the case that where clauses
+  are easier to understand than sharing equations for novice users of the language.
+
+
+1.7. [core] The "abstype" declaration
+
+  abstype declarations are redundant given structures with opaque signature ascription
+  (Harper's "sealing").
+
+
+1.8. [Core] The "while" expression form
+
+  Redundant. Use recursion instead for iteration. Same reason we don't have a "loop"
+  expession form.
+
+
+1.9. [Core] Eliminate the "and" connector for nonrecursive val and type declarations,
+  using it only where it makes sense, i.e. for multiple, mutually recursive fun and
+  datatype declarations. If, sometime in the future, we want to consider adding recursive
+  val declarations for other than functions, we could support that with a new "valrec"
+  declaration keyword.
+
+
+------------------------------------------------------------------------------------------
+2. Additions
+ 
+2.1. [Core] record combination (or "overlaying")
+
+  Let's initially introduce a syntax form e1 ++ e2 where e1 and e2 must have record types
+
+    r1 ++ r2 is the (environmental) overlay of the r2 label mapping on top of the r1 mapping.
+
+  This allows for both addition of fields and functional updates of fields of a base
+  record (r1).
+
+
+2.2. [Modules*] Higher order functors.
+
+  As implemented in SML/NJ since version 0.93 (1993.02?), but maybe dropping special
+  syntactic support for curried functor declarations and partial application of such
+  curried functors.
+
+
+2.3. [Modules] Signature functors.
+
+  Signatures that are defined relative to structure parameters (or _a_ structure parameter).
+  But as pointed out by Bob Harper, this is somewhat redundant, since it is similar to
+  specializing an existing signature with a structure "where" clause.
+
+
+2.4. [Modules] Higher-order functor concrete and abstract syntax.
+
+  If it seems important, proper, native, concrete and abstract syntax for curried functors
+  and partial applications thereof could be added. I guess one might also introduce
+  curried signature functors?  Probably better to remove the support for curried functors
+  and their partial application.
+
+  [Note: currently SML/NJ does not provide a proper abstract syntax for the module level.
+   This omission should be addressed in the New Front End.]
+
+
+2.5. [Modules*] "where structure" clauses modifying signatures (in addition to "where type").
+
+  This has been available in SML/NJ for many years, i.e. since the late 1990s, but was
+  unfortunately omitted in the Revised Definition (SML '97).
+
+
+2.6. [Core] Adding a "variable type declaration" construct.
+ 
+  This would allow "pre-declaration" of a variable before the definition of the variable.
+  Mainly justified by its use for code self-documentation, but it would also support
+  simple and efficient "polymorphic recursion".
+
+  This was actually a feature of Burstall's NPL, an early precursor of SML, and in Hope,
+  an immeditate ancestor of SML. The feature is also available (and mandatory) in Haskell.
+
+
+2.7. [Core] "try <exp> handle <match> endt" syntax for handled expressions.
+
+
+------------------------------------------------------------------------------------------
+3. Other Changes
+
+3.1. [Modules] Replacement of open and include for defining extensions of structures/signatures.
+
+   How about _extension_ functors and signature functors that add elements to their argument
+   stuctures or signatures?  But not supporting any sort of "merging" of new
+   declarations/specifications with existing ones in the parameter (no overriding, no
+   mutually recursive definitions involving old and new specifications).
+
+   [Viewing that as a separate dimention of _extension_ or _refinement_ of an existing
+    structure/signature.]
+
+
+3.2. [Core+Modules] Correct errors in the concrete syntax.
+
+   For example, the 2 shift/reduce ambiguities in the MLyacc grammar: (1) nested matches,
+   and (2) somewhere in the module system grammar. This would involve adding closing
+   keywords to those syntactic forms ending in a match ("fn", "case", "handle").
+   
+
+3.3. [Core] Consider changing record selection notation.
+
+   Would it be possible to use (re-use) the conventional "dot"
+   selection notation for projecting fields of a record, as in "r.a"?
+   Not the #a is not really a function (can only be instantiated at a
+   particular record type). I've never felt comfortable with the SML
+   notation.
+
+   If we need a field selector function, say for mapping, we can always just
+   write "(fn r: rty => r.a).
+
+   This is a change to a Core language notation, but it will _interact_ with the Module
+   syntax.  For instance, the notation "A.x.r" might refer to the "x" component of a
+   structure named by the path (qualified identifier) "A.x", or it might denote the
+   selection of the "r" field of a record value component "A.x".  Is this ambiguity a
+   problem? It can be reliably disambiguated by "type checking" in the general sense, but
+   might we need to disambiguate the notation _before_ type checking in some situations?
+   One could approach this by establishing strict, enforced, rules that would distinguish
+   structure and value names, e.g. by requiring structure names to be capitalized while
+   value names must be uncapitalized.  We could also consider using a character other than
+   period (".") for record field selection. The characters "@", "#", or "$" come to mind
+   as possible alternatives, but what is the impact on the definition of "symbolic"
+   identifiers?
+   
+
+3.4. [Core] (Cf. 1.1) We need to think about other possible options for binding type
+   variables in expressions and value declarations (i.e., "val" and "fun" declarations).
+
+   How about something like
+
+      val [A] x : A list = nil ?
+ 
+   But the ramifications of this choice are not clear to me at this point.
+   
+
+------------------------------------------------------------------------------------------
+4. Other issues
+
+4.1. [General] Symbol and their representation
+
+  Symbols are kind of hashed strings with the hash number also encoding a "name space".
+  This may be a bit too clever. What are the simpler alternatives?
+  
+
+4.2. [General] "Dynamic" Exceptions
+
+  The semantics of exceptions is rather naive and by now there might be a "better" way
+  of defining exceptions. I've always thought that it would be better to have exception
+  declarations be "static" in some sense, but it is not clear what this would mean.
+  Have to look into "algebraic exceptions", whatever those are.
+
+
+4.3. [Modules] Optimized data constructor representation vs (partial) abstraction
+
+  This is a known issue that could probably be solved by using "functor inlining", but the
+  interaction with higher-order functors is not clear to me. Functor inlining would
+  probably need to be _deep_ or _recursive_ inlining to deal with functor arguments (and
+  results?).
+
+
+4.4. [Modules] "Recursive" modules (signatures, structures, functors)
+
+  These have been studied (notably in Dreyer's PhD Thesis), but the payoff does not seem
+  to justify the added complexity involved, both static and dynamic.
+
+
+4.5. Marcros [General]
+
+  No, because of terrible interactions with the type system, type errors in particular.
+
+
+4.6. [Core+Modules] Type variable notation
+
+  I've never been fond of the 'a type variable notation. I think it would have been
+  better to use initial letter case to distinguish between type constructor names and
+  type variable names. We could adopt the Haskell convention, where type constructors
+  are capitalized and type variables are lower case, but the opposite would be more
+  consistent with SML notational history, i.e. type variables are capitalized alphanumeric
+  names and type construcotors start with a lower-case character ("int" vs "X").  We would
+  still support the two primitive, symbolic type constructor names "->" and "*" as special
+  cases.
+
+  The Standard ML notation lead to the ''a equality type variable variant. We would not
+  need this distinction if we drop equality polymorphism.
+
+
+4.7. Technologies for lexical analysis and parsing.
+
+  Should we continue to use MLlex and MLyacc, or are there better tools to replace them?
+
+  Should we use a "manual", e.g. recursive descent, style of parser (e.g. maybe the
+  smlfmt parser, apropriately modified?)?
+
+
+4.8. [Core] The problem of combining clausal and curried function definitions.
+
+  This has always felt like a "messy" bit in the language design. Is there anything new
+  to explore?
+
+
+4.9. [Modules] Types only structures and their signatures ("data modules"?).
+
+  Some structures contain only type declarations. Often in this case their signatures
+  are entirely redundant, so their signatures are not necessary or useful?
+
+
+4.10. [Core] Records vs tuples
+
+  Currently, tuples are just a special case of records, with successive numeric number
+  labels (symbols) "1", "2", ..., "<n>" for some positive n. The null tuple is treated
+  specially, and is the unique value of the type unit. Is there a case for treating tuples
+  separately?  This would add a lot of new "tuple" cases throughout the elaborator, so it
+  would need to be worth it. What are potential payoffs?  (e.g. get rid of "bogus"
+  tuple-like records like {1=2, 3=4}, record labels symplified (alphanumeric symbols
+  rather than either symbols or positive integers) (note that labels don't have
+  _bindings_))
+
+
+4.11. [Core+Moduels] Shadowing of variable bindings
+
+  (S)ML is liberal respecting shadowing of variables, so things like
+
+     val x = 3
+     val x = x+1
+
+  and
+
+     datatype d = A | B
+     datatype d = C | D
+
+  are allowed, as are related declarations like
+
+     local
+       datatype d = A
+     in
+       val x = A
+     end
+
+  (This last example relates to what is called "type explicitness" in the Commentary.)
+ 
+  Should we continue this liberal policy re shadowing?  And re "type explicitness"?
+
+  Having a REPL seems to present a fairly strong argument for liberal shadowing, as we
+  often reload (repeatedly "use") a souce file (usually after editing), which rebinds the
+  variables bound when the file was last loaded.  So it seems we would at least want to
+  allow shadowing (rebinding) in the REPL.  But we might have a different policy within
+  a basic structure expression ("struct <decl> end").
+
+
+------------------------------------------------------------------------------------------
+5. Futher Discussion
+
+5.1. Are the suggested changes "backward compatibe"?  No. Too limiting.
+
+   Maintaining backward compatibility is not one of my goals.
+
+
+5.2. What is the impact of the changes on the Basis and SMLNJ libraries?
+
+
+5.3. What about formal definition of the modified language?
+
+  There should be a formal definition of the modified language. This could be achieved
+  in various ways:
+
+  (a) Modifying the existing Definition (Revised), as in the Successor ML repository.
+      [What about the LaTeX macros? Missing index?]
+
+  (b) Modifying the existing TWELF formalization written by Harper and Crary.
+
+  (c) Using a new semantic definition technology?
+
+  What does Harper say?  Use TWELF.
+
+
+5.4. What (else?) was wrong with the original (Standard) ML design and its methodology?
+
+  See, for instance, [MacQueen94].
+
+  Are there good ideas from OCaml or Haskell (or whatever) that should be considered for
+  inclusion in the list of proposed changes?  Infix operators, for instance?
+
+
+5.5. The "open" declaration and "include" specifications
+
+  These have long been known to be problematic. The original designs should be viewed
+  as initial failed attempts to provide some sort of module or signature "calculus",
+  meaning constructs or operations for combining or extending previously defined
+  structures and signatures.  Need some new ideas.
+
+
+5.6. Curried functors.
+
+  These were originally added as somewhat clumsy "derived forms" or syntactic sugar. Then
+  the FLINT group made the scheme more complicated in their revision of module elaboration.
+  Perhaps curried functors are not worth supporting (given that most of the SML implementations
+  never implemented higher-order functors, since they were left out of the 1997 revision).
+
+  Programmers who really need to define and use curried functors can do it (more
+  cumbersomely) using the basic syntax (i.e. the ability to declare functors as
+  components of structures).  Currying is just syntactic sugar, after all.
+
+
+------------------------------------------------------------------------------------------
+6. Successor ML proposed changes
+
+  Here I am using
+
+    https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
+
+  as the reference document for successor ML changes that have been proposed.
+  Note that a couple of the links to the descriptions of changes on this page are dead.
+
+  Here are my reactions to the proposed Successor ML changes.
+  Generally I would prefer not to make changes that add features and complexity.
+  Keep it simple!
+
+[Proposed "immediate" changes]
+
+6.1. Line comments
+
+  OK. Don't much care, but probably it would be useful and popular.
+
+6.2. Excapes in strings
+
+  OK. Don't much care. Minor bullet-proofing.
+
+6.3. Extended syntax for literals.
+
+  OK. Don't much care. Would not affect me.
+
+6.4. Functional record extension and row capture
+
+  I much prefer a single record overlay "operator" (expression syntax form) as suggested
+  in 3.1 above.  This captures the useful functionality in a much simper way. Originally
+  suggested by Wand many years ago and studied by others (R\'emy, ...).
+
+  I don't like the introduction of another special class of variables, namely row
+  variables.
+
+  I guess a parallel form for record type overlays might be useful, but I would not
+  consider it necessary.
+
+6.5. Functional record update
+
+  See my comments on 6.4. above.
+
+6.6. Record labels and fields (?)
+
+  Don't like. Too "cute". Part of this has been considered and rejected in the past.
+
+6.7. Disjunctive patterns
+
+  OK. Already supported in SML/NJ for many years.
+
+6.8. Generalized layered patterns to conjunctive patterns
+
+  No. Added complexity with little gained. Happy with just <variable> as <pattern>.
+
+6.9. Match guards.
+
+  No. Messes up the simplicity of pattern matching; complicates match compilation.
+
+6.10. Simplifying val rec syntax
+
+  OK, but even better, let's just get rid of val rec, etc.  (I never use it!)  Use "fun"
+  only for recursive function definitions. Introduce a "valrec" keywords for other
+  recursive value declarations, if we ever want to support them.
+
+6.11. Withtype in signatures.
+
+  Done (in SML/NJ).
+
+6.12. Fixed scoping for manifest type specifications
+
+  OK. Seems to fix an obvious, unintended, design bug.
+
+6.13. Degrade abstype to derived form
+
+  No. Just get rid of abstype.
+  It has effectively been abandoned in practice [I haven't used it in decades.]
+
+6.14. Haskell-like declaration prootypes/signatures
+
+  The description seems to have been lost!
+
+  If this is actually 3.7 above, I'm for it.
+
+6.15. Option bar before first match clause
+
+  A small concrete syntax tweak for editing convenience.
+  Don't particularly like.
+  What is the general principal?
+
+6.16. Disallow non-exhaustive patterns in polymorphic bindings
+
+  OK. Could also just make non-exhaustive pattern matches an error, period.
+
+6.17. More liberal type sharing
+
+  Description of the change is missing [dead link]. 
+
+  Don't know what this refers to.
+
+6.18. "where" constraints for structures
+
+  Description of the change is missing [dead link]. 
+
+  I think this has already been implemented in SML/NJ since around 1996.
+
+6.19. Drop "and" in "where type" constraints
+
+  OK. Fixes a syntax design bug.
+  Is this the shift/reduce conflict in the  module syntax?
+
+6.20 Derived "do" declarations
+
+  OK. Already implemented in SML/NJ as a Successor ML extension.
+
+  Doesn't do much, but probably would be better to consider "do e" as syntactic
+  sugar for
+
+     val () = e
+
+  where we would have to use the ignore function in cases where e returns a non
+  unit value.
+
+6.21. Fixing various minor issues with the formal syntax.
+
+  Sure. Milner and the rest of us didn't know how to properly define a syntax.
+  This whole issue needs to be rethought and brought into the 21st century.
+
+6.22. Fixing various minor issues with the formal semantics.
+
+  Not clear that retaining the Definition's semantic formalism is the best
+  course. How would an expert do this with today's knowledge and formalisms?
+
+6.23. Quoting/anti-quoting
+
+  OK? Need to consult with actual users of the feature about whether it does the right
+  thing.
+
+  This should also apply to the "lazy" extension, which has a rather shallow, ad hoc
+  implementation.
+
+[Proposed "short-term" changes]
+
+6.24. Unicode support
+
+  Would be nice.  What does it entail?
+
+6.25. Javadoc style comments?
+
+  Why?  No.
+
+6.26. Improve grammar so fewer parens are required?
+
+  How exactly?
+
+6.29. Eliminate ref patterns? (mark as non-exhaustive?)
+
+  Ok.
+
+6.30. Mutable records?
+
+  No.
+
+6.31. Polymorphic recursion?
+
+  Yes, as supported with with new _val declarations_.
+
+6.32. Sharing constraints vs n-ary where type clauses?
+
+  What? Don't understand what this was about.
+
+6.33. Higher-order modules?
+
+  Yes. As in SML/NJ, but probably with no "derived forms" like curried functors.
+
+6.34. Unified compilation/build technology?
+
+  Yes, but what does it mean?  CM 2 + simplified, rationalized build/boot process?
+  This is probably out of bounds because it is orthogonal to language design.
+
+[Proposed "medium-term" changes]
+
+6.35. Views
+
+  But what, how?
+  This has been considered, and re-considered over time. Does not appear to
+  have a simple solution.
+
+6.36. "(. ... .)" comments, line comments?
+
+  Why?
+
+6.37. Re-think syntax.
+
+  What? Why?
+
+6.38. Weakening the value restriction?
+
+  Been there, done that.  Gave up.
+
+6.39. Higher-order polymorphism and type constructors?
+
+  Sure, if this can be done while _simplifying_ the type system.  How? 
+  [Beware the slippery slope that Haskell has gone down.]
+
+6.40. First-class polymorphism?
+
+  Sure, if this can be done while _simplifying_ the type system.  How? 
+
+6.41. Existential datatypes?
+
+  Sure, if this can be done while _simplifying_ the type system.  How? 
+
+6.42. Polymorphic records?
+
+  What? Does this simplify the type system?
+
+6.43. Polymorphic variants?
+
+  See 6.42.
+
+6.44. Type classes ...
+
+  No. Quite the reverse -- get rid of the sole existing "type class" of equality
+  polymorphism.
+
+6.45. Data signatures?
+
+  What?
+
+6.46. GADTs?
+
+  No. Does not simplify the type system; introduces a "non-obvious" notion.
+
+6.47. Recursive modules?
+
+  No. Definitely does not simplify the module system. See, e.g., Dryer's thesis.
+
+6.48. More expressive signature language?
+
+  Maybe, e.g. signature functors, signature extension (replacing "include").
+
+6.49. Proof obligations?
+
+  This would be macro language design. Therefore out of scope.
+
+6.50. An sML-IL?
+
+  What? Not part of the language. An implementation matter.
+
+[Proposed "long-term" changes]
+
+6.51. An "effect system".
+
+  Future research projects, thesis idea.  Not for now.
+  Possible more "principled" approaches to mutation, exceptions.
+  This enters the arena of "macro" language design.
+
+[Other]
+
+6.52. Separate compilation [Harper, Crary, et al]
+
+  Possibly relates to CM-build-boot redesign.

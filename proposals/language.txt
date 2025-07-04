@@ -716,21 +716,24 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
 ------------------------------------------------------------------------------------------
 7. A Preliminary Bibliography
-   (For most of these, see full bibtex info in SML History bib file)
+   (For most of these, full bibtex info is found in the SML History bib file)
+
+[Harper, MacQueen, Milner, 1986] "Standard ML", Edinburgh LCFS Tech Report ECS-LFCS-86-2, 1986.
+
+[Milner, Tofte, Harper, 1990] "The Defintion of Standard ML", MIT Press, 1990.
 
 [Milner, Tofte, Harper, MacQueen, 1997] "The Defintion of Standard ML (Revised)", MIT
 Press, 1997.
 
-[Appel, 1994]: Andrew Appel, A Critique of Standard ML, 1994.
+[Appel, 1994] "A Critique of Standard ML", 1994.
 
-[MacQueen, 1994]: David MacQueen, Reflections on Standard ML, 1994.
-
-[Riecke, et al., ???] ML 2000
+[MacQueen, 1994] "Reflections on Standard ML", 1994.
 
 [Harper, Mitchell, 1996] Robert Harper, John Mitchell: ML and Beyond, ACM Computing
 Surveys, 28, 4es, p 219, 1996.
 
-[The above papers are available in the SML History archive, in design/critiques.]
+[ML2000 Working Group (Jon Riecke), 1999] "Principles and a preliminary design for ML
+2000", [Unpublished: http://flint.cs.yale.edu/flint/publications/ml2000.pdf].
 
 [Successor ML]: https://smlfamily.github.io/successor-ml/OldSuccessorMLWiki/Successor_ML.html
 
@@ -739,15 +742,19 @@ Surveys, 28, 4es, p 219, 1996.
 [Harper, Stone] "A Type-Theoretic Interpretation of Standard ML", Proof, Language,
 Interaction (Milner commemoration volume), MIT Press, 2000, pp. 341-387.
 
-[Sterling, Harper] "Logical Relations as Types, ..."
-
 [Dryer, 2005] Derek Dryer, "Understanding and Evolving the ML Module System",
   PhD Thesis, CMU, 2005.
 
-[Chakravarty-Dreyer-Harper-Keller]: Modular Type Classes.
+[Sterling, Harper, 2021] "Logical Relations as Types, Proof-Relevant Parametricity for
+Program Modules", JACM, 68,6, Article No. 41, pp 1-47, 2021.
 
-[Karl Crary]: http://istarilogic.org/iml.html (Karl Crary's IML) 
+[Dreyer, Harper, Chakravarty, Keller 2007]: "Modular Type Classes", POPL 2007, pp 63-70.
 
-* Other SML dialects with their own language innovations? [Which?/What? Alice? Cake?]
+[Karl Crary]: "IML", http://istarilogic.org/iml.html.
 
-[What else?  Language changes/deviations in Moscow ML, MLton, PolyML, ML Kit, etc?]
+[MacQueen, 2025] "New Front End Project", github.com/dmacqueen/NewFrontEnd. 2025.
+
+* Other SML dialects with their own language innovations? [Alice? Cake?]
+
+* What else?  Language changes/deviations in Moscow ML, MLton, PolyML, ML Kit, etc?
+  OCAML description.

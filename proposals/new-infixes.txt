@@ -1,0 +1,98 @@
+Proposed New treatment of infix operators in MsML
+
+------------------------------------------------------------------------------------------
+Basis predefined infix operators (12):  [Basis, p. 23]
+
+*   7
+div 7  (or "//")
+mod 7  (or "/!")
+
++   6
+-   6
+^   6 
+
+::  5r (right assoc by convention)
+@   5r (right assoc for efficiency)
+
+=   4 (special)
+>   4
+<   4
+>=  4
+<=  4
+<>  4
+
+
+------------------------------------------------------------------------------------------
+Infix symbolic identifiers declared in compiler sources
+(15, 1 right assoc)
+
+infix 6 ++
+infix -- infix 5 -- infix 6 --  (3 times)
+infix 6 +++
+infix 6 ---
+infix 6 \/
+infix 7 /\
+infix -->
+infix $ infix 3 $ (2 times?)
+infixr 4 & (only infixr decl, in pickle-util.sml)
+infix >>
+infix :-:
+infix // %% !!
+infix 5 $$
+
+
+Infix alphanumeric identifiers declared in compiler sources
+
+infix upto  
+infix atop  
+infix 9 sub  
+infix plus times 
+
+------------------------------------------------------------------------------------------
+Proposed extra (to Basis) predefined infix identifiers:
+[similar to Ada treatment of infix operators?]
+
+--  (maybe this should be reserved for line comments?)
+++
+**
+$$
+%%
+||  (possibly used to replace "div")
+&&
+!!
+//
+<<
+>>
+
+All symbolic, 2 characters long.
+All of precedence 8, left-associative.
+
+Comment 0:
+  The idea is that these identifiers would have predefined infix
+  properties. But they could be bound to values (in the usual way)
+  in user code. and such bindings would be treated in the standard
+  way, e.g., they could be exported from a structure.  The infix
+  property would be inherent to the identifier, and not regarded as
+  a special "binding" of the identifier as in (S)ML.  This means that
+  we do not need a static environment to determine the "fixity" of an
+  identifier. Instead we would invoke a fixed fixity "oracle".
+
+  fixity : identifier -> precedence * associativity
+
+Comment 1:
+  Should we predeclare some subset at right associative?
+  If so, how many and which ones?
+  Should any such right-associative identifiers be visually or
+  sylistically distinguished?
+
+Comment 2:
+  Probably it would be a good idea to replace the alphanumeric "mod"
+  and "div" infix operators with symbolic operators. Possibly
+  "div" -> //, "mod" -> "/!".
+
+Comment 3:
+  The short-circuiting logical operators "andalso" and "orelse" can't
+  be replaced by (by default, call-by-value) infix operators, but
+  perhaps "&&" and "||" (or some such) could replace them as keywords?
+  
+  
