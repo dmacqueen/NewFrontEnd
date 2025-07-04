@@ -1,0 +1,17 @@
+NewFrontEnd/work/de-infix.txt
+
+Plan for removing infix declaraions
+
+
+1 fixed global infix partial mapping:
+   maps identifiers (symbols) to precedence (int) * associativity (R or L) pair
+   domain is set of all infix identifiers (symbols)
+     Basis infixes + fixed supply of predefined infix symbols ($$ etc.)
+
+2 Parser:  (ml,sml.grm)
+   Where fixItems were constructed before, now the precedence parser will be invoked
+   directly and immediately to complete parsing of application patterns and expressions
+
+3 Infix predeclarations can be removed from bootstrapping code that constructs the
+  pervasive static environment
+
