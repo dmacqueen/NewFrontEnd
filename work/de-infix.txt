@@ -3,7 +3,7 @@ NewFrontEnd/work/de-infix.txt
 Plan for removing infix declaraions
 
 
-1 fixed global infix partial mapping:
+1 Create fixed global infix partial mapping (InfixMap):
    maps identifiers (symbols) to precedence (int) * associativity (R or L) pair
    domain is set of all infix identifiers (symbols)
      Basis infixes + fixed supply of predefined infix symbols ($$ etc.)
