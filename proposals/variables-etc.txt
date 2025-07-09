@@ -32,14 +32,69 @@ Name Spaces
     also record labels. Most identifiers are internally represented by a "symbol" type.
 
 * We use various flavors of variables (values, tycons, type variables, modules, signatures).
+  These can be organized into three "name spaces":
 
+     1. Value: names of variables that occur in expressions and
+        (binding) patterns, and names of data constructors. By
+        convention, value variables are initial lower case and
+	data constructors have initial caps (except for the
+	infix symbolic exception "::").
+
+     2. Type: names of type constructors (tycons) and type variables
+        Convention: type constructors (other than "->" and "*" are
+          initial lower case, while type variables are initial upper case.
+
+     3. Module: names of structures, functors, _and_ their signatures.
+        Convention: Structure and functor names have initial caps and
+	use camel-case. Signature names are all caps, with underscore
+        separating words.  A single capital letter is always assumed
+        to be a module name.  [What about S1, S2a, S2A, etc?]
+   
     datatype namespace
      = Value (* variables appearing in value expressions, notionally bound to values,
-              * and data constructors *)
-     | Tycon (* or simply "Type"? - variables bound to a tycon *)
-     | Tyvar (* type variables - used within type decls, type expressions, and value expressions *)
-     | Module (* structures and functors share a namespace *)
-     | Signature
+                plus and data constructors *)
+     | Type (* names of tycons and type variables *)
+     | Module (* structures, functors, and their signatures *)
+
+    Note that type constructors and type variables inhabit the same
+    name space, but that they can be distinguished based on the case
+    of the initial (alpha) character.  Similarly, modules names and
+    signature names are in the same name space but are distinguished
+    by the capitalization convention.  We are abandoning the initial
+    backquote lexical convention for type variables, along with the
+    separate type variable name space.
+
+    We should never need to worry about how to distinguish type
+    constructors and type variables. Type constructors should always
+    start with a lower-case letter and type variables should start
+    with an upper-case letter. We stick with the informal convention
+    used in (S)ML rather than adopting the Haskell convention that
+    type constructors are capitalized.  There are usual exceptions for
+    the symbolic, infix type constructors "->" and "*".
+
+    Type variables may be bound or free in a given type
+    expression. They can appear free in a type if they are bound in an
+    expression/declaration context. Static scoping analysis will be
+    needed to determine whether a type variable is (locally) bound or
+    free in a type expression.
+
+    Note that we do not need a record field label name space nor a
+    "fixity" name space.  Field labels will be alphanumeric, and by
+    convention will be initial lower case.  Whether "r.lab" is valid
+    can be determined given the type of r, which should be a record
+    type containing a field with label "lab".  Tuples will be treated
+    as a distinct form, so numberic field labels will not be needed or
+    allowed.
+
+    Environments will consist of three component environments for the Value, Type,
+    Module name spaces. The domains of these envionments will be sets
+    of "atoms".
+    
+    We can have a variable and a type (constructor) named "x".  But
+    "x" should not be the name of a type variable or a module or a
+    signature, because of the capitalization conventions.
+    
+
 
 * Every identifier except record labels is used to name something, and these are the
   various flavors of "variables".  Each variable identifier should belong to a unique
@@ -57,31 +112,37 @@ Name Spaces
 
 * Principle: every variable should have an explicit binding occurrence (appear in a "binding") 
 
-  Currently in SML, type variables occurring in expressions may not have an explicit
-  binding occurrence, but I view this as a mistake.
+  Currently in SML, type variables occurring in expressions or function declarations
+  may not have an explicit binding occurrence, but I view this as a
+  mistake that needs to be corrected. Type variable bindings at the
+  expression level must be made explicit.
 
 * Should record labels belong to their own "label" namespace? 
   Labels can be considered as a means of accessing internal components of a
   record. Whether this means that they should be treated as variables is debatable,
-  since we do not normally view records as "environments", for the sake of efficient
-  access (we want to treat them as offsets in a compound value).
+  since we do not normally view records as "environments". For the sake of efficient
+  access, we want to treat them as offsets in a compound value. Also
+  labels used in "field access" expressions are not considered "bound"
+  symbols -- instead, their validity depends on the type of the record
+  being accessed.  A record is a labelled product, as opposed to a
+  positional product indexed by component position in a tuple.
   
-* It's not clear whether we need separate name spaces for modules and signatures. Pretty sure
-  we do _not_ need separate name spaces for structures and functors, especially with HOF.
+* It's not clear why we would need separate name spaces for modules and signatures.
+  It seems likely that we do _not_ need separate name spaces for structures and
+  functors, especially with HOF.
 
-* Sometimes we want to distinguish classes of identifier lexically. For instance, we might
+* Sometimes we want to distinguish classes of identifier lexically. For instance, we can
   use the convention that ordinary value variables have initial lower case while data
   constructor names have initial upper case. Such lexical conventions may, or may not, be
-  inforced. But such lexical distinctions do not necessarily imply distinct name spaces.
-  E.g. we usually assign value variables and data constructor names to the same "value"
-  namespace.  But this is not _necessary_, just an option.
-
+  "statically" inforced. But such lexical distinctions do not require distinct
+  name spaces. E.g. we traditionally consider value variables and data constructor names
+  to be in the same "value" namespace.
 
 Variables
 
 * All variables are bound ("there ain't no such thing as a free variable"), and have
   a unique binding occurrence; e.g. the subject of a val or fun declaraion, variables in
-  patterns)
+  _binding_ patterns in a function declaration, case expression, exception handler).
 
 * Occurrences of a variable in its scope are called "applied occurrences".
 
@@ -89,7 +150,7 @@ Variables
 
   - its name, a string (atom?)
 
-  - what namespace it belongs to 
+  - what namespace it belongs to (i.e. in which environment component is it bound).
 
   - its scope
     -- the idea of scope of a variable described here is incomplete, and the scope
@@ -114,8 +175,8 @@ Variables
 
 * We assume we need equality on variables, which may be based on a hash value for efficiency.
   The hash value would also (involved in) the key for environment mappings. It would
-  seem to suffice to have the variable name be an atom rather than a string, since the
-  notion of an atom is motivated by the desire to have efficient equality.
+  seem to suffice to have the variable name be an _atom_ rather than a _string_, since the
+  notion of an atom is motivated by the desire to have efficient equality (and finite maps).
   
 * Value variables and module variables will (probably) have an assoiciated unique
   _dynamic_ variable used to refer to the runtime value to which it is bound during
@@ -124,7 +185,8 @@ Variables
 
 * We assume that tycon and signature variables will not have a runtime representation
   but will be relevant only during elaboration and probably, in some altered form,
-  during middle-end optimization.
+  during middle-end optimization (i.e. in FLINT or the equivalent type-sensitive
+  optimization phases).
 
 * Programming point: We want a variable with a closed scope to have the smallest
   possible scope.
@@ -132,8 +194,8 @@ Variables
 * other information that would be useful (to a programmer)
   - source location of the binding occurrence of a variable
   - source locations of the applied occurrences of a variable, if any
-  - if variable has closed scope, are there any applied occurrences in its scope?
-    if not, generate a warning message.
+  - if a variable has closed scope, are there any applied occurrences in its scope?
+    if not, generate a warning message ("variable x bound but not used").
 
 * Note that if type variables have explicit binding points, no lexical distinction
   (like a leading apostrophy) is needed for type variables.  We could have a convention
@@ -158,15 +220,13 @@ Value variables can have two different bindings in scope at a given point: the n
 bound variable, and a "fixity" binding with an different, independent scope. This
 is messy, but static infix bindings should be dropped anyway.
 
-So lets assume that an environment is a record of separate environment mappings for
-each name space, as in
+So lets assume that an environment is a record of separate environment mappings, one
+for each name space, as in
 
 datatype senv  (* static environment *)
-  = {value : variable --> valueVar,
-     tycon : variable --> tycon,  (* static semantics tycon *)
-     tyvar : variable --> tyvar,  (* static semantics tyvar *)
-     module : variable --> structure + functor,
-     signature : variable --> signature + funsignature}
+  = {value : variable --> valueVar + datacon,
+     type' : variable --> tycon + tyvar,  (* static semantics tycon or type variable *) 
+     module : variable --> structure + functor + signature + fctsignature}
 
 So to find the binding of a variable symbol v in a static environment e, we:
 
@@ -179,12 +239,13 @@ So to find the binding of a variable symbol v in a static environment e, we:
 ------------------------------------------------------------------------------------------
 The question of _shadowing_ of bindings
 
-* The policy in (S)ML toward shadowing is quite liberal (perhaps because of the REPL).
+* The policy in (S)ML toward shadowing is quite liberal, probably because of the REPL,
+  where it is convenient to repeatedly "reload" source code.
 
-* Could it, should it, be more strict in certain cases, e.g. for the body of a basic
+* Could it, should it, be more strict in certain cases, e.g. within the body of a basic
   structure expression?
 
-* Relation with the "type explicitness" question. E.g.
+* Relation or interaction with the "type explicitness" question. E.g.
 
     local
       datatype d = A
@@ -196,17 +257,25 @@ The question of _shadowing_ of bindings
 ------------------------------------------------------------------------------------------
 Symbols (the concrete representation of identifiers)
 
-  - the _name_ of a symbol should be an atom
-    This means we don't have to deal with a hash of a string name.
+  - Roughly, symbol == atom.
+
+  - The _name_ of a symbol should be an atom.
+    This means we don't have to deal with a hash of a string name; that is implicit.
     We also can define finite atom sets and finite mappings using the Atom structure
-    together with set and map functors from the smlnj-lib library.
+    together with finite set and map functors from the smlnj-lib library.
 
-  - thus, equality of symbols is defined to be atom equality on the name.
+  - Thus, equality of symbols reduces to atom equality.
 
-  - A symbol should have an associated name space.
+  - But we are not interested in equality of symbols across different name spaces.
+
+  - A symbol should belong to an name space, which is implicit in where and how it is
+    bound and used.
     Two symbols in different name spaces may have the same name, but this is
-    harmless -- there is no ambiguity.
+    harmless -- there is no ambiguity. But we don't want a variable and a datacon to
+    have the same name, which is why they belong to the same name space.  Similarly, we
+    don't want to have confusion of type constructors and type variables, which can occur
+    together in type expressions.
 
-  - A symbol should have at most one binding in a given name space.
+  - A symbol should have at most one binding in a given name space!:? (see shadowing)
     This means we can use library finite map functors for the components of the environment
-    record.
+    record. [Shadowing is supported by the normal behavior of the finite map abstraction.]
