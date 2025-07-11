@@ -32,6 +32,39 @@ Standard ML '97 is, in my opinion, an incomplete revision based on self-imposed 
 and [Milner's] worries about resistance or objections from "commercial" entities such
 as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
+Things that I am definitely not interested in including:
+
+* "object-oriented" features: 1st-class functions is an adequate substitute.
+  
+* generalized data types: Not sufficiently "obvious".
+
+* recursive modules: See Derek Dreyer's thesis for the ensuing complications.
+
+* type classes a la Haskell: Instead, let'g get rid of our one existing type class, namely
+  polymophic equality. Dreyer, et al, doesn't convince me.
+
+* higher-order polymorphism: "ML is not F_omega". Besides, this is, in part, what the module
+  system (functors in particular) provides.
+
+* 1st-class structures: Some simple form of existential type might be considered instead.
+
+* subtyping: Makes too much of a mess in the type system. We have structure signature coercion.
+
+* type dynamic: We seem to have been able to live without this.
+
+* "naked" recursive types: Introduced in OCaml to support its OO language extension.
+
+
+Additional things that I _might_ consider including:
+
+* Unicode support (UTF8): This seems to be something expected of a "modern" language.
+
+* Existential types: not sure of the utility of this beyond the existing support for
+  abstract types through "sealed" structures.
+
+* 1st-class polymorphism: This might be considered, in some restricted form that does not
+  disrupt type inference. Not convinced of the utility.
+  
 
 ------------------------------------------------------------------------------------------ 
 1. Deletions
@@ -68,7 +101,7 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
   the implicit _declaration_ of types and structures within expreesions.
 
 
-1.3. [Core] No static (type/module) declarations within expressions
+1.3. [Core] No static (type or module) declarations within expressions
 
   Moto: "Keep the core and module levels separate", or "no static declarations within
   dynamic expressions".
@@ -135,8 +168,8 @@ as Forman's Abstract Hardware, and, later, Marx's Harlequin.
 
   in signatures, letting all required sharing be specified by
 
-  (a) definitional type and structure specifications (internal), and
-  (b) where clauses modifying signatures (external).
+  (a) definitional type and structure specifications (internal to a signature), and
+  (b) where clauses modifying signatures (external to an existing signature).
 
   I my experience with the SML/NJ code, this is entirely feasible, but I know of
   contrived examples where sharing equations seem to be required. The question is:
@@ -754,7 +787,7 @@ Program Modules", JACM, 68,6, Article No. 41, pp 1-47, 2021.
 
 [MacQueen, 2025] "New Front End Project", github.com/dmacqueen/NewFrontEnd. 2025.
 
-* Other SML dialects with their own language innovations? [Alice? Cake?]
+* Other SML dialects with their own language innovations? [Alice? Cake? ...?]
 
 * What else?  Language changes/deviations in Moscow ML, MLton, PolyML, ML Kit, etc?
   OCAML description.
