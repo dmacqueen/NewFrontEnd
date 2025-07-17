@@ -8,66 +8,75 @@ and are
 reasonable 
 
 ------------------------------------------------------------------------------------------
-Basis predefined infix operators (12):  [Basis, p. 23]
+Basis predefined infix operators (16):  [Basis Book, Sec 3.4, p. 23]
 
-*   7
-div 7  (or symbol "//")
-mod 7  (or symbol "%", using the name from C)
+The 16 predefined infix operators, listed from strongest to weekest binding:
 
-+   6
--   6
-^   6 
+    *   7  
+    div 7  (or symbol "//")
+    mod 7  (or symbol "%", using the name from C)
 
-::  5r (right assoc by convention)
-@   5r (right assoc for efficiency)
+    +   6
+    -   6
+    ^   6 
 
-=   4 (special)
->   4
-<   4
->=  4
-<=  4
-<>  4
+    ::  5r (right assoc by convention)
+    @   5r (right assoc for efficiency)
+
+    =   4 (special)
+    >   4
+    <   4
+    >=  4
+    <=  4
+    <>  4
+
+    :=  3 
+    o  3    (function composition)
+
+    before 0  ("command" reverse sequencing)
 
 There is the question of whether "div" and "mod" should be infix at
-all, since the "quot" and "rem" functions are not infix (in fact, they
-are not bound in the pervasive environment at all, and have to be
+all, since the related "quot" and "rem" functions are not infix (in fact,
+they are not bound in the pervasive environment at all, and have to be
 referred to as Int.quot and Int.rem). Why should "div", "mod" be treated
-differently from "quot", "rem"?  It would be good to eliminate the two
+differently from "quot", "rem"? It would be good to eliminate the two
 alphanumeric infix identifiers and restrict infix operators to be
 symbolic.
 
+"o" and "before" are the only additional alphanumeric infixes.
+
 Note that in the syntax of type terms, "->" and "*" are infix
 operators, with "*" being _variadic_ and of higher precedence than
-"->". But types have a separate syntax.  Here we are only concerned
-with core expressions and declarations.  But infix operator
+"->". But types have a separate syntax. Here we are only concerned
+with core expressions and declarations. But infix operator
 identifiers can be used as the names of datatype constructors.
 
 
 ------------------------------------------------------------------------------------------
 Infix symbolic identifiers declared in the SML/NJ compiler sources (base/compiler).
-(15, only 1 of which is right associative)
+(15, 1 of which is right associative)
 
-infix 6 ++
-infix -- infix 5 -- infix 6 --  (3 times)
-infix 6 +++
-infix 6 ---
-infix 6 \/
-infix 7 /\
-infix -->
-infix $ infix 3 $ (2 times?)
-infixr 4 & (only infixr decl, in pickle-util.sml)
-infix >>
-infix :-:
-infix // %% !!
-infix 5 $$
+    infix 6 ++
+    infix -- infix 5 -- infix 6 --  (3 times)
+    infix 6 +++
+    infix 6 ---
+    infix 6 \/
+    infix 7 /\
+    infix -->
+    infix $ infix 3 $ (2 times?)
+    infixr 4 & (only infixr decl, in pickle-util.sml)
+    infix >>
+    infix :-:
+    infix // %% !!
+    infix 5 $$
 
 
 Infix alphanumeric identifiers declared in compiler sources
 
-infix upto  
-infix atop  
-infix 9 sub  
-infix plus times 
+    infix upto  
+    infix atop  
+    infix 9 sub  
+    infix plus times 
 
 ------------------------------------------------------------------------------------------
 Proposed extra  predefined infix identifiers (beyond those in the Basis):
