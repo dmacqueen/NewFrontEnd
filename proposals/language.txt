@@ -66,6 +66,26 @@ Additional things that I _might_ consider including:
   disrupt type inference. Not convinced of the utility.
   
 
+0.1. Goals and Non-goals of this document
+
+This document presents my personal opinions on how the (S)ML language might be changed to
+improve it from my perspective. It is an exercise in _micro_ language design, and it not
+meant to change, add, or delete the major concepts that characterize a language in the ML
+family (e.g. 1st class functions, strict evaluation, algebraic data types, modules).
+
+I am not aiming to improve the language to make it more attractive or "acceptible" to any
+class of users, existing or potential. For instance, I am not interested in making the
+syntax closer to that of, say, C or Fortran, or even OCaml. I am not interested in adding
+"object-oriented" features, nor features supporting "artificial intelligence" or "machine
+learning".
+
+I don't have much to say about concurrency, except that the Reppy Concurrent ML exstension
+(library) seems pretty good to me, given that I have not personally used it.
+
+In other words, basically the reader can "take it or leave it", or make their own, alternative,
+proposals. But I do welcome constructive feedback.
+
+
 ------------------------------------------------------------------------------------------ 
 1. Deletions
 
