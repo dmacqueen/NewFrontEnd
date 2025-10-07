@@ -191,14 +191,14 @@ proposals. But I do welcome constructive feedback.
   (a) definitional type and structure specifications (internal to a signature), and
   (b) where clauses modifying signatures (external to an existing signature).
 
-  I my experience with the SML/NJ code, this is entirely feasible, but I know of
+  In my experience with the SML/NJ code, this is entirely feasible, but I know of
   contrived examples where sharing equations seem to be required. The question is:
   are there natural, non-contrived examples of module code where equational
   "sharing" specs are necessary.
 
-  Getting rid of sharing equations would make the "instantiation" process in
-  module elaboration much simpler. It might also be the case that where clauses
-  are easier to understand than sharing equations for novice users of the language.
+  Getting rid of sharing equations would make the "instantiation" process used in module
+  elaboration much simpler. It may also be the case that _where_ clauses are easier to
+  understand than sharing equations for novice users of the language.
 
 
 1.7. [core] The "abstype" declaration
@@ -519,11 +519,13 @@ proposals. But I do welcome constructive feedback.
 
 6.1. Line comments
 
-  OK. Don't much care, but probably it would be useful and popular.
+  OK. Don't much care, but it might be useful and popular. Secondary concern.
+  An issue is: how do line comments interact with existing, nestable, delimited comments?
+  This might be a bit messy (could check how smlfmt handles this).
 
 6.2. Excapes in strings
 
-  OK. Don't much care. Minor bullet-proofing.
+  OK. Don't much care. Seems like minor bullet-proofing.
 
 6.3. Extended syntax for literals.
 
@@ -538,7 +540,7 @@ proposals. But I do welcome constructive feedback.
   I don't like the introduction of another special class of variables, namely row
   variables.
 
-  I guess a parallel form for record type overlays might be useful, but I would not
+  I guess a parallel form for record type overlays might be useful, but I do not
   consider it necessary.
 
 6.5. Functional record update
@@ -555,7 +557,7 @@ proposals. But I do welcome constructive feedback.
 
 6.8. Generalized layered patterns to conjunctive patterns
 
-  No. Added complexity with little gained. Happy with just <variable> as <pattern>.
+  No. Added complexity with little gained. Happy with just: <variable> as <pattern>.
 
 6.9. Match guards.
 
@@ -580,16 +582,16 @@ proposals. But I do welcome constructive feedback.
   No. Just get rid of abstype.
   It has effectively been abandoned in practice [I haven't used it in decades.]
 
-6.14. Haskell-like declaration prootypes/signatures
+6.14. Haskell-like declaration prototypes/signatures
 
-  The description seems to have been lost!
+  The description of this feature seems to have been lost!
 
   If this is actually 3.7 above, I'm for it.
 
 6.15. Option bar before first match clause
 
   A small concrete syntax tweak for editing convenience.
-  Don't particularly like.
+  I don't particularly like it.
   What is the general principal?
 
 6.16. Disallow non-exhaustive patterns in polymorphic bindings
@@ -611,7 +613,7 @@ proposals. But I do welcome constructive feedback.
 6.19. Drop "and" in "where type" constraints
 
   OK. Fixes a syntax design bug.
-  Is this the shift/reduce conflict in the  module syntax?
+  Is this the shift/reduce conflict in the module syntax?
 
 6.20 Derived "do" declarations
 
@@ -622,8 +624,8 @@ proposals. But I do welcome constructive feedback.
 
      val () = e
 
-  where we would have to use the ignore function in cases where e returns a non
-  unit value.
+  in which case we would have to use the ignore function in cases where e returns
+  a non unit value.
 
 6.21. Fixing various minor issues with the formal syntax.
 
@@ -682,13 +684,14 @@ proposals. But I do welcome constructive feedback.
   Yes, but what does it mean?  CM 2 + simplified, rationalized build/boot process?
   This is probably out of bounds because it is orthogonal to language design.
 
+
 [Proposed "medium-term" changes]
 
 6.35. Views
 
   But what, how?
   This has been considered, and re-considered over time. Does not appear to
-  have a simple solution.
+  have a simple or sufficiently obvious solution.
 
 6.36. "(. ... .)" comments, line comments?
 
@@ -717,7 +720,7 @@ proposals. But I do welcome constructive feedback.
 
 6.42. Polymorphic records?
 
-  What? Does this simplify the type system?
+  What? Does this simplify the type system? Doesn't seem to.
 
 6.43. Polymorphic variants?
 
@@ -726,7 +729,9 @@ proposals. But I do welcome constructive feedback.
 6.44. Type classes ...
 
   No. Quite the reverse -- get rid of the sole existing "type class" of equality
-  polymorphism.
+  polymorphism.  Harper, Dreyer, Crary wrote a paper on this, but it wasn't convincing
+  to me, as it didn't address the major problems of type classes that I see.
+  [Need a polemical paper criticising type classes.]
 
 6.45. Data signatures?
 
@@ -734,23 +739,27 @@ proposals. But I do welcome constructive feedback.
 
 6.46. GADTs?
 
-  No. Does not simplify the type system; introduces a "non-obvious" notion.
+  No. Does not simplify the type system; introduces a "non-obvious" construct..
 
 6.47. Recursive modules?
 
-  No. Definitely does not simplify the module system. See, e.g., Dryer's thesis.
+  No. Definitely does not simplify the module system. See, e.g., Dreyer's thesis.
 
 6.48. More expressive signature language?
 
   Maybe, e.g. signature functors, signature extension (replacing "include").
+  But Harper has pointed out that the effect of signature functors (signatures parameterized
+  w.r.t. structures) can be achieved with "fibration", or use of "where" clauses.
 
 6.49. Proof obligations?
 
-  This would be macro language design. Therefore out of scope.
+  This would be macro language design. Therefore out of scope. Seems to lead in the direction of
+  programming+verification languages like Agda, Lean, Dafny, etc.
 
 6.50. An sML-IL?
 
-  What? Not part of the language. An implementation matter.
+  What? Not part of the language. An implementation matter, thus out of scope.
+  
 
 [Proposed "long-term" changes]
 
@@ -760,11 +769,12 @@ proposals. But I do welcome constructive feedback.
   Possible more "principled" approaches to mutation, exceptions.
   This enters the arena of "macro" language design.
 
+
 [Other]
 
 6.52. Separate compilation [Harper, Crary, et al]
 
-  Possibly relates to CM-build-boot redesign.
+  Possibly relates to CM-build-boot redesign.  Implementation matter, out of scope.
 
 
 ------------------------------------------------------------------------------------------
