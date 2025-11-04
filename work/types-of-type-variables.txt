@@ -1,0 +1,46 @@
+Types of Type Variables
+
+Notational conventions:
+
+-  Type constructors are lower case alphanumeric, except for "->" and "*", e.g. int, bool. (as currently)
+
+-  Polymorphic type variables a alphanumeric with initial capital letter (g.e. A, B, C3), replacing current "'a" notation.
+
+-  Explicit type variables appearing in core expressions and declarations are written as "_A", with an initial underscore
+   followed by a capitalized alphanumberic.
+
+One major problem with the type system as implemented in the front end (Elabdata, Elatorator) is that fundamentally different
+sorts of type variables share the same representation.
+
+Here are the different sorts of type variables:
+
+1. PTV: [A]-bound polymophic type variables in a polymorphic type, e.g.
+    A in A -> A, or [A].A -> A.
+    A in [A]. A -> _B
+
+2. LTV: lambda-bound type variables used in the definition of type functions:
+    type pair A = A * A  (pair = \A. A * A)
+
+3. ETVs (Explicit Type Variables in Core expressions and declarations).
+    fun f [_A) (x: _A)  = x
+    [In actuallity, the initial "_" used to distinguish these from polymorphic type variables will probably be dropped.]
+
+4. UTV (Type Unification Variables)
+    type variables introduced by the type inference algorithm that are "solved for" using unification.
+
+These 4 kinds of type variables should have distinct representations.
+
+PTV and LTV type variables are all of kind Type, ranging over ground zero-order types like int, bool, int * bool, int -> bool, etc.
+
+PTV and LTV type variables can be represented, as they are now, by Nat indices (simple deBruijn indices for non-nested bindings).
+polymorphic and type lambda abstractions can continue to be represented by TyFun structures (but choose new name).
+
+----------
+Structures and Type constructors
+
+There will also be structure variables ranging over structures (roughly the same as the current entity variables), but with
+associated "kinds" (replacing the current TycPaths).
+
+Since all type constructors originate in structures, they could be designated using a symbolic path rooted at a structure
+variable.  But we may want something more direct and efficient for the purpose of type constructor equality [perhaps type
+constructor variables analagous to "stamps"].
