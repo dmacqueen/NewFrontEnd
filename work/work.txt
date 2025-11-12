@@ -5,10 +5,11 @@ Documentation of work on the New Front End project.
 * Review and (re)learning of Harperism, the CMU work represented by
 
 1. Harper and Mitchell: XML  (The Essence of SML paper, POPL 93?)
-2. Harper and Stone: CMU Tech Report version of the Harper-Stone paper "An Interpretation of Standard ML in Type Theory"
+2. Harper and Stone: CMU Tech Report version of the Harper-Stone paper
+   "An Interpretation of Standard ML in Type Theory"
 3. Sterling and Harper: the advanced version (what's new, different)
 4. the TILT compiler
 5. Crary's compiler course elaborator  (currently uses "old module type theory", instead of the newer
-   "focused type theory".  (What is "focused type theory"?)
+   "focused type theory".  What is "focused type theory"?
 
 

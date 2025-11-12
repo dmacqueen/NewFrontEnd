@@ -4,43 +4,114 @@ Notational conventions:
 
 -  Type constructors are lower case alphanumeric, except for "->" and "*", e.g. int, bool. (as currently)
 
--  Polymorphic type variables a alphanumeric with initial capital letter (g.e. A, B, C3), replacing current "'a" notation.
+-  Polymorphic type variables a alphanumeric with initial capital letter (g.e. A, B, C3),
+   replacing current "'a" notation.
 
--  Explicit type variables appearing in core expressions and declarations are written as "_A", with an initial underscore
-   followed by a capitalized alphanumberic.
+- Explicit type variables appearing in core expressions and declarations are also written as
+  "A", with an initial underscore followed by a capitalized alphanumberic.  The context
+  must determine how such a concrete syntax type variable is bound.
 
-One major problem with the type system as implemented in the front end (Elabdata, Elatorator) is that fundamentally different
-sorts of type variables share the same representation.
+One major problem with the type system as implemented in the front end (Elabdata,
+Elatorator) is that fundamentally different sorts of type variables share the same
+representation.
 
 Here are the different sorts of type variables:
 
 1. PTV: [A]-bound polymophic type variables in a polymorphic type, e.g.
-    A in A -> A, or [A].A -> A.
-    A in [A]. A -> _B
+
+     A -> A, or [A].A -> A.   (implicitly, [A: Type]. A -> A)
+     [A]. A -> B   (where B is a type variable bound in the context)
+
+  These appear only in the surface language. In the A.S. the polytype will
+  be represented using a TYfun or equivalent (a "type abstraction"?).
 
 2. LTV: lambda-bound type variables used in the definition of type functions:
-    type pair A = A * A  (pair = \A. A * A)
 
-3. ETVs (Explicit Type Variables in Core expressions and declarations).
-    fun f [_A) (x: _A)  = x
-    [In actuallity, the initial "_" used to distinguish these from polymorphic type variables will probably be dropped.]
+     type pair A = A * A  (pair = \A. A * A).
+
+   These appear only in the surface language. In the A.S. the type abstraction will be
+   represented by a TYfun or equivalent.  The binding is always local to the particular
+   type function declaration (or datatype declaration), and there is no nesting of scopes.
+
+3. ETVs (Explicit Type Variables in Core expressions and declarations). E.g. A in
+
+     fun f [A] (x: A) = x
+     ==> f : [A] A -> A
+
+   It might be useful to distinguish ETV variables from PTV variables will probably
+   be dropped.]
 
 4. UTV (Type Unification Variables)
     type variables introduced by the type inference algorithm that are "solved for" using unification.
 
-These 4 kinds of type variables should have distinct representations.
+In the surface (concrete) syntax, PTVs, LTVs, and ETVs will all be represented by
+initial caps alphanumeric identifiers.  UTVs do not appeal in the surface syntax, but
+may appear in type error messages.
 
-PTV and LTV type variables are all of kind Type, ranging over ground zero-order types like int, bool, int * bool, int -> bool, etc.
+All forms of type variables are of kind Type.
 
-PTV and LTV type variables can be represented, as they are now, by Nat indices (simple deBruijn indices for non-nested bindings).
-polymorphic and type lambda abstractions can continue to be represented by TyFun structures (but choose new name).
+But internally, these 4 kinds of type variables should have distinct representations.
+
+PTV and LTV type variables are all of kind Type, ranging over ground zero-order types like
+int, bool, int * bool, int -> bool, etc.
+
+PTV and LTV type variables can be represented, as they are now, by Nat indices (simple
+deBruijn indices for flat, non-nested _abstractions_).
+
+polymorphic and type lambda abstractions can continue to be represented by TYfun structures
+(but probably should choose new name, e.g. "type abstraction").
 
 ----------
 Structures and Type constructors
 
-There will also be structure variables ranging over structures (roughly the same as the current entity variables), but with
-associated "kinds" (replacing the current TycPaths).
+There will also be structure variables ranging over structures (roughly the same as the
+current entity variables), but with associated "kinds" (replacing the current TycPaths).
 
-Since all type constructors originate in structures, they could be designated using a symbolic path rooted at a structure
-variable.  But we may want something more direct and efficient for the purpose of type constructor equality [perhaps type
-constructor variables analagous to "stamps"].
+Since all type constructors originate in structures, they could be designated using a
+symbolic path rooted at a structure variable.  But we may want something more direct and
+efficient for the purpose of type constructor equality [perhaps type constructor variables
+analagous to "stamps"].
+
+[Edited 2025.11.10]
+========================================================================================== 
+Terminology
+
+We have:
+
+ type variables, type expressions, type constructors, type functions.
+
+ ground types, polytypes.
+
+In some of the literature, type expressions and type constructors seem to be the same
+thing.  But here, type constructors are primitive or generative type functions, including
+0-ary constructors like int, bool, ... and unary constructors like list.
+
+When we use the word "type" without qualification, we generally mean "type expression" of
+kind Type.  Thus "list" is a type constructor, but not a "type"; it has kind Type => Type.
+
+Type functions can be considered a variety of type constructor that can be eliminated
+by beta-reduction.
+
+[Edited 2025.11.10]
+==========================================================================================
+Reduction and equality of types
+
+Polytypes are not "first-class" ("polytypes are not types").
+Their ground instances are types of kind Type.
+
+Type functions are defined as abstractions over type variables, where the body is a
+"ground" type expression of kind Type. (e.g. \A. A * A).  These are always defined in
+a type function declaration, where they are named.  There are no "in-line" type
+abstractions.  Type abstractions are "simply-kinded" and can always be eliminated by
+beta-reduction (no recursion, self-application, or nesting of abstractions).
+
+There is a finite initial set of _primitive_ type constructors (int, string, ...).  New
+type constructors are introduced via datatype declarations.  Type constructors are
+"generative" and irreducible.  I.e., there are no reduction or simplification rules that
+eliminate them.
+
+Equality of types is decidable: it is term equality after reducing (eliminating) all
+applications of type functions.
+
+[Edited 2025.11.10]
+==========================================================================================

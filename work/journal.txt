@@ -10,7 +10,9 @@ Worked on legacy issue (bug) 338, noticing that bug requires no semicolon betwee
 
 Worked on bug 319. Wrote up notes in bug319.txt. Working on getting rid of or moving tycpath (ElabData/types/types.sml), which, along with TKind (ElabData/basics/tkind.sml), is only used in Elaborator/modules.
 
-Worked a bit on removing curried functors (Ast, elabmod-fix.sml).  Will continue this.
+Worked a bit on removing unnecessary curried functors (Ast, elabmod-fix.sml).  Will continue this.
 
 * Wednesday, 2025.2.12
 
+* 2025.11.4: added note "types-of-type-variables.txt", wherein I begin
+  to develop the scheme for differentiated type variables for NFE.
