@@ -16,3 +16,7 @@ Worked a bit on removing unnecessary curried functors (Ast, elabmod-fix.sml).  W
 
 * 2025.11.4: added note "types-of-type-variables.txt", wherein I begin
   to develop the scheme for differentiated type variables for NFE.
+
+* 2025.11.12: Edited types-NFE.sml and
+  work/types-of-type-variables.txt, added work/compilation.txt.
+  Committed changes to github repository.

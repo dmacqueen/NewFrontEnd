@@ -2,20 +2,23 @@ Types of Type Variables
 
 Notational conventions:
 
--  Type constructors are lower case alphanumeric, except for "->" and "*", e.g. int, bool. (as currently)
+- Type constructors are lower case alphanumeric, except for "->" and "*", e.g. int, bool. (as currently)
 
--  Polymorphic type variables a alphanumeric with initial capital letter (g.e. A, B, C3),
-   replacing current "'a" notation.
+- Polymorphic type variables a alphanumeric with initial capital letter (g.e. A, B, C3),
+   replacing current "'a" notation.  The convention is that defined type constructors have
+   alphanumeric names with initial lower-case character, with the exceptions "->" and "*".
 
 - Explicit type variables appearing in core expressions and declarations are also written as
-  "A", with an initial underscore followed by a capitalized alphanumberic.  The context
-  must determine how such a concrete syntax type variable is bound.
+  "A", i.e., the same convention as for PTVs ([All]-bound) and LTVs. (\-bound). The context
+  determines how such a concrete syntax type variable is bound. Usual shadowing rules
+  apply for nested bindings.
 
-One major problem with the type system as implemented in the front end (Elabdata,
+One major problem with the type system as implemented in the current front end (Elabdata,
 Elatorator) is that fundamentally different sorts of type variables share the same
-representation.
+representation.  In effect, they are treated as different varieties of unification
+varialbes that might be "instantiated".
 
-Here are the different sorts of type variables:
+Here are the different sorts of type variables, conceptually:
 
 1. PTV: [A]-bound polymophic type variables in a polymorphic type, e.g.
 
@@ -45,10 +48,10 @@ Here are the different sorts of type variables:
     type variables introduced by the type inference algorithm that are "solved for" using unification.
 
 In the surface (concrete) syntax, PTVs, LTVs, and ETVs will all be represented by
-initial caps alphanumeric identifiers.  UTVs do not appeal in the surface syntax, but
+initial caps alphanumeric identifiers.  UTVs will not appear in the surface syntax, but
 may appear in type error messages.
 
-All forms of type variables are of kind Type.
+All forms of type variables range over kind Type (0-order ground type expressions).
 
 But internally, these 4 kinds of type variables should have distinct representations.
 
@@ -59,13 +62,15 @@ PTV and LTV type variables can be represented, as they are now, by Nat indices (
 deBruijn indices for flat, non-nested _abstractions_).
 
 polymorphic and type lambda abstractions can continue to be represented by TYfun structures
-(but probably should choose new name, e.g. "type abstraction").
+(but probably should choose new name, e.g. "type abstraction", or tyab for short).
 
 ----------
 Structures and Type constructors
 
 There will also be structure variables ranging over structures (roughly the same as the
-current entity variables), but with associated "kinds" (replacing the current TycPaths).
+current entity variables), but with associated "kinds".  These internal module "kinds"
+will presumably replace the current Types.TycPaths, which are in the wrong place, as they
+are associated with a variety of type constructor, FLEXtyc, which is being eliminated.
 
 Since all type constructors originate in structures, they could be designated using a
 symbolic path rooted at a structure variable.  But we may want something more direct and
@@ -74,20 +79,39 @@ analagous to "stamps"].
 
 [Edited 2025.11.10]
 ========================================================================================== 
-Terminology
+Kinds
 
-We have:
+We use the usual simple (naive) notion of the kind of a type or type constructor.  The
+base kind is "Type", which contains "0-order" or ground type expressions.  Type
+constructors have _higher_ kinds, like list :: Type => Type. We use "#" as a product
+operation on kinds:
+
+Examples:
+
+int : Type (short for int : () => TYPE, treating int as a "nullary" constructor)
+list : Type => Type
+int list : Type
+=> : Type # Type => Type  (because we don't want n-ary constructors to be "curried")
+int -> bool : Type
+
+[Edited 2025.11.12]
+========================================================================================== 
+Some Terminology
+
+We have a number of closely related terms, namely:
 
  type variables, type expressions, type constructors, type functions.
 
  ground types, polytypes.
 
-In some of the literature, type expressions and type constructors seem to be the same
-thing.  But here, type constructors are primitive or generative type functions, including
-0-ary constructors like int, bool, ... and unary constructors like list.
+In some of the literature, "type expressions" and "type constructors" seem to be the same
+thing, and I have always found this confusing. But here, type constructors are primitive
+or generative type functions (i.e., irreducible), including 0-ary constructors like int,
+bool, ... that serve as type "constants", unary constructors like list, and binary type
+constructors like "->", and so on.  We use "tycon" as an abbreviation of "type constructor".
 
 When we use the word "type" without qualification, we generally mean "type expression" of
-kind Type.  Thus "list" is a type constructor, but not a "type"; it has kind Type => Type.
+kind Type. Thus "list" is a type constructor, but not a "type"; it has kind Type => Type.
 
 Type functions can be considered a variety of type constructor that can be eliminated
 by beta-reduction.
