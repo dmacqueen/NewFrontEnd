@@ -20,3 +20,9 @@ Worked a bit on removing unnecessary curried functors (Ast, elabmod-fix.sml).  W
 * 2025.11.12: Edited types-NFE.sml and
   work/types-of-type-variables.txt, added work/compilation.txt.
   Committed changes to github repository.
+
+* 2025.11.15.
+  - Minor edits of proposals/language.txt.
+  - Added work/sharing.txt and work/exceptions.txt as stubs for future
+    research notes.
+  

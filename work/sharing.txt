@@ -1,0 +1,10 @@
+Note on static sharing.
+
+Question: Can "definitional sharing" adequately replace symmetric sharing equations?
+
+Definitional sharing (using definitional specs inside signatures and "where clauses" modifying existing signatures) implies an _ordering_ of the static entities involved in the sharing, so  that a later entity can share with an earlier one.  [Another name for this might be "ordered sharing".]
+
+In SML as it stands, this may not be quite possible [Example ?]. But the examples where the ordering requirement is violated seem to be rather artificial and may not occur (or at least, may not be needed) in actual programs.
+
+  [Is the MLton style of modularization an exception?  Someone once hinted that this
+   might be the case.

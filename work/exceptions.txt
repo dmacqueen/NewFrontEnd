@@ -1,0 +1,14 @@
+Exceptions: Can they be "static"?
+
+[This document is an unfinished "stub" to be completed later.]
+
+Currently, new "constructors" declared for type exn involve the creation of a dynamic value that
+is used when pattern-matching in exception handlers. [Or is this an implementation choice specific
+only to certain SML compilers, like SML/NJ.  Need to check.]
+
+Is there a reason that exception constructors can't be assigned a static identity when they are
+declared (i.e., when their declaration is elaborated)?
+
+What is the relevant research?  Is the concept of "algebraic exceptions" relevant?
+What don't I know?
+
