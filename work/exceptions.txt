@@ -56,4 +56,12 @@ or
 
 Suggestion: perhaps shadowing of datacon bindings should not be allowed in general.
 
+------------------------------------------------------------------------------------------
 
+Exception constructor declarations should be considered to be _static_ declarations,
+so by the MsML restriction, they should not be declared withing expressions, only at
+structure top-level.
+
+Does this help find a static approach to defining exception constructor tags?
+
+------------------------------------------------------------------------------------------
