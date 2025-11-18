@@ -253,7 +253,7 @@ proposals. But I do welcome constructive feedback.
 
   Signatures that are defined relative to structure parameters (or _a_ structure parameter).
   But as pointed out by Bob Harper, this is somewhat redundant, since it is similar to
-  specializing an existing signature with a structure "where" clause.
+  (or related to) the method of specializing an existing signature with a structure "where" clause.
 
 
 2.4. [Modules] Higher-order functor concrete and abstract syntax.
@@ -283,7 +283,11 @@ proposals. But I do welcome constructive feedback.
   an immeditate ancestor of SML. The feature is also available (and mandatory) in Haskell.
 
 
-2.7. [Core] "try <exp> handle <match> endt" syntax for handled expressions.
+2.7. [Core] Consider 
+
+    "try <exp> handle <match> endt"
+
+    syntax (for instance) for handled expressions, thus closing the scope of the handler match.
 
 
 ------------------------------------------------------------------------------------------
@@ -352,13 +356,17 @@ proposals. But I do welcome constructive feedback.
   This may be a bit too clever. What are the simpler alternatives?
   
 
-4.2. [General] "Dynamic" Exceptions
+4.2. [General] "Dynamic" vs "static" Exceptions
 
-  The semantics of exceptions is rather naive and by now there might be a "better" way
-  of defining exceptions. I've always thought that it would be better to have exception
-  declarations be "static" in some sense, but it is not clear what this would mean.
-  Have to look into "algebraic exceptions", whatever those are.  This relates to
-  pattern matching over exceptions in exception handler clauses.
+  The semantics of exceptions is rather naive and by now there might be a "better" way of
+  defining exceptions. I've always thought that it would be better to have exception
+  declarations be "static" in some sense, but it is not clear what this would mean.  Have
+  to look into "algebraic exceptions", whatever those are. This relates to pattern
+  matching over exceptions in exception handler clauses. The issue that seems to require
+  "dynamic" exception constructor tags is the appearance of exception constructor
+  specifications in a functor parameter signature. How else can we compile exception
+  matches involving such parameter exception constructors in handlers occurring in the
+  functor body?
 
   There is also the possibility of generalizing the "exn" type (which has been treated as
   a special form of primitive type), making it just an instance of a general construct for

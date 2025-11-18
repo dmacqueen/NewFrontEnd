@@ -12,3 +12,48 @@ declared (i.e., when their declaration is elaborated)?
 What is the relevant research?  Is the concept of "algebraic exceptions" relevant?
 What don't I know?
 
+------------------------------------------------------------------------------------------
+The exn type and exception constructors are a bit wierd, with some of the wierdness being
+shared with _ordinary_ datacons declared through a datatype declaration.
+
+(1) The exn tycon is the unique tycon representing an open, extensible tagged union.
+
+(2) The exn tycon is primitive and pervasive.
+
+(3) New datacons for exn can be declared anywhere, and may be shadowed.
+
+(4) Redeclaration of an exception constructor names can give it a different type.
+
+Actually, shadowing of datacons in general seems a bit questionable.  It can be used to
+"break" a datatype or make it partially or fully _abstract_, in the sense that a datatype
+tycons datacons are needed to concretely build values and to fully deconstruct values of
+the datatype.
+
+For example:
+
+    datatype d = A | B of d; 
+
+    structure S =
+    struct  
+	val A = 1;
+	val B = 2;
+    end;
+
+    open S; (* now datacons A and B have been shadowed, and d is effectivly _abstract_! *)
+
+Getting rid of "open" eliminates this particular example, but there are other ways:
+
+    datatype d = A | B of d; 
+
+    datatype foo = A of int | B of bool;  (* A and B from d are again shadowed *)
+
+or
+
+    datatype d = A | B of d; 
+
+    exception A of int;
+    exception B of bool;
+
+Suggestion: perhaps shadowing of datacon bindings should not be allowed in general.
+
+
