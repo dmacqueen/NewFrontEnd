@@ -1,0 +1,17 @@
+work/intro.txt
+Goals, Principles, etc.
+
+Obviousness
+
+Language features in a good design should be _obvious_ in the sense that an experienced
+user of the language finds them "obvious" rather than "mysterious" or "difficult".
+
+Examples of features I consider non-"obvious":
+   class inheritance in OO languages
+   type classes in Haskell
+   monads in Haskell
+   generalized data types (GDTs)
+
+Obviousness is a subjective quality and it can vary with experience.
+For instance, for inexperience learners of a functional language, recursive
+functions may seem non-obvious.
