@@ -98,6 +98,10 @@ What could we use as the _static_ tags of these two constructors?
     <A.E> for A.E
     <B.E> for B.E
 
+So in the abstract, the name "E" is not sufficient by itself to
+designate a particular exn data constructor.
+
+
 But what if abstraction is involved?
 
 signature S =
