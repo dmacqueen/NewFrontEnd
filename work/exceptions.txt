@@ -65,3 +65,50 @@ structure top-level.
 Does this help find a static approach to defining exception constructor tags?
 
 ------------------------------------------------------------------------------------------
+Consider the example:
+
+structure A =
+struct
+  exception E of int
+end
+
+structure B =
+struct
+  exception E of string
+end
+
+So now we can refer to two exception constructors named "E":
+
+A.E : int -> exn
+B.E : string -> exn
+
+There does not seem to be conflict, since the two constructors have
+differnt full names (paths) A.E and B.E. The do not "conflict" and
+there is no reason why they would be confused with one another.
+
+What could we use as the _static_ tags of these two constructors?
+
+(1) The name "E" and the domain type:
+
+    <"E", int> for A.E
+    <"E", string> for B.E
+
+(2) the paths for the constructors
+
+    <A.E> for A.E
+    <B.E> for B.E
+
+But what if abstraction is involved?
+
+signature S =
+sig
+  type t
+  exception E of t
+end
+
+functor F (X : S) =
+struct
+   ... X.E ...
+end 
+
+What could serve as the static tag for X.E?
