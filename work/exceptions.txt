@@ -116,3 +116,21 @@ struct
 end 
 
 What could serve as the static tag for X.E?
+
+------------------------------------------------------------------------------------------
+
+Idea: 
+
+  (1) exceptions as quasi-static constructs (also dynamic wrt functor
+      abstraction and application)
+      e.g. no exception constructor declarations in dynamic contexts (within expressions)
+
+  (2) new open discriminated sum type and "constructor" declarations
+      -- values of such types are dynamic
+
+Because exception constructors "feel" like they should be static.  If it weren't for the
+functor problem, I think they could be actually static.
+
+(2) seems like it is essentially Harper's "Dynamic Classification" (PFPL, Chpt 33).
+
+What to call the new open descriminated union types and their "constructors" (or tags).
