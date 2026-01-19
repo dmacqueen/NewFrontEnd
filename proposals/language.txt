@@ -32,6 +32,17 @@ Standard ML '97 was, in my opinion, an incomplete revision based on self-imposed
 and [Milner's] worries about resistance or objections from "commercial" entities such
 as Mike Forman's Abstract Hardware, and, later, Joe Marx's Harlequin.
 
+Language Design Principles
+
+* Keep things as simple as possible (but no simpler, after Einstein)
+
+* Keep simple things simple (Generally avoid adding complexity for the
+  sake of _convenience_).
+
+* Things that are not simple should be _obvious_, once they are learned
+  or properly understoon.  Avoid puzzles or mysterious notions (e.g. "inheritance").
+
+
 Things that I am definitely not interested in including:
 
 * "object-oriented" features: 1st-class functions is an adequate substitute.
@@ -289,6 +300,20 @@ proposals. But I do welcome constructive feedback.
 
     syntax (for instance) for handled expressions, thus closing the scope of the handler match.
 
+2.8 [Core+Modules] Datatypes as a special form of module.
+
+  Currently, datatypes are "fragile" in the sense that they can be
+  broken.  This happens when a later datatype declaration shadows some
+  of a given datatypes data constructor names.  In that case, not all
+  values having the datatype as their type can be constructed or
+  destructed because of missing data constructors.
+
+  If "d" is the name of a datatype currently in scope, then "d.k" is
+  an alternate name for its data constructor k, so we can access any
+  data constructor of d where ever we can access d.
+
+  [Interaction with datatype identity declarations?]
+  
 
 ------------------------------------------------------------------------------------------
 3. Other Changes
