@@ -21,5 +21,29 @@ implementing the ideas (or studying Crary's implemenntation). I estimate this ma
 around 3 months.
 
 
+==========================================================================================
+Harper-Mitchell (TOPLAS version)
+==========================================================================================
+
+* type constants vs type variables (monotypes, p5/215)
+
+A type constant, e.g. Int/int, can be viewed as a type variable bound
+(somehow, maybe /\) in an outer scope context.  So we don't
+necessarily need to distinguish type variables and type constants in
+the definition of the syntax of monotypes.  A free type variable can
+be viewed as a type constant, defined in an outer scope.
+
+* polytypes
+
+- Note that both monotypes, \tau, and polytypes, [All t] \tau, can
+contain free type variables or type constants.
+
+- Note that the type variable t in [All t] \tau ranges over monotype expressions
+\tau.
+
+- Polytypes are prenex: sequence of [All t] quantifiers with a monotype body.
+
+- Polytypes are not inferred.
+
 
 
