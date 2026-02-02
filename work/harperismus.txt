@@ -44,6 +44,3 @@ contain free type variables or type constants.
 - Polytypes are prenex: sequence of [All t] quantifiers with a monotype body.
 
 - Polytypes are not inferred.
-
-
-
