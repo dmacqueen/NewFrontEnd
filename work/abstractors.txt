@@ -49,3 +49,8 @@ val e = Abs (ax, Abs (ay, App Bvar (ax 0), Bvar (ay, 0)))
 type closure = exp * exp list
 (* where exp = Abs ((a,n), body)
      and exp list is of length n *)
+
+* What about multiple levels (scopes) of closures?
+
+* Translation of conventional symbolic (say) lambda expressions into the above abstraction representation
+
