@@ -54,3 +54,7 @@ type closure = exp * exp list
 
 * Translation of conventional symbolic (say) lambda expressions into the above abstraction representation
 
+* Degeneracy of abstractors for non-nestable abstractions
+  In the case of type functions and polytypes in (s)ML, the abs is not needed because there is only ever
+  on level of abstraction, at the outermost level.  So in these cases, the abstractor could be represented
+  as a (positive) nat.

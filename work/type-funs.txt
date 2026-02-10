@@ -25,12 +25,13 @@ Here the code would be something like
 
 OR
 
-     let val t1 = CONTty (arrowTyc (CONty (intTyc, nil) -> CONty (stringTyc, nil)
-         (* bindinig t1 to the constant, immutable term (int -> string) *) 
-      in \(p1, p2). CONTty (arrowTyc (CONty (typleTyc (2, [p1, t1])), p2)
-     end
+val t = 
+    let val t1 = CONTty (arrowTyc (CONty (intTyc, nil) -> CONty (stringTyc, nil)
+        (* bindinig t1 to the constant, immutable term (int -> string) *) 
+     in fn (p1, p2) => CONTty (arrowTyc (CONty (typleTyc (2, [p1, t1])), p2)
+    end
 
-where p1 and p2 correspond to the type variables 'a and 'b.
+where p1 and p2 represent the type variables 'a and 'b.
 
 Then only the arrow and times nodes of the body of the defn are copied when applying the
 type function. The immutable subterm "int -> string" is not copied and is shared by all
