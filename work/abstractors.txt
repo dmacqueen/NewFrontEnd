@@ -1,0 +1,51 @@
+NewFrontEnd/work/abstractors.txt
+
+Abstractors
+
+This note documents some thoughts arrising from thinking about de Bruijn indexes (more generally "positional representation of bound variables) and Harper's presentation of "abstract binding trees" in Section 1.2 of PFPL ("Practical Foundations of Programming Languages").
+
+The idea behind abstract binding trees is that one can use a single variable binding construct to introduce scoped bound variables of various flavors (e.g. lambda-bound, let-bound, etc.). The bound variables so represented could be of various "sorts", such as value variables in expressions or type variables in F_omega like languages.  E.g. \x.e => Lambda((x).e) and let x = e1 in e2 => Let (e1, (x).e2)
+
+Variables are typically written as symbols or identifiers (properly thought of as the _names_ of variables.  And also typically, using symbolic variables introduces the usual superficial difficulties (equivalence under alpha conversion, free variable capture under substituion, etc.). DeBruijn solved some of these difficulties by replacing bound variables with a _positional_ notation using indexing with respect to nesting levels of variable abstractions.
+
+A minor elaboration of the de Bruijn scheme is to have 2-dimentional bindings (i,j) where i might be the _vertical_ index related to depth of nesting of abstractions, and j might be the _horizontal_ index over several variables bound in parallel by one abstraction.
+
+A compilcation associated with de Bruijn indexes, which are ordered from innermost abstraction level (0) to outermost, is that substituion can require modification of indexes, and (relatively) free variables can have different indexes at different occurrences within a body expression.  E.g. \x. (x, \y. x) => \(0, \1), where the two occurrences of "x" have indices 0 and 1.
+
+Idea: instead of using an index relative to abstraction nesting levels, let's just generate a unique abstraction token for each abstraction instance, and use this (plus horizontal indexes for multiple abstraction variables) to identify bound (applied) occurrences of variables.
+
+Question: What about free variables? Or free variables relative to scoping?
+These could be treated as bound variables that are bound wrt an outermost or global scope.
+
+Types: 
+
+(* type abs -- used to identify an abstractor *)
+type abs  -- abstract and atomic, with a primitive equality
+  -- possible representations: nat or atom
+
+(* type abstractor: (a, n) a horizontal abstraction of n variables *)
+type abstractor = abs * nat
+
+(* type bvo, short for "bound variable occurrence": (a, i) the ith variable bound by the abstractor designated by a *)
+type bvo = abs * nat
+
+
+Example, lambda calculus
+
+datatype exp
+  = Fvar of symbol
+  | Bvar of bvo
+  | App of exp * exp
+  | Abs of abstractor * exp
+
+(* \x. \y. (x y) -- a closed lambda expression *)
+val ax : abstractor = (genAbs (), 1)   (* abstractor for x *)
+val ay : abstractor = (genAbs (), 1)   (* abstractor for y *)
+val e = Abs (ax, Abs (ay, App Bvar (ax 0), Bvar (ay, 0)))
+
+
+* abstraction closures (horizontal)
+
+type closure = exp * exp list
+(* where exp = Abs ((a,n), body)
+     and exp list is of length n *)
