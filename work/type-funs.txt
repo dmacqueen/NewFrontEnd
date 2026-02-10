@@ -1,8 +1,17 @@
-Type Functions: optimizing their application (i.e. type term beta-reduction)
+NewFrontEnd/work/type-funs.txt
 
-* Idea: compile the body of a type function (a type term) into "code" that builds the result
-  out of the parameters and the immutable subterms of the body (the subterms not containing
-  a parameter variable).
+Type Functions: 
+"Compiling" type functions to optimize their application with respect
+to duplicating constant type subterms.
+
+The problem is to reduce or minimize reproduction of existing type
+expression structure when applying type functions (e.g. for generic
+instantiation of polytypes). The goal is to eliminate the need
+for drastic measures like FLINT's hash-consing of types.
+
+IDEA: compile the body of a type function (a type term) into "code" that builds the
+  result out of the parameters and the immutable subterms of the body (the subterms not
+  containing a parameter variable).
 
 Example:
 
@@ -10,7 +19,8 @@ type ('a, 'b) t = 'a * (int -> string) -> 'b
 
 Here the code would be something like
 
-     let t1 = int -> string (* bindinig t1 to a constant term *) 
+     let t1 = int -> string (* bindinig t1 to a constant term that is
+                             * shared by all applications *) 
       in \(p1, p2). arrow (times (p1, t1), p2)
 
 OR
@@ -18,10 +28,11 @@ OR
      let val t1 = CONTty (arrowTyc (CONty (intTyc, nil) -> CONty (stringTyc, nil)
          (* bindinig t1 to the constant, immutable term (int -> string) *) 
       in \(p1, p2). CONTty (arrowTyc (CONty (typleTyc (2, [p1, t1])), p2)
+     end
 
-
-where p1 and p2 correspont with 'a and 'b.
+where p1 and p2 correspond to the type variables 'a and 'b.
 
 Then only the arrow and times nodes of the body of the defn are copied when applying the
-type function.  The immutable subterm "int -> string" is not copied and is shared by all
-the contracta.
+type function. The immutable subterm "int -> string" is not copied and is shared by all
+the contractions ("immutable" in the sense that it is a term that does not contain
+(bound) occurrences of the parameter variables p1 and p2).

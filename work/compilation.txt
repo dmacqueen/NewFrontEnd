@@ -1,17 +1,21 @@
 Compilation - Build - Execute Models
 
-For MsML and NFE, the goal is to equally and independently support the interactive mode (as in SML/NJ), and a _batch_ mode (similar to, or supporting, a compilation/build model like CM.
+For MsML and NFE, the goal is to equally and independently support the interactive mode
+(as in SML/NJ), and a _batch_ mode (similar to, or supporting, a compilation/build model
+like CM.
 
-* Since the language model assumes that every _Core_ declaration occurs within a structure, some special treatment
-will need to be used to support interactive compilation and execution.
+* Since the language model assumes that every _Core_ declaration occurs within a
+structure, some special treatment will need to be used to support interactive compilation
+and execution.
 
-* In either model, there will be a _pervasive_ environment binding symbols that can be used anywhere, without
-"qualification".
+* In either model, there will be a _pervasive_ environment binding symbols that can be
+used anywhere, without "qualification".
 
-A compilation interface will be defined that will be used by both an interactive REPL and by a CM.
+A compilation interface will be defined that will be used by both an interactive REPL and
+by a CM.
 
-The existing CM might be revised to use this interface to the compiler, or a revised CM could be
-implemented using it.
+The existing CM might be revised to use this interface to the compiler, or a revised CM
+could be implemented using it.
 
 * Linking model.
   - nontraditional "execution based" linking model based on function/functor application.
@@ -27,7 +31,9 @@ implemented using it.
 
 * Problems:
 
-The existing compilation/build model used by CM is ad hoc and not well documented or understood, and the compiler bootstrapping system is excessivly complex (and fragile).
+The existing compilation/build model used by CM is ad hoc and not well documented or
+understood, and the compiler bootstrapping system is excessivly complex (and fragile).
 
-CM was designed to work with the existing system where everything was built within the REPL model.
+CM was designed to work with the existing system where everything was built within the
+REPL model.
 
