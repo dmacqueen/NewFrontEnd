@@ -39,20 +39,20 @@ Language Design Principles
 * Keep simple things simple (Generally avoid adding complexity for the
   sake of _convenience_).
 
-* Things that are not simple should be _obvious_, once they are learned
-  or properly understoon.  Avoid puzzles or mysterious notions (e.g. "inheritance").
+* Things that are not simple should be _obvious_, once they are properly understood. Avoid
+  puzzles or mysterious notions (e.g. "inheritance").
 
 
-Things that I am definitely not interested in including:
+Things that I am definitely not interested in including
 
 * "object-oriented" features: 1st-class functions is an adequate substitute.
   
-* generalized data types: Not sufficiently "obvious".
+* generalized data types: Not sufficiently _obvious_.
 
-* recursive modules: See Derek Dreyer's thesis for the ensuing complications.
+* recursive modules: See Derek Dreyer's PhD thesis for some ensuing complications.
 
-* type classes a la Haskell: Instead, let'g get rid of our one existing type class, namely
-  polymophic equality. Dreyer, et al, doesn't convince me.
+* type classes a la Haskell: Instead, let's get rid of our one existing type class, namely
+  polymophic equality. Dreyer, et al [type classes for ML], doesn't convince me.
 
 * higher-order polymorphism: "ML is not F_omega". Besides, this is, in part, what the module
   system (functors in particular) provides.
@@ -80,14 +80,14 @@ Additional things that I _might_ consider including:
 0.1. Goals and Non-goals of this document
 
 This document presents my personal opinions on how the (S)ML language might be changed to
-improve it from my perspective. It is an exercise in _micro_ language design, and it not
+improve it from my perspective. It is an exercise in _micro_ language design, and it is not
 meant to change, add, or delete the major concepts that characterize a language in the ML
 family (e.g. 1st class functions, strict evaluation, algebraic datatypes, modules). Most
 of the changes tend to simplify the language.
 
 I am not aiming to improve the language to make it more attractive or "acceptible" to any
 class of users, existing or potential. For instance, I am not interested in making the
-syntax closer to that of, say, C or Fortran, or even OCaml. I am not interested in adding
+syntax closer to that of, say, C, Fortran, or even OCaml. I am not interested in adding
 "object-oriented" features, nor features supporting "artificial intelligence" or "machine
 learning".
 
@@ -118,12 +118,13 @@ proposals. But I do welcome constructive feedback.
 
 1.2. [Core+Modules] Drop the "open" declaration form
 
-  The "open" declaration is an example of a language feature that whose semantics is
-  fairly obvious and which has obvious utility, but it enables and encourages a bad
-  programming habit, i.e. the wholesale import of multiple name spaces, making it more
-  difficult to see at a glance where a given identifier is bound.
+  The "open" declaration is an example of a language feature whose semantics is fairly
+  obvious and which has obvious utility, but it enables and encourages a bad programming
+  habit, i.e. the wholesale import of multiple name spaces (i.e. structures), making it
+  more difficult to see at a glance where a given identifier comes from (i.e. where it is
+  defined).
 
-  Deleting open declarations prevents programmers from falling into thie bad habit (a good
+  Deleting open declarations prevents programmers from falling into this bad habit (a good
   thing). The usual replacement is to introduce in each structure a bunch of short
   abbreviations for external modules that are used in that structure ("imported" by that
   structure). This pattern could be codified in concrete syntax using some sort of
@@ -185,11 +186,11 @@ proposals. But I do welcome constructive feedback.
   could have a finite, predefined, fixed, "fixity" environment that would map these infix
   identifiers to their "fixities" and that would be available during parsing. In addition,
   there would be a few (e.g. 6?) predefined symbolic symbols (e.g. ++, **, $, $$, ...) of
-  lower precedence that could be defined by users.  The parser would use a function
-  mapping such infix symbols to their precedence.  Instead of wiring the treatement of
+  lower precedence that could be defined by users. The parser would use a function
+  mapping such infix symbols to their precedence. Instead of wiring the treatment of
   infix operators into the grammar, the parser could invoke a precedence parser to parse
   general application forms for patterns and expressions, at the time of parsing. So the
-  use of the current "partial parsiing" and "reparsing" approach could be avoided.
+  use of the current "partial parsing" and "reparsing" approach could be avoided.
 
 
 1.6. [Modules, Controversial?] Sharing equations in signatures
@@ -230,7 +231,7 @@ proposals. But I do welcome constructive feedback.
 1.8. [Core] The "while" expression form
 
   Redundant. Use recursion instead for iteration. Same reason we don't have a "loop"
-  expession form.
+  expression form.
 
 
 1.9. [Core] Eliminate the "and" connector for nonrecursive val and type declarations,
@@ -325,7 +326,7 @@ proposals. But I do welcome constructive feedback.
    declarations/specifications with existing ones in the parameter (no overriding, no
    mutually recursive definitions involving old and new specifications).
 
-   [Viewing that as a separate dimention of _extension_ or _refinement_ of an existing
+   [Viewing that as a separate dimension of _extension_ or _refinement_ of an existing
     structure/signature.]
 
 
@@ -338,9 +339,9 @@ proposals. But I do welcome constructive feedback.
 
 3.3. [Core] Consider changing record selection notation.
 
-   Would it be possible to use (re-use) the conventional "dot"
+   Would it be possible to use (re-use, overload) the conventional "dot"
    selection notation for projecting fields of a record, as in "r.a"?
-   Not the #a is not really a function (can only be instantiated at a
+   Note that #a is not really a function (can only be instantiated at a
    particular record type). I've never felt comfortable with the SML
    notation.
 
@@ -426,7 +427,7 @@ proposals. But I do welcome constructive feedback.
   type variable names. We could adopt the Haskell convention, where type constructors
   are capitalized and type variables are lower case, but the opposite would be more
   consistent with SML notational history, i.e. type variables are capitalized alphanumeric
-  names and type construcotors start with a lower-case character ("int" vs "X").  We would
+  names and type constructors start with a lower-case character ("int" vs "X"). We would
   still support the two primitive, symbolic type constructor names "->" and "*" as special
   cases.
 
@@ -439,7 +440,7 @@ proposals. But I do welcome constructive feedback.
   Should we continue to use MLlex and MLyacc, or are there better tools to replace them?
 
   Should we use a "manual", e.g. recursive descent, style of parser (e.g. maybe the
-  smlfmt parser, apropriately modified?)?
+  smlfmt parser, appropriately modified?)?
 
 
 4.8. [Core] The problem of combining clausal and curried function definitions.
@@ -461,7 +462,7 @@ proposals. But I do welcome constructive feedback.
   specially, and is the unique value of the type unit. Is there a case for treating tuples
   separately?  This would add a lot of new "tuple" cases throughout the elaborator, so it
   would need to be worth it. What are potential payoffs?  (e.g. get rid of "bogus"
-  tuple-like records like {1=2, 3=4}, record labels symplified (alphanumeric symbols
+  tuple-like records like {1=2, 3=4}, record labels simplified (alphanumeric symbols
   rather than either symbols or positive integers) (note that labels don't have
   _bindings_))
 
@@ -500,7 +501,7 @@ proposals. But I do welcome constructive feedback.
 ------------------------------------------------------------------------------------------
 5. Futher Discussion
 
-5.1. Are the suggested changes "backward compatibe"?  No. Too limiting.
+5.1. Are the suggested changes "backward compatible"?  No. Too limiting.
 
    Maintaining backward compatibility is not one of my goals.
 
@@ -574,7 +575,7 @@ proposals. But I do welcome constructive feedback.
   An issue is: how do line comments interact with existing, nestable, delimited comments?
   This might be a bit messy (could check how smlfmt handles this).
 
-6.2. Excapes in strings
+6.2. Escapes in strings
 
   OK. Don't much care. Seems like minor bullet-proofing.
 
@@ -590,7 +591,6 @@ proposals. But I do welcome constructive feedback.
 
   I don't like the introduction of another special class of variables, namely row
   variables.
-
   I guess a parallel form for record type overlays might be useful, but I do not
   consider it necessary.
 
@@ -643,7 +643,7 @@ proposals. But I do welcome constructive feedback.
 
   A small concrete syntax tweak for editing convenience.
   I don't particularly like it.
-  What is the general principal?
+  What is the general principle?
 
 6.16. Disallow non-exhaustive patterns in polymorphic bindings
 
@@ -875,3 +875,9 @@ Program Modules", JACM, 68,6, Article No. 41, pp 1-47, 2021.
 
 * What else?  Language changes/deviations in Moscow ML, MLton, PolyML, ML Kit, etc?
   OCAML description.
+
+
+------------------------------
+Feedback contributions:
+
+* Peter Eriksen - correcting typos in MsML.txt
