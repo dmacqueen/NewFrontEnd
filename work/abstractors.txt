@@ -1,5 +1,6 @@
 NewFrontEnd/work/abstractors.txt
 [DBM, 2026.2.1]
+[revised, 2026.2.19]
 
 Abstractors
 
@@ -7,7 +8,7 @@ This note documents some thoughts arising from thinking about de Bruijn indexes 
 
 The idea behind abstract binding trees is that one can use a single variable binding construct to introduce scoped bound variables of various flavors (e.g. lambda-bound, let-bound, etc.). The bound variables so represented could be of various "sorts", such as value variables in expressions or type variables in F_omega like languages.  E.g. \x.e => Lambda((x).e) and let x = e1 in e2 => Let (e1, (x).e2)
 
-Variables are typically written as symbols or identifiers (properly thought of as the _names_ of "abstract" variables). Also typically, using symbolic variables introduces the usual superficial difficulties (equivalence under alpha conversion, free variable capture during substituion, etc.). DeBruijn solved some of these difficulties by replacing bound variables with a _positional_ notation using indexing with respect to nesting levels of variable abstractions/bindings.
+Variables are typically written as symbols or identifiers (properly thought of as the _names_ of "abstract" variables). Also typically, using symbolic variables introduces the usual superficial difficulties (equivalence under alpha conversion, free variable capture during substituion, etc.). De Bruijn solved some of these difficulties by replacing bound variables with a _positional_ notation using indexing with respect to nesting levels of variable abstractions/bindings, innermost to outermost.
 
 A minor elaboration of the de Bruijn scheme is to have 2-dimensional bindings (i,j) where i might be the _vertical_ index indicating depth of nesting of abstractions, and j might be the _horizontal_ index over several variables bound in parallel by one abstraction.
 
@@ -83,8 +84,10 @@ Notes:
   one level of abstraction, at the outermost level. So in these cases, the abstractor could be represented
   as a (positive) nat.
 
-* Related problem of closure representations. Compare with "The Calculus of Substitutions" paper by Levy et al.
-  [closure with respect to multiple abstractions.]
+* Related problem of closure representations. Compare with "Explicit Substitutions", Abadi, Cardelli,
+  Curien, and Levy, Journal of Functional Programminig, 1:4, 1991.
+  [closure with respect to multiple abstractions.]  The end of this line of inquiry may be
+  Gopalan Nadathur's closures, a variant of which is used in the FLINT type system.
   
 * It may be possible to adapt this idea to module signatures, in particular to functor signatures. This
   requires futher exploration.
