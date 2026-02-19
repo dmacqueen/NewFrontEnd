@@ -3,43 +3,64 @@ NewFrontEnd/work/abstractors.txt
 
 Abstractors
 
-This note documents some thoughts arrising from thinking about de Bruijn indexes (more generally "positional representation of bound variables) and Harper's presentation of "abstract binding trees" in Section 1.2 of PFPL ("Practical Foundations of Programming Languages").
+This note documents some thoughts arising from thinking about de Bruijn indexes (more generally "positional representation of bound variables) and Harper's description of "abstract binding trees" in Section 1.2 of PFPL ("Practical Foundations of Programming Languages").
 
 The idea behind abstract binding trees is that one can use a single variable binding construct to introduce scoped bound variables of various flavors (e.g. lambda-bound, let-bound, etc.). The bound variables so represented could be of various "sorts", such as value variables in expressions or type variables in F_omega like languages.  E.g. \x.e => Lambda((x).e) and let x = e1 in e2 => Let (e1, (x).e2)
 
-Variables are typically written as symbols or identifiers (properly thought of as the _names_ of variables.  And also typically, using symbolic variables introduces the usual superficial difficulties (equivalence under alpha conversion, free variable capture under substituion, etc.). DeBruijn solved some of these difficulties by replacing bound variables with a _positional_ notation using indexing with respect to nesting levels of variable abstractions.
+Variables are typically written as symbols or identifiers (properly thought of as the _names_ of "abstract" variables). Also typically, using symbolic variables introduces the usual superficial difficulties (equivalence under alpha conversion, free variable capture during substituion, etc.). DeBruijn solved some of these difficulties by replacing bound variables with a _positional_ notation using indexing with respect to nesting levels of variable abstractions/bindings.
 
-A minor elaboration of the de Bruijn scheme is to have 2-dimentional bindings (i,j) where i might be the _vertical_ index related to depth of nesting of abstractions, and j might be the _horizontal_ index over several variables bound in parallel by one abstraction.
+A minor elaboration of the de Bruijn scheme is to have 2-dimensional bindings (i,j) where i might be the _vertical_ index indicating depth of nesting of abstractions, and j might be the _horizontal_ index over several variables bound in parallel by one abstraction.
 
-A compilcation associated with de Bruijn indexes, which are ordered from innermost abstraction level (0) to outermost, is that substituion can require modification of indexes, and (relatively) free variables can have different indexes at different occurrences within a body expression.  E.g. \x. (x, \y. x) => \(0, \1), where the two occurrences of "x" have indices 0 and 1.
+A complication associated with de Bruijn indexes, which are ordered from innermost abstraction level (0) to outermost, is that substituion can require modification of indexes, and different occurrences of a given variable can have different indexes within a body expression. E.g. \x. (x, \y. x) => \(0, \1), where the two occurrences of "x" have indices 0 and 1.
 
 Idea: instead of using an index relative to abstraction nesting levels, let's just generate a unique abstraction token for each abstraction instance, and use this (plus horizontal indexes for multiple abstraction variables) to identify bound (applied) occurrences of variables.
 
 Question: What about free variables? Or free variables relative to scoping?
-These could be treated as bound variables that are bound wrt an outermost or global scope.
+These could be treated as bound variables that are bound wrt an outermost or global scope (abstractor).
+Note that if expressions are constructed "bottom-up", one can have free variables turning into bound variables
+as abstraction levels are wrapped around a body expression. One needs to be careful about this issue, using
+some sort of binding context (or environment) as one constructs an expression representation.
+
+Note:
+Usually a parser for concrete syntax will produce a "symbolic" version of an expression with variable binders, where the connection between bound occurrences of variables and their binding occurrences is implicit and has to be made explicit through some sort of static analysis (or "elaboration" in the SML/NJ compiler terminology). This static binding analysis can be made separate and prior to type checking, although in SML/NJ Core langauge elaboration, binding analysis and type checking are integrated (compiler/Elaborator/elaborate/elabcore.sml).
 
 Types: 
+
+type nat = word (* natural numbers, i.e. nonnegative integers or words (bounded nats) *)
 
 (* type abs -- used to identify an abstractor *)
 type abs  -- abstract and atomic, with a primitive equality
   -- possible representations: nat or atom
+  -- possibly ordered, in order to support finite sets of and maps over abs values
+  -- an abs is an alternative to the "vertical" index or de Bruijn index
 
-(* type abstractor: (a, n) a horizontal abstraction of n variables *)
+(* type abstractor: (a, n) a horizontal abstraction of n variables, with n being 0 based (or maybe n
+   should be 1-based? *)
 type abstractor = abs * nat
 
-(* type bvo, short for "bound variable occurrence": (a, i) the ith variable bound by the abstractor designated by a *)
+(* type bvo, short for "bound variable occurrence": (a, i) the ith variable bound by the abstractor
+   designated by an abs a
+   The nat component is a "horizontal" index that distinguishes between several variables bound in the same
+   abstraction. E.g. \ x, y. x y => App (Vbar (a, 0), Bvar(a, 1)). This assumes a sort of tuple abstraction
+   form, denoted here as "\x,y._". *)
 type bvo = abs * nat
 
+val genAbs : unit -> abs (* a generator function that produces a "fresh" abs value on each call *)  
+val compareAbs : abs * abs -> order  (* equality and ordering of abs values -- not used here *)
 
 Example, lambda calculus
 
 datatype exp
-  = Fvar of symbol
-  | Bvar of bvo
+  = Fvar of symbol  (* free variables.
+                     * Should they have a different representation?
+		     * We might replace them with bound variables introduced by a "global" abstractor
+		     *   (related to lambda lifting).
+		     * Note that these will not occur in the representation of a closed expression. *)
+  | Bvar of bvo     (* bound variables, represented by bvos *)
   | App of exp * exp
-  | Abs of abstractor * exp
+  | Abs of abstractor * exp  (* lambda abstraction with respect to an abstractor *)
 
-(* \x. \y. (x y) -- a closed lambda expression *)
+(* \x. \y. (x y) -- a closed lambda expression, with two nested abstractions *)
 val ax : abstractor = (genAbs (), 1)   (* abstractor for x *)
 val ay : abstractor = (genAbs (), 1)   (* abstractor for y *)
 val e = Abs (ax, Abs (ay, App Bvar (ax 0), Bvar (ay, 0)))
@@ -51,11 +72,19 @@ type closure = exp * exp list
 (* where exp = Abs ((a,n), body)
      and exp list is of length n *)
 
+Notes:
+
 * What about multiple levels (scopes) of closures?
 
 * Translation of conventional symbolic (say) lambda expressions into the above abstraction representation
 
 * Degeneracy of abstractors for non-nestable abstractions
   In the case of type functions and polytypes in (s)ML, the abs is not needed because there is only ever
-  on level of abstraction, at the outermost level.  So in these cases, the abstractor could be represented
+  one level of abstraction, at the outermost level. So in these cases, the abstractor could be represented
   as a (positive) nat.
+
+* Related problem of closure representations. Compare with "The Calculus of Substitutions" paper by Levy et al.
+  [closure with respect to multiple abstractions.]
+  
+* It may be possible to adapt this idea to module signatures, in particular to functor signatures. This
+  requires futher exploration.
