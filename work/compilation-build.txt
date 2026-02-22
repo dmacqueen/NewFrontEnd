@@ -13,7 +13,9 @@ Discussion of issues relating to the compilation model and program build infrast
 
 * Compilation management [next generation CM]
   - language
-  - concepts: "compilation units" (source files), "libraries", dependency analysis
+  - concepts: "compilation units" (source files), "libraries", (static) dependency analysis
+    "dynamic loading/linking", "auto-loading/linking", "state initialization",
+    "state-based" dependencies
 
 * "Linkage" model 
 
