@@ -15,7 +15,7 @@ Discussion of issues relating to the compilation model and program build infrast
   - language
   - concepts: "compilation units" (source files), "libraries", (static) dependency analysis
     "dynamic loading/linking", "auto-loading/linking", "state initialization",
-    "state-based" dependencies
+    "state-based" dependencies, tools and tool-generated source files (e.g. mlyacc, mllex)
 
 * "Linkage" model 
 

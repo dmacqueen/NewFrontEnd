@@ -25,6 +25,10 @@ some sort of binding context (or environment) as one constructs an expression re
 Note:
 Usually a parser for concrete syntax will produce a "symbolic" version of an expression with variable binders, where the connection between bound occurrences of variables and their binding occurrences is implicit and has to be made explicit through some sort of static analysis (or "elaboration" in the SML/NJ compiler terminology). This static binding analysis can be made separate and prior to type checking, although in SML/NJ Core langauge elaboration, binding analysis and type checking are integrated (compiler/Elaborator/elaborate/elabcore.sml).
 
+Note:
+This is not an attempt to implement "abstract binding trees" as described in Harper's PFPL book.  Some
+of this material was inspired by my effort to understand abstract bindiing trees.
+
 Types: 
 
 type nat = word (* natural numbers, i.e. nonnegative integers or words (bounded nats) *)
