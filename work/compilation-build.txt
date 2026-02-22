@@ -13,7 +13,7 @@ Discussion of issues relating to the compilation model and program build infrast
 
 * Compilation management [next generation CM]
   - language
-  - concepts: "libraries"
+  - concepts: "compilation units" (source files), "libraries", dependency analysis
 
 * "Linkage" model 
 
