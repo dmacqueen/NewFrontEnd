@@ -1,0 +1,38 @@
+[~/sml/Dev/github/NewFrontEnd/work/compilation-build.txt]
+
+Discussion of issues relating to the compilation model and program build infrastructure.
+[This is currently just a "stub" or place-holder for a more discussion.]
+[Should be merged with existing file work/compilation.txt.]
+
+* Compilation Unit
+  - relation with the module systme
+
+* Compilation Dependencies
+  - static
+  - dynamic
+
+* Compilation management [next generation CM]
+  - language
+  - "libraries"
+
+* "Linkage" model 
+
+* "bin files"
+  content, interfaces, formats
+
+* Interactive system (REPL)
+
+* Batch compilation system
+
+* what is common to the interactive and batch compilation models?
+
+* "build" model
+
+* compiler bootstrapping
+
+------------------------------------------------------------
+Document history
+
+- Created 2026.2.21 by DBM.
+
+
