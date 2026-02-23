@@ -1,0 +1,65 @@
+[~/sml/Dev/github/NewFrontEnd/work/toc.txt]
+
+A "Table of Contents" for the work directory.
+
+This directory contains notes on various random topics related to MsML (MacQueen's own version
+of successor ML) and its implementation in the New Front End project.
+
+Files:
+
+bug319.txt
+   Discussion of the problem underlying bugs 319/344 that caused me to realize that a deeper
+   reworking of the module implementation was required, hence New Front End.
+
+intro.txt
+   Some "introductory" thoughts.  Goals, strategy, principles.
+
+harperismus.txt
+   Notes on Harper, Crary, et al ideas about type-theoretic formal semantics.
+   The question is how these ideas are relevant to a new implementation.
+
+journal.txt
+    A journal of work done.  Patchy.
+    
+
+Core elements
+-------------
+Variables, infixes
+
+de-infix.txt  
+
+new-infixes.txt
+
+variables-etc.txt  
+
+new-variables.txt
+
+abstractors.txt  
+
+exceptions.txt 
+
+
+Types
+-----
+types-NFE.sml
+
+types-of-type-variables.txt
+
+type-funs.txt 
+  An idea about "compiling" type functions to avoid excessive duplication of
+  "shared" type structure.
+
+
+Modules
+-------
+sharing.txt
+
+
+Compilation
+-----------
+The following two files should be merged into one.
+
+compilation-build.txt
+
+compilation.txt
+
