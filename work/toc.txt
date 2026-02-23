@@ -24,7 +24,8 @@ journal.txt
 
 Core elements
 -------------
-Variables, infixes
+Variables, infixes.
+This material could be reorganized and reduced to a smaller number of notes.
 
 de-infix.txt  
 
