@@ -26,3 +26,5 @@ Worked a bit on removing unnecessary curried functors (Ast, elabmod-fix.sml).  W
   - Added work/sharing.txt and work/exceptions.txt as stubs for future
     research notes.
   
+* 2026.2.23
+  Added work/toc.txt. -- table of contents for work directory
