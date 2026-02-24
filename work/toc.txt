@@ -97,3 +97,5 @@ Other topics.
 * extension of structures
 
 * extension of signatures
+
+* "structural" equality (and equality types)
