@@ -99,3 +99,6 @@ Other topics.
 * extension of signatures
 
 * "structural" equality (and equality types)
+
+* simple vs optimized
+  the effect of Moore's Law over decades
