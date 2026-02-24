@@ -93,3 +93,7 @@ Other topics.
 * type closures
 
 * type reduction
+
+* extension of structures
+
+* extension of signatures
