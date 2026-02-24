@@ -28,39 +28,68 @@ Variables, infixes.
 This material could be reorganized and reduced to a smaller number of notes.
 
 de-infix.txt  
-
+  No (statically scoped) infix declarations.
+  
 new-infixes.txt
+  Fixed set of predefined infix symbols, that can be user bound.
 
 variables-etc.txt  
-
 new-variables.txt
+  Should these two files be merged?
 
 abstractors.txt  
+  A more specific idea derived from "abstract binding trees" (as in Harper, PFPL)
+  and de Bruijn indices.  Two dimentional indices or bindings.
 
-exceptions.txt 
+exceptions.txt
+  Open ended tagged union types (generalization of the exn type).
 
 
 Types
 -----
-types-NFE.sml
-
 types-of-type-variables.txt
+  Need to rethink "static" variables.
+  Different varieties of type variables.
+  Need for static variables for structures.
+
+types-NFE.sml  
+  Illustrating some simplifications possible for the existing type representations.
 
 type-funs.txt 
-  An idea about "compiling" type functions to avoid excessive duplication of
-  "shared" type structure.
+  "Compiling" type functions to avoid excessive duplication of
+  "shared" type structure.  Alternative to older approaches like hash-consing
+  of types.
 
 
 Modules
 -------
 sharing.txt
-
+  Can "reference" sharing (e.g. "where type ..." clauses) replace all sharing equations
+  (when extended to structures as well as types)
 
 Compilation
 -----------
-The following two files should be merged into one.
-
 compilation-build.txt
-
 compilation.txt
+  These files should be merged into one. 
 
+  What is the compilation model?
+  How can "batch" and "interactive" compilation coexist and interact?
+
+
+------------------------------------------------------------------------------------------
+Other topics.
+
+* Abstract syntax
+
+* stucture static identities and variables
+  SML '90 vs SML '97 sharing semantics
+
+* Next generation Compilation Manager (CM)
+  "linking" model (function application)
+  simple (static) source dependency analysis
+  dynamic dependencies
+
+* type closures
+
+* type reduction
