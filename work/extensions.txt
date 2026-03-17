@@ -1,0 +1,23 @@
+NewFrontEnd/work/extensions.txt
+
+extensions is a replacement for the idiom where open is used to define
+a new structure that "extends" an existing structure, and similarly
+for the use of the *include* specification to define a new signature
+that *extends* and existing signature.
+
+Let's look at signatures first.
+
+signature S2 = extend S1 with <apecs> end.
+
+The idea is that any structure that matches S2 should also match S1.
+That is, S2 is a *subsignature* (module level subtype) of S1.  A
+simple way to achieve this is that <specs> does not specify any name
+that was already specified in S1.
+
+structure A2 = extend A1 with <decls> end
+
+is treated similarly: <decls> should declare no name that is already
+defined in structure A1.
+
+
+
