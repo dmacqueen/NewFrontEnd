@@ -3,15 +3,41 @@ DBM, 2026.3.17
 
 Thoughts on modules in MsML.
 
+Guiding principles
+
+-- If we can declare (i.e. name) something, we should be able to (lambda-) abstract over
+  such a name, according to
+
+    Landin's Correspondence Principle
+      [Stated by Landin in The Next 700 PLs, CACM 1966; named by Tennant, in Acta Informatica, 1977]
+
+    [Tennant, 1977] This discipline helps in both discovering and correcting unnecessary
+    restrictions, "missing" facilities, irregularities in the syntax, semantics, or terminology,
+    unexpected interactions or complications, and so on.
+
+-- Simplicity and "obviousness"
+   of individual "features" and of interactions between features
+   As far as is possible, features should be independent (*orthogonal*)
+
 * Concepts
+
+-- Modules as encapsulated (reified), named environments
 
 The most basic idea of a module is that a module is a named piece of environment (both static
 and dynamic).  We will concentrate primarily on the static side here.  We call the named
 piece of environment a *structure*.
 
-There is a natural notion of the "type" of an environment, which gives rise to the idea of a *signature* of an environment, which simply means that natural *type* of the environment.
+-- Type of a module -- *signatures*
+
+Given that we are starting with a typed "value language", there is a natural notion of the
+"type" of an environment, which gives rise to the idea of a *signature* of an environment,
+which simply means that natural *type* of the environment.
+
+-- environments are "mixed" or "heterogeneous"
 
 Environments contain bindings for a mixture of static (e.g. type) and value components.
+
+where "This discipline" refers to the Correnspondence and Abstraction principles in that paper.
 
 -- Hierarchy
 
@@ -23,10 +49,6 @@ structure component (a *substructure*).
 
 -- Abstaction over structure names (*functors*)
 
-   Landin's Correspondence Principle [citation: Tennant?].
-
-     If we can declare (i.e. name) something, we should be able to (lambda-) abstract over
-     such a name.
 
 -- *Generativity*
 
@@ -34,8 +56,12 @@ structure component (a *substructure*).
 
 -- Static Sharing
 
+-- Higher-order functors
 
-* Design (syntax and semantics)
+   Another application of Landin's Correspondence Principle
+
+
+* Design (syntax and operational semantics)
 
 
 * Implementation
