@@ -5,7 +5,34 @@ Thoughts on modules in MsML.
 
 * Concepts
 
-* Design
+The most basic idea of a module is that a module is a named piece of environment (both static
+and dynamic).  We will concentrate primarily on the static side here.  We call the named
+piece of environment a *structure*.
+
+There is a natural notion of the "type" of an environment, which gives rise to the idea of a *signature* of an environment, which simply means that natural *type* of the environment.
+
+Environments contain bindings for a mixture of static (e.g. type) and value components.
+
+-- Hierarchy
+
+We extend the basic notion of a (mixed) environment by allowing bindings of structures (named
+environments) to be included in environments, and hence allow a structure to contain a named
+structure component (a *substructure*).
+
+-- Dependency and ordering
+
+-- Abstaction over structure names (*functors*)
+
+   Landin's Correspondence Principle [citation: Tennant?].
+
+     If we can declare (i.e. name) something, we should be able to (lambda-) abstract over
+     such a name.
+
+-- Sharing
+
+
+* Design (syntax and semantics)
+
 
 * Implementation
 
