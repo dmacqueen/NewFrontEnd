@@ -28,7 +28,11 @@ structure component (a *substructure*).
      If we can declare (i.e. name) something, we should be able to (lambda-) abstract over
      such a name.
 
--- Sharing
+-- *Generativity*
+
+   [*NOminal* typing and (implicit) alpha-conversion ("fresh" names)]
+
+-- Static Sharing
 
 
 * Design (syntax and semantics)
