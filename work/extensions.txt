@@ -1,23 +1,82 @@
 NewFrontEnd/work/extensions.txt
+DBM: 2026.3.23, 2026.3.17
 
-extensions is a replacement for the idiom where open is used to define
-a new structure that "extends" an existing structure, and similarly
-for the use of the *include* specification to define a new signature
-that *extends* and existing signature.
+Extensions are replacements for the idiom that uses *open* to define a new structure
+that "extends" an existing structure, and similarly for the use of the *include*
+specification to define a new signature that *extends* and existing signature.
 
-Let's look at signatures first.
+    structure S2 =
+    struct
+      open S1
+      <decls>
+    end
 
-signature S2 = extend S1 with <apecs> end.
+and, for signtures:
 
-The idea is that any structure that matches S2 should also match S1.
-That is, S2 is a *subsignature* (module level subtype) of S1.  A
-simple way to achieve this is that <specs> does not specify any name
-that was already specified in S1.
+    signature S2 =
+    sig
+      include S1
+      <specs>
+    end
 
-structure A2 = extend A1 with <decls> end
+
+Let's consider the extension of a signature first.
+
+    signature S2 = extend S1 with <specs> end.
+
+The idea is that any structure that matches S2 should also match S1.  That is, S2 is a
+*subsignature* (module level subtype) of S1. A simple way to achieve this is to require
+that <specs> does not specify any name that was already specified in S1.  I.e. its
+"domain" or "component name set" should be disjoint from that of S1.  Symbolically
+
+     names (<specs>) \intersect names S1 = \empty
+
+
+We can use essentially the same notation for extending structures.
+
+    structure A2 = extend A1 with <decls> end
 
 is treated similarly: <decls> should declare no name that is already
-defined in structure A1.
+defined in structure A1, or
 
+    names <decls> \intersect names S1 = \empty
+
+
+With the *open* and *include* approach to extending structures and signatures, it was
+possible  that the name spaces of the extendiing declarations/specifications could
+overlap with and hence, "override", names defined in the base structure/signature.
+This was problematic, because, for instance, overriding type declarations might have
+a different arity than the overridden type declaration.
+
+For example
+
+    structure S1 =
+    struct
+      datatype t = A
+      val x: t = A
+    end
+
+    structure S2 =
+    struct
+      open S1
+      type 'a t = int * 'a
+    end;
+
+Now what is the type of S2.x in the inferred signature of S2?
+
+    S2.x : ?
+
+Note that an analagous problem is possible in a normal structure expression, such
+as
+
+    structure S2 =
+    struct
+      datatype t = A
+      val x: t = A
+      type 'a t = 'a * int
+    end
+
+Perhaps we should make this illegal by not allowing shadowing (of type constructor
+names) in the body of a structure.
 
 

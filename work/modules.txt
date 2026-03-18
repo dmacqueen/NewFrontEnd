@@ -1,0 +1,11 @@
+NewFrontEnd/work/modules.txt
+DBM, 2026.3.17
+
+Thoughts on modules in MsML.
+
+* Concepts
+
+* Design
+
+* Implementation
+
