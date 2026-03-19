@@ -1,25 +1,30 @@
 NewFrontEnd/work/modules.txt
-DBM, 2026.3.17
+DBM, 2026.3.17...
 
 Thoughts on modules in MsML.
 
 Guiding principles
 
+-- Simplicity and "obviousness"
+   of individual "features" and of interactions between features.
+   As far as is possible, features should be independent (*orthogonal*)
+   The term "obvious" here means "nearly canonical, once one has properly understood
+   the concept", which understanding may not be achieved immediately on first encounter.
+
 -- If we can declare (i.e. name) something, we should be able to (lambda-) abstract over
-  such a name, according to
+  such a name. This is according to
 
     Landin's Correspondence Principle
       [Stated by Landin in The Next 700 PLs, CACM 1966; named by Tennant, in Acta Informatica, 1977]
 
-    [Tennant, 1977] This discipline helps in both discovering and correcting unnecessary
-    restrictions, "missing" facilities, irregularities in the syntax, semantics, or terminology,
-    unexpected interactions or complications, and so on.
+    [Tennant, 1977] This discipline [Correspondence and Abstraction principles] helps
+    in both discovering and correcting unnecessary restrictions, "missing" facilities,
+    irregularities in the syntax, semantics, or terminology, unexpected interactions or
+    complications, and so on.
 
--- Simplicity and "obviousness"
-   of individual "features" and of interactions between features
-   As far as is possible, features should be independent (*orthogonal*)
+where "This discipline" refers to the Correnspondence and Abstraction principles in that paper. 
 
-* Concepts
+* Concepts (and terminology)
 
 -- Modules as encapsulated (reified), named environments
 
@@ -37,7 +42,6 @@ which simply means that natural *type* of the environment.
 
 Environments contain bindings for a mixture of static (e.g. type) and value components.
 
-where "This discipline" refers to the Correnspondence and Abstraction principles in that paper.
 
 -- Hierarchy
 
@@ -45,10 +49,11 @@ We extend the basic notion of a (mixed) environment by allowing bindings of stru
 environments) to be included in environments, and hence allow a structure to contain a named
 structure component (a *substructure*).
 
+"Environments can contain bindings of named environments, i.e. modules."
+
 -- Dependency and ordering
 
 -- Abstaction over structure names (*functors*)
-
 
 -- *Generativity*
 
@@ -58,11 +63,28 @@ structure component (a *substructure*).
 
 -- Higher-order functors
 
-   Another application of Landin's Correspondence Principle
+   By another straightforward application of Landin's Correspondence Principle.
 
+-- Terminology
+   Historical, in the design of the Standard ML module system. Has a *mathematical* flavor.
+   Simple module (named environment) called a "structure" (suggested by Universal Algebra).
+   Module function or *abstraction* called a "functor" (borrowed from Category Theory).
+   Module type is called a "signature" (from modern algebra).
+
+   Alternative, more conventional names from PL culture might be "module" (for structure),
+   "module function" (for functor), and "module type" (for signature).
 
 * Design (syntax and operational semantics)
 
 
 * Implementation
+
+
+* Beyond modules - the meta level of modularity
+
+CM demonstrated the need to manage collections/groups/libraries of modules.  CM's
+"metalanguage" for managing these things seems to based on or heavily influenced by
+older tools like Unix *make*.  We need to consider whether a layer of notations for
+this sort of management should be part of MsML or external, in a modernized CM-like
+tool.
 
