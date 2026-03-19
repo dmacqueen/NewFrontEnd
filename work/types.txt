@@ -1,0 +1,70 @@
+NewFrontEnd/work/types.sml
+DBM, 2026.03.19
+
+Some general observations about types in MsML (and (Standard)ML)
+
+* types vs type constructors (tycons)
+  - we don't distinguish between type type "int" and the type constructor "int"
+    i.e. nullary type constructors like "int" are treated as types
+
+  - [Implementation]. In the implementation (as in SML/NJ), they may be different.
+    int : TYPE
+    int : () => TYPE, int () : TYPE
+
+* structural typing (type equivalence)
+  - primitive types
+  - products (tuples, records)
+  - sums (delegated to datatypes)
+
+* nominal typing (what does it mean in the context of ML?)
+
+* generativity of type declarations
+  - datatypes
+  - opaque signature matching (the new "abstract" types)
+  - [related to generativity of structure declarations]
+
+* type equivalence (when do two types "match" or "agree" in type checking)
+  - structural modulo generativity
+
+* datatypes
+  - tagged sum, recursion, parametric
+  - datatypes as modules [CMU view]
+
+* structural equality
+  - certain primitive types, e.g. int, string
+  - equality preserved by certain type constructors
+    -- products
+    -- lists
+  - datatypes that *preserve equality*
+    i.e. produce an equality type when applied to an equality type
+    -- e.g. bool, list
+    -- can be recursive (inductive)
+  - types with infinite values (function types, streams) are not equality types
+    -- i.e. function types and *coinductive* types?
+  - abstract types are not equality types
+    -- even if their *interface* (whatever that might be) contains an equality function for
+       the type
+    -- even though a function might be called "eq" or "equal" or "same", it is not necessily
+       an equality (or "the" equality) for the type.  Same for "compare".
+  - type variables (are abstract, and) are not equality types
+  - orderings ("lt", "lessThan", "compare") are not generic and always have to explicitly
+    provided.
+
+* relation betweeen type level and value level
+  - related to "phase distinction"
+  - no way to "derive" values from types (no type classes!)
+
+* types exist independent of how they are named
+  - a shadowed type declaration does not mean the type no longer exists
+  - nameless types (types that (no longer) have a name
+
+* type variables
+  [see work/types-of-type-variables.txt]
+
+* type functions / defined types (of type constructors)
+  - *definitional* type declarations
+  - [Implementation: see work/type-funs.txt]
+
+* type (tycon) sharing
+  - direct, implicit
+  - implied by structure sharing
