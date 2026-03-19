@@ -12,7 +12,7 @@ Guiding principles
    the concept", which understanding may not be achieved immediately on first encounter.
 
 -- If we can declare (i.e. name) something, we should be able to (lambda-) abstract over
-  such a name. This is according to
+   such a name. This is according to
 
     Landin's Correspondence Principle
       [Stated by Landin in The Next 700 PLs, CACM 1966; named by Tennant, in Acta Informatica, 1977]
@@ -56,14 +56,15 @@ structure component (a *substructure*).
 -- Abstaction over structure names (*functors*)
 
 -- *Generativity*
-
-   [*NOminal* typing and (implicit) alpha-conversion ("fresh" names)]
+   - [Not the same as *Nominal* typing with (implicit) alpha-conversion ("fresh" names)]
+   - at type level (datatypes and "abstract" types)
+   - generativity of structure declarations
+   - generativity of functo applications (*generative functors*)
 
 -- Static Sharing
 
 -- Higher-order functors
-
-   By another straightforward application of Landin's Correspondence Principle.
+   - another straightforward application of Landin's Correspondence Principle
 
 -- Terminology
    Historical, in the design of the Standard ML module system. Has a *mathematical* flavor.
@@ -74,8 +75,12 @@ structure component (a *substructure*).
    Alternative, more conventional names from PL culture might be "module" (for structure),
    "module function" (for functor), and "module type" (for signature).
 
-* Design (syntax and operational semantics)
+-- Generative functors
+   - as opposed to "applicative functors" in Caml (CAML?).
 
+
+* Design (syntax and operational semantics)
+  -- An environment is the denotation of a *declaration*
 
 * Implementation
 

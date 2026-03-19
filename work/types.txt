@@ -3,8 +3,9 @@ DBM, 2026.03.19
 
 Some general observations about types in MsML (and (Standard)ML)
 
-* types vs type constructors (tycons)
-  - we don't distinguish between type type "int" and the type constructor "int"
+* types vs type constructors (types vs tycons)
+  - Types are expressed by "type expressions" built from type variables using tycons
+  - We don't distinguish between type type "int" and the type constructor called "int".
     i.e. nullary type constructors like "int" are treated as types
 
   - [Implementation]. In the implementation (as in SML/NJ), they may be different.
@@ -15,16 +16,20 @@ Some general observations about types in MsML (and (Standard)ML)
   - primitive types
   - products (tuples, records)
   - sums (delegated to datatypes)
-
-* nominal typing (what does it mean in the context of ML?)
+  - nominal typing (what does it mean in the context of ML? connected with generativity)
 
 * generativity of type declarations
+  - A new, unique static identity for a type constructor is *generated* at its declaration. 
+    -- this identity is "robust" and does not depend on the ability to *name* the tycon
   - datatypes
   - opaque signature matching (the new "abstract" types)
-  - [related to generativity of structure declarations]
+  - [related to generativity of structure declarations and *signature instantiation* in the
+     module system]
 
 * type equivalence (when do two types "match" or "agree" in type checking)
-  - structural modulo generativity
+  - structural modulo generativity (and inductive tycons like list)
+  - treatment of *inductive* tycons like list (t == t' ==> list t == list t')
+  - MsML does not allow the definition of *coinductive* tycons (??)
 
 * datatypes
   - tagged sum, recursion, parametric
@@ -68,3 +73,6 @@ Some general observations about types in MsML (and (Standard)ML)
 * type (tycon) sharing
   - direct, implicit
   - implied by structure sharing
+  - expressed by *where clauses* modifying signatures
+
+* [modules] primary tycons and secondary tycons
