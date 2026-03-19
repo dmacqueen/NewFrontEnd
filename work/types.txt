@@ -16,7 +16,13 @@ Some general observations about types in MsML (and (Standard)ML)
   - primitive types
   - products (tuples, records)
   - sums (delegated to datatypes)
-  - nominal typing (what does it mean in the context of ML? connected with generativity)
+  - nominal typing (what does it mean in the context of ML? comparison with generativity)
+    -- nominal typing differs from typeing with generative type declaraions, in that
+       the generative identity of a tycon remains even if we have lost that ability to
+       name the tycon (e.g. because of a shadowing declaration)
+    -- this may imply that structural type identity cannot be captured by purely syntactic
+       means
+    -- See the notion of "type explicitness" from the SML Commentary.
 
 * generativity of type declarations
   - A new, unique static identity for a type constructor is *generated* at its declaration. 
@@ -25,6 +31,7 @@ Some general observations about types in MsML (and (Standard)ML)
   - opaque signature matching (the new "abstract" types)
   - [related to generativity of structure declarations and *signature instantiation* in the
      module system]
+  - a tycon may have multiple names or no name
 
 * type equivalence (when do two types "match" or "agree" in type checking)
   - structural modulo generativity (and inductive tycons like list)
@@ -32,7 +39,7 @@ Some general observations about types in MsML (and (Standard)ML)
   - MsML does not allow the definition of *coinductive* tycons (??)
 
 * datatypes
-  - tagged sum, recursion, parametric
+  - tagged sum, recursion, parameterized
   - datatypes as modules [CMU view]
 
 * structural equality
@@ -75,4 +82,5 @@ Some general observations about types in MsML (and (Standard)ML)
   - implied by structure sharing
   - expressed by *where clauses* modifying signatures
 
-* [modules] primary tycons and secondary tycons
+* [modules] primary tycons and secondary tycons (in a signature)
+  [see work/modules.txt]
