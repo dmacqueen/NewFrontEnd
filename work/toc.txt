@@ -70,8 +70,6 @@ sharing.txt
 Compilation
 -----------
 compilation-build.txt
-compilation.txt
-  These files should be merged into one. 
 
   What is the compilation model?
   How can "batch" and "interactive" compilation coexist and interact?

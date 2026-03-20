@@ -1,40 +1,83 @@
-[~/sml/Dev/github/NewFrontEnd/work/compilation-build.txt]
+[NewFrontEnd/work/compilation-build.txt]
+DBM, 2026.02.21, 2026.03.20 (this now supercedes the old compilation.txt)
 
 Discussion of issues relating to the compilation model and program build infrastructure.
 [This is currently just a "stub" or place-holder for a more discussion.]
 [Should be merged with existing file work/compilation.txt.]
 
-* Compilation Unit
-  - relation with the module systme
+* Compilation Unit (= "program unit")
+  - a piece of source code (relation to source files and their names)
+  - relation with the module system
 
 * Compilation Dependencies
   - static
-  - dynamic
+  - dynamic (generally due to state initialization issues)
 
-* Compilation management [next generation CM]
-  - language
-  - concepts: "compilation units" (source files), "libraries", (static) dependency analysis
-    "dynamic loading/linking", "auto-loading/linking", "state initialization",
-    "state-based" dependencies, tools and tool-generated source files (e.g. mlyacc, mllex)
+* Compilation management [future CM-like system]
+  - *libraries*
+  - language for specifying libraries (more functional, less "make-like")
+  - concepts:
+    -- compilation units (source files),
+       ** imports and exports
+    -- localization and name-space control
+    -- libraries (collections of compilation units)
+       ** library level import and export specifications
+    -- automatic (static) dependency analysis
+    -- (dynamic) loading/linking of binary files or libraries in the REPL
+       ** auto-loading/linking
+    -- "state initialization",
+    -- "state-based" dependencies
+    -- tools and tool-generated source files (e.g. mlyacc, mllex)
+    -- "stand-alone" ML programs
 
-* "Linkage" model 
+* "Linkage" model
+   - linkage via *functor application*
+   - static and dynamic levels
+   - building coordinated static and dynamic environments
+   
+* common compilation libraries
 
-* "bin files"
-  content, interfaces, formats
+  Need a compilation interface (library of modules) that is used by both an interactive REPL
+  and by a batch compilation manager, like CM. This will provide common, basic compilation
+  functionality that can be used to implment both the REPL and a batch compilation and build
+  facility analagous to CM.
 
-* Interactive system (REPL)
+  - what is common to the interactive (REPL) and batch compilation models? 
 
-* Batch compilation system
+  - how do the interactive (REPL) and batch compilation (CM?) models interact?
 
-* what is common to the interactive and batch compilation models?
+  - binary files as a compilation product
+    content, formats, interface
 
-* "build" model
+  - binary representation of libraries
+    -- combined or library binaries (as in current CM)
+
+  - "build" model
+    -- static vs dynamic dependencies
+
+  - disentangle REPL from batch compile/build model
 
 * compiler bootstrapping
+
+------------------------------------------------------------------------------------------
+Discussion
+
+* It is assumed that compilation ordering required because of dynamic (as opposed to static)
+  dependencies, e.g. arrising from state initialization, is a rare issue.
+  May need a compilation order "override" feature to deal with these situations.
+
+* existing REPL/CM
+
+   The existing compilation/build model used by CM is ad hoc and not well documented or
+   understood, and the compiler bootstrapping system is excessivly complex (and fragile).
+
+   CM was designed to work with the existing system where everything was built within the
+   REPL model.  Future CM should not depend on the REPL and its top-level environment.
 
 ------------------------------------------------------------
 Document history
 
 - Created 2026.2.21 by DBM.
+- DBM, merged former compilation.txt and deleted compilation.txt
 
 
