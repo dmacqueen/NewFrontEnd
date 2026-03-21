@@ -1,4 +1,4 @@
-NewFrontEnd/proposals/variables-etc.txt
+NewFrontEnd/work/syntax/variables-etc.txt
 
 Some thoughts on variables, namespaces, environments, scopes, etc.
 

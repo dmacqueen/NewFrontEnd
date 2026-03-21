@@ -1,37 +1,30 @@
 [~/sml/Dev/github/NewFrontEnd/work/toc.txt]
 
-A "Table of Contents" for the work directory.
+= A "Table of Contents" for the work directory.
 
-This directory contains notes on various random topics related to MsML (MacQueen's own version
+This directory contains notes on various topics related to MsML (MacQueen's own version
 of successor ML) and its implementation in the New Front End project.
 
-Files:
+== meta
 
-bug319.txt
+* bug319.txt
    Discussion of the problem underlying bugs 319/344 that caused me to realize that a deeper
    reworking of the module implementation was required, hence New Front End.
 
-intro.txt
-   Some "introductory" thoughts.  Goals, strategy, principles.
-
-harperismus.txt
-   Notes on Harper, Crary, et al ideas about type-theoretic formal semantics.
-   The question is how these ideas are relevant to a new implementation.
-
-journal.txt
-    A journal of work done.  Patchy.
+* journal.txt
+    A journal of work done.  Patchy records.
     
 
-Core elements
+== general
+
+* intro.txt
+  "introductory" thoughts: goals, strategy, principles.
+
+
+== core/
 -------------
 Variables, infixes.
 This material could be reorganized and reduced to a smaller number of notes.
-
-de-infix.txt  
-  No (statically scoped) infix declarations.
-  
-new-infixes.txt
-  Fixed set of predefined infix symbols, that can be user bound.
 
 variables-etc.txt  
 new-variables.txt
@@ -41,62 +34,91 @@ abstractors.txt
   A more specific idea derived from "abstract binding trees" (as in Harper, PFPL)
   and de Bruijn indices.  Two dimentional indices or bindings.
 
-exceptions.txt
-  Open ended tagged union types (generalization of the exn type).
+= Table of Contents of NewFrontEnd/work directory
+
+== general/
+
+* intro.txt
+  Introductory material
+  
+
+== core/
+
+* exceptions.txt
+  Open ended tagged union types (generalizing the exn type).
 
 
-Types
------
-types-of-type-variables.txt
+== types/
+
+* types.txt
+  general discussion of types, including "equality types"
+
+* types-of-type-variables.txt
   Need to rethink "static" variables.
   Different varieties of type variables.
   Need for static variables for structures.
 
-types-NFE.sml  
-  Illustrating some simplifications possible for the existing type representations.
+* types-NFE.sml  
+  modified types.sml, illustrating some simplifications possible for the existing type
+  representations.
 
-type-funs.txt 
+* type-funs.txt 
   "Compiling" type functions to avoid excessive duplication of
   "shared" type structure.  Alternative to older approaches like hash-consing
   of types.
 
+* types-of-type-variables.txt
 
-Modules
--------
-sharing.txt
-  Can "reference" sharing (e.g. "where type ..." clauses) replace all sharing equations
-  (when extended to structures as well as types)
 
-Compilation
------------
-compilation-build.txt
+== modules/
 
+* modules.txt
+  Base concepts, etc., design, implementation of the module system
+
+* sharing.txt
+  - Can "reference" sharing (e.g. "where type ..." clauses) replace all sharing equations
+    (when extended to structures as well as types)?
+  - SML '90 vs SML '97 sharing semantics 
+
+* static-variables.txt
+  static variables for types and structures
+
+* extensions.txt
+  "extending" existing structures and signatures
+ 
+
+== compilation/
+
+* compile-build.txt
   What is the compilation model?
   How can "batch" and "interactive" compilation coexist and interact?
 
 
-------------------------------------------------------------------------------------------
-Other topics.
+== syntax/
+   concrete syntax, abstract syntax, variables, name-spaces, environments
 
-* Abstract syntax
+* de-infix.txt
 
-* stucture static identities and variables
-  SML '90 vs SML '97 sharing semantics
+* new-infixes.txt
 
-* Next generation Compilation Manager (CM)
-  "linking" model (function application)
+* variables-etc.txt
+
+
+== compilation/
+  future Compilation Manager (CM)
+  "linking" model (functor application)
   simple (static) source dependency analysis
   dynamic dependencies
+  compiler bootstrapping
 
-* type closures
+* compile-build.txt
 
-* type reduction
 
-* extension of structures
+== theory/
 
-* extension of signatures
+* harperismus.txt
+  Notes on Harper, Crary, et al ideas about type-theoretic formal semantics.
+  The question is how these ideas are relevant to MsML language and the New Front End.
 
-* "structural" equality (and equality types)
-
-* simple vs optimized
-  the effect of Moore's Law over decades
+* HarperStone/
+  The Harper-Stone type theoretic semantics of SML (CMU tech report and notes)
