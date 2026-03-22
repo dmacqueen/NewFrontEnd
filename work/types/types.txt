@@ -102,7 +102,7 @@ Some general observations about types in MsML (and (Standard)ML)
 
   In SML/NJ, type reduction (i.e., application of tyfuns) used a simple device to avoid
   copying type subterms that were not affected by physical substitution.  The file
-  work/types/type-funs.txt describe another, roughtly equivalend approach involving a sort
+  work/types/type-funs.txt describe another, roughtly equivalend approach, involving a sort
   of compilation of type functions.
   
   
