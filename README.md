@@ -21,10 +21,10 @@ This NewFrontEnd repository may at some point be moved to the smlnj github proje
 
 == README.md: this file
 
-This directory (a clone of the repository github.com/dmacqueen/NewFrontEnd) contains work
+This directory (cloned from the repository github.com/dmacqueen/NewFrontEnd) contains work
 related to the project to rebuild/restore the front end of SML/NJ, except that the
-language being processed is a version of successor ML called MsML.  MsML is not backward
-compatible with (Standard)ML, but is close.
+language being processed is a version of successor ML called MsML. MsML is not backward
+compatible with (Standard)ML, but it is close.
 
 = language
 
