@@ -84,3 +84,25 @@ Some general observations about types in MsML (and (Standard)ML)
 
 * [modules] primary tycons and secondary tycons (in a signature)
   [see work/modules.txt]
+
+* [implementation] types and space usage
+
+  Some implemenation of the SML type system or typed intermediate
+  languages (TILT, FLINT in particular) have encountered problems with the space used by
+  type representations. Space usage problems appear to be associated with duplication
+  of type structure when reducing applications of type functions, including the generic
+  instantiation of polytypes. To increase sharing of type structure and avoid duplication,
+  TILT used let-binding or naming of shareable type structure, while FlINT use
+  hash-consing of type structure.
+
+  There is a question about whether types used in intermediate representations such as
+  FlINT (where the flint IR is based on F_omega) use more space for type representations
+  than the Front End type system.  There does not seem to be an obvious reason why IR
+  types should consume more space than FE types.
+
+  In SML/NJ, type reduction (i.e., application of tyfuns) used a simple device to avoid
+  copying type subterms that were not affected by physical substitution.  The file
+  work/types/type-funs.txt describe another, roughtly equivalend approach involving a sort
+  of compilation of type functions.
+  
+  
