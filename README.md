@@ -19,29 +19,22 @@ This NewFrontEnd repository may at some point be moved to the smlnj github proje
 
 ## Top (directory .)
 
-- README.md: this file
+== README.md: this file
 
-## Proposals (directory ./proposals/)
+This directory (a clone of the repository github.com/dmacqueen/NewFrontEnd) contains work
+related to the project to rebuild/restore the front end of SML/NJ, except that the
+language being processed is a version of successor ML called MsML.  MsML is not backward
+compatible with (Standard)ML, but is close.
 
-- language.txt: proposed micro-design alterations to (Standard) ML, under the title MsML
-  (MacQueen's (own version of) Successor ML).
+= language
+
+The file language/msml.txt contains a preliminary, informal sketch of a proposed
+micro-design alternative to (Standard) ML, under the title MsML ("MacQueen's (own version
+of) Successor ML").
   
-- variables-etc.txt: design-engineering note concerning symbols, variables, static environments, etc.
+= work 
 
-## Discussion (directory ./discussion/)
-
-- rwh1.txt: Bob Harper's initial response to proposals/language.txt (originally rh-response.txt)
-
-- dbm1.txt: DBM's response to discussion/rw1.txt (originally dbm-on-rwh1.txt).
-
-- rwh2.txt: RWH's response to discussion/dbm1.txt (originally rwh-on-dbm-on-rwh1.txt).
-
-- dbm2.txt: DBM's response to discussion/rwh2.txt (originally dbm-rwh-2.txt)
-
-- rwh3.txt: RWH's background discussion of SML module semantics and design (originally rwh-background.txt).
-
-- dbm3.txt: DBM's comments on discussion/rwh3.txt.
-
-- rwh4.txt: RWH's further explanation of the Sterling-Harper model.
-
-- dbm4.txt: DBM's comments on discussion/rwh4.txt.
+This directory contains informal notes on various topics under headings (subdirectories):
+meta, general, syntax, core, types, modules, theory, and compilation; see the file work/toc.txt
+for a table of contents.
+ 
