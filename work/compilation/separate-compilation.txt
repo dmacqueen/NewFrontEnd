@@ -1,0 +1,70 @@
+NewFrontEnd/work/compilation/separate-compilation.txt
+
+What does "separate compilation" mean in the context of (S)ML and sML?
+
+* Classical separate compilation
+
+  - context of first-order imperative languages (like Pascal and C)
+
+  The assumption is that the static "interface" sublanguage is sufficient
+  to describe imports of an importing compilation unit (i.e. source file) everything
+  it (the compiler) needs to know about the imports. Typically this means it describes
+  the types of values and functions in the imported unit, including relevant type
+  definitions.
+
+  The effect is that the order of compilation of a set of compilation units can, in
+  principle, be arbitrary, not constrained by dependencies between the units.  But in
+  practice, because of imperative effects (including data structure initialization, there
+  is a required order that can be specified by an external build tool like Unix make.
+
+  In ML, the components of an imported unit are module-level entitites like structures,
+  functors and signatures.
+
+  The problem (in the presence of higher-order functors, at least) is that the necessary
+  static description of an imported functor must describe how the functor acts functionally
+  to map parameter static stuff into the static stuff in the resulting module.
+
+  "Classically", functor signatures are not able to represent this functional static behavior
+  of functors.
+
+  I have used the term "full signature" to describe an internally generated static
+  representation of a functor that captures its static functional behavior (as a signature
+  + *realization*).  The realization part is not captured by the surface syntax (or
+  abstract syntax) of functor signatures. The static functional behavior of a functor
+  also is not just a matter of static-level lambda-calculus, because of generative
+  declarations (e.g., datatype and structure declarations) which means that the functional
+  behavior of a functor has *effects* in the form of generation of new static identities.
+
+  [In the Caml/OCaml community, this issue has inspired the introduction of "purely applicative"
+  functors, which is a rather artificial and unrealistic notion.]
+
+  For instance,
+
+    functor F () =
+    struct
+      datatype d = A
+    end
+
+  An application of F has the "static effect" of introducing a new identity for a data
+  type d, and each application of F produces a distinct identity for d.  So
+
+    structure A = F ()
+    structure B = F ()
+    A.d and B.d do not match -- they are different type constructors. So
+    val x : A.d = B.A ==> type error
+
+  
+ So how does "separate compilation" work in the context of such static effects?
+
+ In SML/NJ, separate compilation is based on the "full signatures" of imports produced by
+ prior elaboration (static evaluation?) of imported units/modules.
+
+ In practice, this imposes an order of compilation (or at least elaboration) that is not
+ required in classical "pure" separate compilation.
+
+ One could try to restrict the source language, imposing language design restrictions that
+ would allow for the classical "pure" separate compilation.  I choose not to do so, facing
+ my version of "reality" (module semantics) and the practical consequences that follow.
+
+
+ 
