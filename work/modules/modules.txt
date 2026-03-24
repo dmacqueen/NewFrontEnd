@@ -82,6 +82,24 @@ structure component (a *substructure*).
 * Design (syntax and operational semantics)
   -- An environment is the denotation of a *declaration*
 
+  -- Statically "first-class" structures vs "second-class" structures
+     (or SML '90 sharing semantics vs SML '97 sharing semantics).
+
+     Is a structure just a container of tycons? In which case (1) a structure that doesn
+     not contain any type declarations is *degenerate* and has no *static* content.  (This
+     is the SML '97 semantics).
+
+     Or does (2) a structure itself have a static identity (as in the SML
+     '90 semantics), regardless of whether it contains (transitively) any type (tycon)
+     components?
+
+     In case (2), all structures have a static identity and are hance subject to sharing
+     specifications. This has an interesting consequence when the structure contains
+     *state*, since sharing specifications can enforce identity of two stateful structures.
+     Also, stucture declarations and functor applications generate new structure
+     identities (the "nonapplicative" functor semantics).
+     
+
 * Implementation
 
 

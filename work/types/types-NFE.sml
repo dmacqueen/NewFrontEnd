@@ -1,6 +1,6 @@
-(* ElabData/types/types.sml
+(* types-NFE.sml
  *
- * COPYRIGHT (c) 2025 The Fellowship of SML/NJ (http://www.smlnj.org)
+ * COPYRIGHT (c) 2025, 2026: The Fellowship of SML/NJ (http://www.smlnj.org)
  * All rights reserved.
  *)
 
@@ -39,22 +39,27 @@ type litSource = IntInf.int * SL.region  (* the "occurrence" of an overloaded li
 
 type etv = AT.atom  (* symbolic type variables represented as atoms *)
 
+(* utv : unification (type) variable = ref utvState
+ * defined below in withtype clause
+ *)
+
 (* UTVkind determines whether a UTV is ordinary (META) or a record row variable (FLEX) *)
 datatype UTVkind
-  = GEN (* general - used for generic instantiation of a polytype *)
-  | FLEX of (label * ty) list  (* flex record *)
+  = GEN (* general - default for generic instantiation of a polytype *)
+  | FLEX of (label * ty) list  (* for flex records, kind of like a row (rho) variable *)
 
-(* tvkind (values that define the _state_ of a UTV, a type unification variable):
+(* utvState (values that define the _state_ of a UTV, a type unification variable):
    - dropping LBOUND of {depth: int, index: int, eq: bool}  - FLINT stuff 
    - IBOUND moved to ty, where it is renamed "DBI", an acronym for "deBruijn index"
    - and eq stuff
    - keeping machinery (OVLDX constructors) for implementing resolution of overloaded variables or literals *)
-and tvKind
+and utvState
   = INSTANTIATED of ty (* instantiation of an OPEN UTV changes its contents to INSTANTIATED *)
   | OPEN of {depth: nat, kind: UTVkind}
      (* depth: lambda binding depth at point of creation; propagated by unification
           = infinity for a generic UTV instantiating polytypes at a polymorphic variable occurrence,
-          < infinity ("finite") for a UTV introduced to represent the unknown type of a lambda bound variable *)
+          < infinity ("finite") for a UTV introduced to represent the unknown type of a lambda bound variable,
+          where infinity is a sufficiently large positive number (1000000 should do) *)
   | OVLDV of varSource list (* names and locations of overloaded variables or literals *)
      (* used to instantiate overloaded operator type scheme,
       * representing one of a finite set of possible ground types used as
@@ -72,11 +77,11 @@ and tyckind
 				     that appear in the datacon types *)
       family : dtypeFamily,
       stripped : bool}            (* true if datatype has matched a simple type spec *)
-  | ABSTRACT of tycon             (* abstracted through opaque signature matching, or "sealing" in the CMU terminology
+  | ABSTRACT of tycon             (* abstracted through opaque signature matching, or "sealing" in the CMU terminology,
 				     the tycon is the concrete represenation of the abstract tycon. No longer involved in
 				     _abstype_ declarations, which have been eliminated in MsML. *)
   | FORMAL                        (* used only inside signatures *)
-  | TEMP                          (* placeholder used only during datatype elaborations *)
+  | TEMP                          (* temporary placeholder used only during datatype elaborations *)
 
 and tycon
   = GENtyc of gtrec          (* "generative", including primitive tycons, abstract/opaque, and datatypes *)
@@ -105,7 +110,8 @@ and ty  (* _ground_ type expressions of kind Type *)
 
   (* type abstraction or "tyabs" ? -- used for type functions and polytypes *)
 withtype tyabs = {arity: int, body: ty}  (* do we care about "strictness", i.e. whether a given DBI occurs in body? *)
-and utv = ref tvkind 	      
+
+and utv = ref utvState  (* unification (type) variable *)
 
 (* datacon description used in dtmember *)
 and dconDesc =
@@ -124,9 +130,9 @@ and dtmember =
      sign: A.consig}
 
 and dtypeFamily =
-  {mkey: ST.stamp,
-   members: dtmember vector,     (* how are these ordered? *)
-   properties: PropList.holder}  (* dubious about need for this "properties" field -- how used? *)
+    {mkey: ST.stamp,
+     members: dtmember vector,     (* how are these ordered? *)
+     properties: PropList.holder}  (* dubious about need for this "properties" field -- how used? *)
 
 and stubinfo =
     {owner : PersStamps.persstamp,
@@ -140,21 +146,30 @@ and gtrec =
      path  : IP.path,
      stub  : stubinfo option}
 
-fun mkUTV (kind: tvKind) : utv = ref kind
-
-fun copyUTV (tv: tyvar) = ref (!tv)
-
-val infinity = 10000000
-
 type polyty = {sign: polysign, body: tyabs}   (* a polytype is not a type *)
 
-datatype datacon (* data constructors, dropping support for _lazy_ constructors *)
+(* datatype datacon: data constructors, dropping support for _lazy_ constructors
+ * could be a simple type definition rather than a datatype.
+ *)
+datatype datacon
   = DATACON of
       {name   : S.symbol,
        typ    : polyty,   (* often a degenerate polytype with no bound type variables *)
        rep    : A.conrep,
        const  : bool,     (* redundant, could be determined from typ *)
        sign   : A.consig} (* redundant, ditto *)
+
+
+(* some value declarations.  Probably should be moved to a different file, such as typesutil.s?? *)
+
+(* infinity: this does not belong here!!! *)
+val infinity = 1000000
+
+(* mkUTV : utvState -> utv *)
+fun mkUTV (init: utvState) : utv = ref init
+
+(* copyUTV : utv -> utv *)
+fun copyUTV (tv: utv) = ref (!utv)
 
 end (* local *)
 end (* structure Types *)
