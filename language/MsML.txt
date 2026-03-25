@@ -28,6 +28,7 @@ signature functors).  What I am suggesting could be thought of as "micro" langua
 character of the language.  I am not soliciting "buy in" to these changes, but would
 appreciate comments, criticisms, and suggestions that might influence future revisions.
 
+Historical Note:
 Standard ML '97 was, in my opinion, an incomplete revision based on self-imposed restrictions
 and [Milner's] worries about resistance or objections from "commercial" entities such
 as Mike Forman's Abstract Hardware, and, later, Joe Marx's Harlequin.
@@ -42,12 +43,14 @@ Language Design Principles
 * Things that are not simple should be _obvious_, once they are properly understood. Avoid
   puzzles or mysterious notions (e.g. "inheritance").
 
+* Stay within the vague boundaries of the "ML Family" of languages.
+
 
 Things that I am definitely not interested in including
 
 * "object-oriented" features: 1st-class functions is an adequate substitute.
   
-* generalized data types: Not sufficiently _obvious_.
+* generalized algebraic data types (GADTs): Not sufficiently _obvious_.
 
 * recursive modules: See Derek Dreyer's PhD thesis for some ensuing complications.
 
@@ -65,6 +68,8 @@ Things that I am definitely not interested in including
 
 * "naked" recursive types: Introduced in OCaml to support its OO language extension.
 
+* Modern "algebraic effects and handlers". (Currently beyond my ken.)
+
 
 Additional things that I _might_ consider including:
 
@@ -75,6 +80,9 @@ Additional things that I _might_ consider including:
 
 * 1st-class polymorphism: This might be considered, in some restricted form that does not
   disrupt type inference. Not convinced of the utility.
+
+* 1st-class continuations: SML/NJ has had these for a while, found to
+  be useful to define Concurrent ML.
   
 
 0.1. Goals and Non-goals of this document
@@ -239,6 +247,8 @@ proposals. But I do welcome constructive feedback.
   datatype declarations. If, sometime in the future, we want to consider adding recursive
   val declarations for other than functions, we could support that with a new "valrec"
   declaration keyword.
+
+1.10. [Core] ref as a pseudo-data-constructor.  The ref typcon is _not_ a datatype!
 
 
 ------------------------------------------------------------------------------------------
