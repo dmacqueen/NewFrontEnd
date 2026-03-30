@@ -42,6 +42,9 @@ which simply means that natural *type* of the environment.
 
 Environments contain bindings for a mixture of static (e.g. type) and value components.
 
+The module system is roughly a typed lambda calculus over (heterogenious) environments,
+with "signatures" (environment types) as types.
+
 
 -- Hierarchy
 
