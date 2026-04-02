@@ -36,6 +36,8 @@ around 3 months.
 Harper-Mitchell (TOPLAS version)
 ==========================================================================================
 
+* inspired by Reynold's "Essence of Algol" paper
+
 * type constants vs type variables (monotypes, p5/215)
 
 A type constant, e.g. Int/int, can be viewed as a type variable bound
@@ -59,3 +61,16 @@ contain free type variables or type constants.
 - Terminology:
   "first level" types = ordinary types (of kind TYPE)
   "second level" types = signatures of modules/structures (i.e., environment types)
+
+- deterministic, specified expression evaluation (call-by-value, left-to-right).
+
+- algebraic data types not deemed essential to SML
+
+- ML's (structured) exceptions included
+
+- difficult to separate "phrase types" and "data types" as in Essence of Algol.
+  ==> deterministic (CBV) evaluation strategy
+
+- module language ==> "non-trivial evaluation is involved in determining equality of type
+  expressions" (??)
+  -- but we can maintain a phase distinction (elaboration vs evaluation)
