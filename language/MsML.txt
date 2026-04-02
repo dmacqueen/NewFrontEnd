@@ -37,13 +37,16 @@ Language Design Principles
 
 * Keep things as simple as possible (but no simpler, after Einstein)
 
-* Keep simple things simple (Generally avoid adding complexity for the
-  sake of _convenience_).
+* Keep simple things simple -- avoid adding complexity for the sake of _convenience_.
 
 * Things that are not simple should be _obvious_, once they are properly understood. Avoid
   puzzles or mysterious notions (e.g. "inheritance").
 
-* Stay within the vague boundaries of the "ML Family" of languages.
+* Stay within the vague boundaries of the "ML Family" of languages:
+  - a *value-oriented* style of programming
+  - *functional* in the sense that functions are first-class values (hence "higher-order")
+  - *algebraic data types* deemed essential for our purposes
+  - modules as a typed lambda calculus over (finite) environments, where types ~ signatures
 
 
 Things that I am definitely not interested in including
