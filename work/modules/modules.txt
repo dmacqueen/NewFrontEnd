@@ -106,7 +106,15 @@ structure component (a *substructure*).
 * Implementation
 
 - question of "centralized" vs "distributed" static variables for identifying
-  e.g. tycons contained in an abstracted parameter.
+  e.g. tycons contained in an abstracted parameter. I.e. derived static identifiers for
+  tycons in a parameter signature.
+
+    signature S = sig type t end
+
+    functor F (X: S) = struct ... X.t ...
+
+  static_id (X.t) = <V_X, ["t"]> where V_X is the static variable for the parameter
+  structure X.
   
 
 * Beyond modules - the meta level of modularity
