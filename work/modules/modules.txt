@@ -114,3 +114,29 @@ older tools like Unix *make*.  We need to consider whether a layer of notations 
 this sort of management should be part of MsML or external, in a modernized CM-like
 tool.
 
+
+* Simplified module syntax in MsML
+
+- no abbreviations, shortcuts, or derived forms
+
+For instance, no implicit functor parameter structures
+Instead of writing
+
+    functor F ( type t val x : t) = struct ... t ... x ... end 
+
+where an internal ghost parameter name like <paramStr> or <F.param> is
+used, one has to write (more explicitly)
+
+    functor F (X : sig type t val x : t end) = struct ... X.t ... X.x ... end
+
+And so on with other syntactic shortcuts or abbreviations.
+
+
+* Development of module system as 2-nd level typed lambda calculus
+
+- There should be a direct, explicit syntax for expressing functor signatures.
+
+   E.g. (X: sig1) => sig2
+
+  This is a 2nd level *dependent* product (or dependent function space) notation.
+

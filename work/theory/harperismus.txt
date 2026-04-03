@@ -72,5 +72,9 @@ contain free type variables or type constants.
   ==> deterministic (CBV) evaluation strategy
 
 - module language ==> "non-trivial evaluation is involved in determining equality of type
-  expressions" (??)
-  -- but we can maintain a phase distinction (elaboration vs evaluation)
+  expressions" (exactly what evaluation? functor application?)
+  -- but we can maintain a phase distinction (elaboration (type checking) vs evaluation)
+  -- the issue of abstraction vs optimized datacon representations
+
+- omitting exceptions and references
+
