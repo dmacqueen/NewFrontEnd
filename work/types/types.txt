@@ -105,4 +105,96 @@ Some general observations about types in MsML (and (Standard)ML)
   work/types/type-funs.txt describe another, roughtly equivalend approach, involving a sort
   of compilation of type functions.
   
+* kinds
+
+  Type constructors are characterized by a kind, which reduces to the number of
+  type arguments they take.  So kinds of type constructors are all of the form
+
+    TYPE # ... # TYPE => TYPE
+
+  and if there are n (>= 0) type arguments, the type constructor is of *arity* n.
+  A null-tuple of types is denoted by "()".
+
+  Type constructors of arity 0 are typically implicitly applied (to 0 arguments), so
+
+    int : () => TYPE      -- int as a type constructor
+    int == int () : TYPE  -- int as a type
+
+* type declarations
+
+  There are two sorts of type declarations.  These declaration introduce/create nameed
+  type *constructors*, where 0-ary type constructors are usually treated as type constants
+  (e.g. int, bool)
+
+  (1) type functions.
+
+  E.g.
+
+     type point = int * int
+     type 'a pair = 'a * 'a
+
+  These are first-order, of kind TYPE* => TYPE with arity given by the number of type
+  arguments (where all arguments are of kind TYPE, as explained above).  Type functions
+  are first-order and are not recursive, so reduction of an application of a type function
+  (by beta-reduction) is trivial.  In principle, type functions whose definition is known
+  can always be eliminated by reduction.
+
+
+  (2) (algebraic) data types (inherited from the Hope language)
+
+  E.g.
+  
+    datatype bool = True | False
+
+    datatype 'a list = Nil | Cons (of) 'a * 'a list
+
+  Datatype declarations introduce an atomic, irreducible type constructors of some specified
+  aritys (arity of bool = 0, arity of list = 1).  Datatypes declarations are *generative*,
+  in that a new static identity is generated whenever such a declaration is elaborated.
+
+  There is no *dynamic* semantics associated with type constructor declarations.
+  I.e. such declarations do not participate in the dynamic semantics of the language.
+
+  By convention, the names of data constructors of datatypes are alphanumeric with an
+  initial capital letter [with some "historical" exceptions, like true, false, nil, ::.
+
+* Abstract type constructors
+
+* equality of types
+
+  In principle, equality of types is term equality after reducing away all type function
+  constructors (with datatype and abstract type constructors being irreduciable).
+
+  In practice, equality can be made more efficient by making type functions be
+  *semi-transparent*, i.e assigning an (weak) identity to them
+
+* names of type constructors
+
+  Type constructors are not nominal. That is, we do not determine whether two type
+  constructors are equal by their names. This is because
+
+    - a type constructor may *loose* its name, e.g., through shadowing.
+
+    - a type constructor may be *renamed*. [?]
+
+  When a type constructor *looses* its name, it still has its internal static identity,
+  and may still be a component of the type, say, of a variable or constructor.  This
+  differs from the SML Definition, with its notion of "type explicitness", [see
+  Commentary, X.x, page ?].
+
+  We don't require that a declaration within the scope of another type declaration declare
+  a different name (thus we allow shadowing).  This is because of the traditional way the
+  environment in a REPL behaves, where we can re-enter or re-load declarations multiple
+  times.
+  
+  
+
+
+
+
+  
+  
+  
+  
+  
   
