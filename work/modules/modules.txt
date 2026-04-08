@@ -126,7 +126,7 @@ this sort of management should be part of MsML or external, in a modernized CM-l
 tool.
 
 
-* Simplified module syntax in MsML
+* Simplified module syntax (concrete *and* abstract) in MsML
 
 - no abbreviations, shortcuts, or derived forms
 
@@ -136,7 +136,7 @@ Instead of writing
     functor F ( type t val x : t) = struct ... t ... x ... end 
 
 where an internal ghost parameter name like <paramStr> or <F.param> is
-used, one has to write (more explicitly)
+generated internally, one has to write, more explicitly:
 
     functor F (X : sig type t val x : t end) = struct ... X.t ... X.x ... end
 
@@ -147,7 +147,9 @@ And so on with other syntactic shortcuts or abbreviations.
 
 - There should be a direct, explicit syntax for expressing functor signatures.
 
-   E.g. (X: sig1) => sig2  [where X can appear free in sig2]
+   E.g. (X: sig1) => sig2  or [P X: sig1] => sig2 or [PI X: sig1] => sig2
+     [where X can appear free in sig2]
 
-  This is a 2nd level *dependent* product (or dependent function space) notation.
+  This notation would denote a 2nd level *dependent product* (or *dependent function*
+  space) using a notation suggested by [MacQueen, POPL 1986].
 
