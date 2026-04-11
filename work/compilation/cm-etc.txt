@@ -1,0 +1,109 @@
+NewFrontEnd/work/compilation/cm-etc.txt
+
+The problem of designing and implementing the next generation of CM (Compilation Manager) is
+peripheral to the main task of the NewFrontEnd/MsML project, but at some point it will
+be relevant.  And it is major issue relating to how MsML can build on the existing SML/NJ.
+
+This document is a very preliminary draft that may develop into a useful treatment of
+these issues. Many of the points or topics below are interrelated, and the order of the
+points does not necessarily reflect any dependency between topics or concepts. Later
+refinement of this document may introduce a more logical ordering or unification of
+topics.
+
+Note: In the beginning, the REPL was assumed as the context in which SML code would be
+compiled and run. (the main designers only had experience of languages (e.g. Lisp, Pop 2)
+where this was the case.  CM and binary libraries came along later and were developed in
+an *ad hoc* way in parallel with the build process for the SML/NJ compiler.
+
+1. What is the current functionality of CM?
+
+2. How should that functionality change.
+
+3. compiling source files to binary files
+
+4. binary files (what do they contain, and how are they used?)
+  - compiled SML machine code (or assembly, or e.g. something like llvm input form.
+  - static info (static environment)
+  - format (code, static info, what else?)
+
+5. what is a *stand alone* SML program
+  - how is it built from binary files?
+  - what is the linking model?
+  - initialization process (involves execution of (compiled) SML code?)
+
+6. CM + or - REPL
+  - operates at the module level of SML
+    -- SML source files may contain only module-level declarations
+    -- [internal] "entity" terminology
+  - libraries
+    collections of source file + interface info (meta)
+  - static dependency analysis to determine order of compilation
+  - requirement for "reified" types
+  - invocation of tools to generate SML sources from secondary formalisms
+    examples: mllex and mlyacc.
+  - autoloading (in cooperation with REPL)
+  - import and export interfaces of libraries
+  - no "groups", just "libraries" (more than just a change in terminology)
+  - overriding default static dependency order
+  - compiling source code () or loading precompiled binary files (2)
+    look for binary first and compile source (and generate binary) if not available
+  - conditional compilation controled by definition of "symbols"
+  - unified library binaries
+  - external vs internal symbols (in a compilation unit)
+
+7. loading binaries
+  - load time type checking for binaries? [current lack thereof]
+  - the role of static environments  (static context and "glue")
+  - "linking" binaries
+    -- environments (static + dynamic) and a medium in when linking occurs
+    -- linking performed by "functor application"
+    -- possibility to separate "linking" part of functor code from the 
+
+8. the "pervasive" environment
+
+9. dynamic loading of libraries in REPL
+  -- e.g. Basis libraries and smlnj-lib libraries
+
+10. the architecture and functionality of the REPL
+
+11. CM dependencies on the REPL
+  -- removing them?
+
+12. general build process
+  - needs runtime system and heap
+     -- for linkage and executing initializations
+  - should not need the compiler (should not need to process any source code)
+  - needs environment (or equivalent) for linking
+    [everything that exists is in the environment)
+     
+13. compiler bootstrap
+  - a special case of building a stand-aline executable
+  - special need for initialization (of (pervasive) envrironment)
+
+14. pervasive environment
+  - needed for both REPL and "batch" compilation
+  - incrementally enlarged in both REPL and *batch build* execution phases
+    does this entail specified order of execution (beyond static dependency (partial) order)
+
+15. batch build
+  - terminology for the *batch build* (build by loading binaries) cases
+    What should we call this mode of building a program? (the alternative to the REPL mode)
+  - raw material for building consists only of compiled binary files?
+
+16. direct compilartion of a *source library* into a binary library
+  - multi-file compilation: not just a single source file
+  - environment filtering to pass through only the library exports (not its internals)
+
+17. What machinery do the REPL and *batch* modes share?
+  - heap (required for almost any execution of code)
+  - envionment (medium supporting linkage, maybe only dynamic env?)
+  - initialization issues
+  - after build, *batch* mode does not need the environment
+
+18. Nature of the REPL
+    - incremental elaboration + compilation of code relative to an existing
+      heap and environment
+    - see compiler/TopLevel SML/NJ source directory for how it works in SML/NJ.
+
+19. How do other SML implementation such as MLton, Moscow ML, MLKit, deal with these
+    issues?
