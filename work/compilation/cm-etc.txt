@@ -107,8 +107,19 @@ an *ad hoc* way in parallel with the build process for the SML/NJ compiler.
 
 19. How do other SML implementation such as MLton, Moscow ML, MLKit, deal with these
     issues?
+    - E.g. it appears MLton may have some support for building "stand-alone programs" from
+      binaries.  If so, how does it work?
 
-20. Sources, References
+20. Difference in computational model behind "conventional" batch-compiled languages like
+    C, Pascal, etc. and a functional language like SML.
+    - In "conventional" imperative languages, code and data are rather distinct, while in
+      SML, code and data "coexist" in a rather intimate combination (such as function
+      closures).
+    - The actual pieces of code (as byte arrays, "blocks of bytes" in the heap), can be
+      treated specially (like strings) in a multi-arena G.C.
+
+
+100. Sources, References
 
   - The CM manual.
   - The CM source files in SML/NJ source tree (base/cm in legacy, 110.99.x;, cm in
