@@ -107,3 +107,9 @@ an *ad hoc* way in parallel with the build process for the SML/NJ compiler.
 
 19. How do other SML implementation such as MLton, Moscow ML, MLKit, deal with these
     issues?
+
+20. Sources, References
+
+  - The CM manual.
+  - The CM source files in SML/NJ source tree (base/cm in legacy, 110.99.x;, cm in
+  "development", 202x.y).
