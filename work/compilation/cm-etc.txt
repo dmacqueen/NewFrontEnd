@@ -116,7 +116,8 @@ an *ad hoc* way in parallel with the build process for the SML/NJ compiler.
       SML, code and data "coexist" in a rather intimate combination (such as function
       closures).
     - The actual pieces of code (as byte arrays, "blocks of bytes" in the heap), can be
-      treated specially (like strings) in a multi-arena G.C.
+      treated specially (like strings) in a multi-arena G.C.  code blocks do not contain
+      any pointers, for instance.
 
 
 100. Sources, References
