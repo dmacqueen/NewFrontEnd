@@ -121,9 +121,29 @@ an *ad hoc* way in parallel with the build process for the SML/NJ compiler.
     - data, whether local or global, normally is represented by pointer structures in the
       garbage-collected heap.
       
+21. Missing HOWTO documents
+    - Title: "How to build stand-alone executibles (apps) using SML/NJ.
+    - suggested recipe:
+        (1) load a program into the REPL using CM.make
+ 	(2) export heap image of application using exportFn
+	(3) create executable using heaptoexec command
 
+
+------------------------------------------------------------------------------------------
 100. Sources, References
 
   - The CM manual.
-  - The CM source files in SML/NJ source tree (base/cm in legacy, 110.99.x;, cm in
-  "development", 202x.y).
+
+  - The CM source files in SML/NJ source tree (./base/cm in legacy, 110.99.x
+    (github.com/smlnj/legacy repository);, ./cm in "development", 2026.y
+    (github.com/smlnj/smlnj repository).
+
+  - Are there any "conventional" books on compilers or link-loaders that are relevant?
+    Dragon book does not seem to be relevant, nor does the Levine book "Liners & Loaders"
+    appear to have any helpful info.  Appel's "Modern Compiler Implementation in ML" does
+    not appear to mention link-loading.  Anything in the Lisp literture?  Probably not.
+    What about OCaml or MLton documenation?
+
+
+    
+
