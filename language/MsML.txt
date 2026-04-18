@@ -266,6 +266,11 @@ proposals. But I do welcome constructive feedback.
   This allows for both addition of fields and functional updates of fields of a base
   record (r1).
 
+  Since "++" is not a typeable function, we should probably treat this record "overlay" or
+  "concatenation" operation as a keyword.  Historically (Wand, Remy, etc.) the keyword
+  used has been "with" as in "r1 with r2". But we already have the "with" keyword, which we
+  can probably get away with overloading.
+
 
 2.2. [Modules*] Higher order functors.
 
@@ -893,4 +898,4 @@ Program Modules", JACM, 68,6, Article No. 41, pp 1-47, 2021.
 ------------------------------
 Feedback contributions:
 
-* Peter Eriksen - correcting typos in MsML.txt
+* Peter Eriksen - reported typos in MsML.txt
