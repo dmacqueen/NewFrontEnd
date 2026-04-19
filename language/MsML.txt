@@ -257,7 +257,7 @@ proposals. But I do welcome constructive feedback.
 ------------------------------------------------------------------------------------------
 2. Additions
  
-2.1. [Core] record combination (or "overlaying")
+2.1. [Core] record combination (or "overlaying"), functional record updating
 
   Let's initially introduce a syntax form e1 ++ e2 where e1 and e2 must have record types
 
@@ -270,6 +270,10 @@ proposals. But I do welcome constructive feedback.
   "concatenation" operation as a keyword.  Historically (Wand, Remy, etc.) the keyword
   used has been "with" as in "r1 with r2". But we already have the "with" keyword, which we
   can probably get away with overloading.
+
+  Elm has a functional record update feature.
+  OCaml also has a syntax (somewhat less general) for functional record updates, and it
+  also involves a "with" keyword.
 
 
 2.2. [Modules*] Higher order functors.
