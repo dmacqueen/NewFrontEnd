@@ -88,11 +88,18 @@ abstractors.txt
  
 
 == compilation/
+  "linking" model (functor application)
+  simple (static) source dependency analysis
+  dynamic dependencies
+  compiler bootstrapping
+  future Compilation Manager (CM) [see CM-etc.txt]
 
 * compile-build.txt
   What is the compilation model?
   How can "batch" and "interactive" compilation coexist and interact?
 
+* CM-etc.txt 
+  Discussion of CM. What it is, what it does, and how it should change.
 
 == syntax/
    concrete syntax, abstract syntax, variables, name-spaces, environments
@@ -102,16 +109,6 @@ abstractors.txt
 * new-infixes.txt
 
 * variables-etc.txt
-
-
-== compilation/
-  future Compilation Manager (CM)
-  "linking" model (functor application)
-  simple (static) source dependency analysis
-  dynamic dependencies
-  compiler bootstrapping
-
-* compile-build.txt
 
 
 == theory/
