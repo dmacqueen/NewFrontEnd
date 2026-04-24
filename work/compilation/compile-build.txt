@@ -5,6 +5,18 @@ Discussion of issues relating to the compilation model and program build infrast
 [This is currently just a "stub" or place-holder for a more discussion.]
 [Should be merged with existing file work/compilation.txt.]
 
+* The conventional story for "object files" and "linking" can be found
+  in Chapter 7 of the Dragon book [Aho-Sethi-Ulmann, etc.].
+
+* The SML/NJ model of linking involves exectuting the binary code (to
+  "reify" the modules of the original source file).  The "input"
+  static interface is implicit and is not statically checked. The
+  dynamic input interface is a tuple or record of (heap-resedent)
+  values. The "output" static interface is the pickled static
+  environment contained in the object file. The dynamic output is a
+  piece of dynamic environment described by the output unpickled static
+  environment (which is added to the "loading" environment).
+  
 * Compilation Unit (= "program unit")
   - a piece of source code (relation to source files and their names)
   - relation with the module system
