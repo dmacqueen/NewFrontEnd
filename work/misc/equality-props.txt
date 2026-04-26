@@ -103,13 +103,16 @@ Note that the datatype family tycons all have the initial property MAYBE.  Durin
 iteration, This property can be changed from MAYBE to NO or YES, but once a tycon has
 the property NO or YES, this canno
  
-There are some complications:
+
+* There are some (potential) complications/optimizations:
 
 (1) assignment of derived OBJ properties
 
 (2) assignment of equality properties to type functions at their definition
 
-(3) the issue of irrelevant tycon arguments
+(3) the issue of "unused" tycon arguments (e.g. \X.int)
+
+(4) the issue of irrelevant tycon arguments (e.g. \X.ref X)
 
 
 Defn: "Equality type constructor"
