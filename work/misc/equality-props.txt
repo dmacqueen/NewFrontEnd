@@ -138,7 +138,8 @@ In either case t should be an equality type constructor, or even stronger, an "o
 In this case, the type parameter variable 'a is said to be *irrelevant* because it appears
 within the argument to the "ref" tycon.
 
-Notion of a *relevant* type parameter variable?
+Notion of a *relevant* type parameter variable?  That is, one that occurs in the RHS of a
+definition of a tycon, but not within the argument of an object tycon like "ref" or "array".
 
 
 Defn: "Equality type constructor"
