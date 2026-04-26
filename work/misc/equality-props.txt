@@ -96,13 +96,17 @@ then change the tycon's property to NO.
 The iterative process terminates when there is no change to any of properties of the datatype family
 tycons.
 
+Postprocessing after the iteration.
+
 After the iteration terminates, if there are any datatype tycons with propery MAYBE, those
-tycon get the property YES.
+tycons are assigned the property YES.
 
 Note that the datatype family tycons all have the initial property MAYBE.  During the
-iteration, This property can be changed from MAYBE to NO or YES, but once a tycon has
-the property NO or YES, this canno
+iteration, this property can be changed from MAYBE to NO or YES, but once a tycon has
+the property NO or YES, this will not be changed again.
  
+After the iteration terminates and postprocessing is done, the datatype family tycons
+should all have property YES or property NO.
 
 * There are some (potential) complications/optimizations:
 
@@ -112,7 +116,29 @@ the property NO or YES, this canno
 
 (3) the issue of "unused" tycon arguments (e.g. \X.int)
 
+Consider
+
+   type 'a t = int (* where 'a does not appear in the body of the type function definition
+   *)
+
+   datatype 'a t = A
+
+In these cases, the parameter type variable 'a does not appear in the RHS of the
+definition of the tycon, so it is said to be *unused*.
+
 (4) the issue of irrelevant tycon arguments (e.g. \X.ref X)
+
+Consider
+
+    type 'a t = ref 'a
+
+    datatype 'a t = A of 'a ref
+
+In either case t should be an equality type constructor, or even stronger, an "obj" type constructor.
+In this case, the type parameter variable 'a is said to be *irrelevant* because it appears
+within the argument to the "ref" tycon.
+
+Notion of a *relevant* type parameter variable?
 
 
 Defn: "Equality type constructor"
