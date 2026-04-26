@@ -1,0 +1,116 @@
+Core Note: How to compute the "equality property" of a type or tycon
+
+(Relevant to solution to smlnj/smlnj Issue 344)
+
+* Terminology
+
+Defn: "Equality type"
+
+A type is classified as an "equality type" if it has a *canonical*, *structural*,
+definition of an equality function for that type. This is generally the case if the type
+is *hereditarily concrete*, i.e. that it contains no abstract types or function types.
+
+  - an *abstract type* is not an equality type.
+
+  - a function type (of the form `t1 -> t2`) is not an equality type.
+
+  - a type of the form tycon (t1, ..., tn) is an equality type if tycon is an equality
+    tycon and all its the argument types t1 to tn are equality types.
+
+  - a free type variable in a type is considered a kind of *abstract* type with no
+    structural equality, because the type variable might be instantiated to any type,
+    including a non-equality type.
+    
+  - a compound subterm of a type may have as its head type constructor an *object* tycon
+    (the primitive forms of such type constructors are "ref" and "array").  Even in cases
+    where an argument type of such a term is not an equality type, the resulting type is
+    an equality type (in fact, an *object* type, where the equality normally amounts to
+    "object equality" or "pointer equality").
+    E.g., ref (int -> int)
+
+
+  There are four kinds of type constructor:
+
+  (0) primitive structural tycons (tuples and records, function tycon arrow)
+  (1) primitive (predefined) tycons (e.g. int, string, real, (list), ...),
+  (2) type functions \t1, ..., tn. body_type,
+  (3) datatype type constructors (like bool, list).
+
+The primitive tycon "->" is not an equality tycon, nor is the primitive type "real".
+Record and tuple tycons (e.g. \X,Y.X*Y, \X,Y.{a:Y, b"X}) are equality tycons, meaning
+(in the general case) that if they are applied to equality type arguments then the result
+is an equality type (thus `int * bool` and `{a: int, b: bool}` are equality types (but
+beware of unused type parameters as in `\X.int`).
+
+Type functions, because they are not recursive, can always be eliminated by beta-reduction.
+
+* The algorithm for datatype families
+
+In the algorithm we are dealing with a newly defined mutually recursive family of datatype
+tycons. There is a iterative but terminating first phase.
+
+Initially there are the following properties that can be assigned to tycons or type terms:
+
+  datatype property = YES, NO, MAYBE, OBJ
+
+YES indicates that the type or tycon is an equality
+
+We will deal with the OBJ property a bit later.
+
+Setup:
+
+- All the new datatype tycons are initially assigned the property MAYBE. 
+
+- The tycon parameter type variables are assumed to be equality types and hence are
+  assigned the property YES
+    
+- The property NO is assigned to "real", "->", and any pre-existing abstract tycons.
+
+- The property OBJ is assigned to the tycons "ref" and "array".
+
+- The iterative phase consists of the following steps:  
+
+- For each datatype tycon, and for each data constructor of the datatype, reduce the
+domain type of that datacon by eliminating all applications type functions.
+
+- Iterate the following process for eatch datatype tycon whose current property is MAYBE:
+
+ (1) Calculate a property(YES, NO, or MAYBE) for each datacon domain type by propagating
+ upward from the leaves, as follows.
+ (a) a subterm that is a parameter type variable is assigned property YES 
+ (b) a subterm with a head tycon of "real", "->", <abstype> has
+ propertyp NO
+ (c) a product subterm *any* of whose components is a NO, is assigned the property NO.
+ (d) a product subterm *all* of whose components have propery YES, is assigned YES
+ (e) a subterm whose head tycon is one of the current datatype family is assigned the current
+     property of that datatype tycon.
+ (f) a product whose subterms are either YES or MAYBE, with at least one MAYBE, is assigned MAYBE.
+
+(2) If no datacon domain is assigned NO, but at least one is assigned MAYBE, then assign MAYBE
+to the tycon.
+
+(3) If after assignment of properties to all the data constructor domain types, all domains have
+type YES, then change the datatype tycon property to YES. If any datacon domain has property NO,
+then change the tycon's property to NO.
+
+The iterative process terminates when there is no change to any of properties of the datatype family
+tycons.
+
+After the iteration terminates, if there are any datatype tycons with propery MAYBE, those
+tycon get the property YES.
+
+Note that the datatype family tycons all have the initial property MAYBE.  During the
+iteration, This property can be changed from MAYBE to NO or YES, but once a tycon has
+the property NO or YES, this canno
+ 
+There are some complications:
+
+(1) assignment of derived OBJ properties
+
+(2) assignment of equality properties to type functions at their definition
+
+(3) the issue of irrelevant tycon arguments
+
+
+Defn: "Equality type constructor"
+  
