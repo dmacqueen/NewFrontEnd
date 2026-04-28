@@ -44,7 +44,10 @@ beware of unused type parameters as in `\X.int`).
 
 Type functions, because they are not recursive, can always be eliminated by beta-reduction.
 
-* The algorithm for datatype families
+* The algorithm for datatype families of tycons
+
+The computation of the equality properties of the tycons in a new datatype family has a
+*coinductive* flavor.
 
 In the algorithm we are dealing with a newly defined mutually recursive family of datatype
 tycons. There is a iterative but terminating first phase.
@@ -64,7 +67,9 @@ Setup:
 - The tycon parameter type variables are assumed to be equality types and hence are
   assigned the property YES
     
-- The property NO is assigned to "real", "->", and any pre-existing abstract tycons.
+- The property NO is assigned to "real", "->", and any pre-existing abstract tycons and
+  nonlocal type variables (which are also a kind of abstract type, with unknown structure
+  or interface).
 
 - The property OBJ is assigned to the tycons "ref" and "array".
 
@@ -73,7 +78,8 @@ Setup:
 - For each datatype tycon, and for each data constructor of the datatype, reduce the
 domain type of that datacon by eliminating all applications type functions.
 
-- Iterate the following process for eatch datatype tycon whose current property is MAYBE:
+- Iterate the following process for eatch datatype tycon in the current family whose
+  current property is MAYBE:
 
  (1) Calculate a property(YES, NO, or MAYBE) for each datacon domain type by propagating
  upward from the leaves, as follows.
@@ -91,15 +97,49 @@ to the tycon.
 
 (3) If after assignment of properties to all the data constructor domain types, all domains have
 type YES, then change the datatype tycon property to YES. If any datacon domain has property NO,
-then change the tycon's property to NO.
+then change the tycon's property to NO. If some of the datacon arguments are assigned the
+property MAYBE, the tycon continues to be assigned MAYBE.
 
 The iterative process terminates when there is no change to any of properties of the datatype family
 tycons.
 
-Postprocessing after the iteration.
+This could be summarized in the following function definition (using some "self-describing"
+(pseudo-) data constructors that are different from the current datacons for Type.ty in SML/NJ).
 
-After the iteration terminates, if there are any datatype tycons with propery MAYBE, those
-tycons are assigned the property YES.
+(* val typeToProperty : Type.ty -> property, but range is {YES, NO, MAYBE} *)
+fun typeToProperty (ParamTyvar n) = YES
+  | typeToProperty (NonLocalTyvar v) = NO
+  | typeToProperty (APPty ((TUPLEtycon _ | RECORDtycon _), argtys) =
+     let fun folder (ty, property) =
+             case (typeToProperty ty, property)
+	       of (YES, YES) => YES
+		| (_, NO) => NO 
+	        | (MAYBE, _) => MAYBE
+      in List.foldl folder YES argtys
+     end
+  | typeToProperty (APPty (tycon, argtys)) =
+     let val relevantArgProperties = map (typeToProperty (relevantArgs(tycon, argtys))
+          (* properties of the relevant tyargs, the subsequence of argtys that are relevant *)
+      in case propertyOf tycon 
+	   of MAYBE => (* tycon is in the current datatype family *)
+	      if not (someNO relevantArgProperties)
+	      then MAYBE
+	      else NO (* some relevant argty is a NO *)
+	    | YES =>  (* either a pre-exising eqtycon or a current family tycon that has
+	               * been assigned YES on a previous iteration *)
+	      if allYES relevantArgProperties then YES
+              else if someNO relevantArgPropertes then NO
+	      else if someMAYBE relevantArgProperties then MAYBE
+	    | NO => NO 
+	    | OBJ => YES (* tycon is ref or array, ignoring the argument type (argtys) *)       
+     end
+
+[Editorial Note: This clearly needs further work!  Futher details are needed.]
+
+Postprocessing after the per tycon iteration.
+
+After the iteration terminates, any family datatype tycons with propery MAYBE are assigned
+the property YES.
 
 Note that the datatype family tycons all have the initial property MAYBE.  During the
 iteration, this property can be changed from MAYBE to NO or YES, but once a tycon has
@@ -139,7 +179,9 @@ In this case, the type parameter variable 'a is said to be *irrelevant* because 
 within the argument to the "ref" tycon.
 
 Notion of a *relevant* type parameter variable?  That is, one that occurs in the RHS of a
-definition of a tycon, but not within the argument of an object tycon like "ref" or "array".
+definition of a tycon, but not within the argument of an object tycon like "ref" or
+"array".
+
 
 
 Defn: "Equality type constructor"
