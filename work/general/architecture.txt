@@ -13,22 +13,26 @@ NewFrontEnd/work/general/architecture.txt
 
   - types (i.e. type constructors and type expressions)
     -- type constructors (and their arities)
-       identification of type constuctors of 0 arity and *constant* type constructors
+       --- identification of type constuctors of 0 arity and *constant* type constructors
     -- type variables
     -- type constructors
     -- kinds (of type constructors and type variables)
+       -- kind TYPE
+       -- all type variables have kind TYPE
     -- type expressions
     -- polymorphic types
 
   - abstract syntax
     -- core
-       --- value variables
+       --- value variables (typed)
+
     -- module system
        --- module (structure and functor) variables
+       --- signatures (module types)
 
   - static _entities_
 
-    -- types
+    -- types, type constructors
 
     -- modules:
        --- structures
@@ -45,3 +49,14 @@ NewFrontEnd/work/general/architecture.txt
 
   - free variables (implicitly bounded?)
 
+
+--------------------
+NFE simplifications
+
+  - symbols as atoms
+
+  - environments as finite maps over atoms
+
+  - elimination of equality type variables and corresponding equality polymorphism
+
+  - generic equality types
