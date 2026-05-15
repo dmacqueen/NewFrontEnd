@@ -1,0 +1,47 @@
+NewFrontEnd/work/general/architecture.txt
+
+* Describing the high-level architecture of the New Front End
+
+
+* Complexes
+
+  There are seveal "complexes" of types defining the representations of various fundamental
+  concepts.  These include
+
+  - symbols
+    -- uniformly represented as *atoms*
+
+  - types (i.e. type constructors and type expressions)
+    -- type constructors (and their arities)
+       identification of type constuctors of 0 arity and *constant* type constructors
+    -- type variables
+    -- type constructors
+    -- kinds (of type constructors and type variables)
+    -- type expressions
+    -- polymorphic types
+
+  - abstract syntax
+    -- core
+       --- value variables
+    -- module system
+       --- module (structure and functor) variables
+
+  - static _entities_
+
+    -- types
+
+    -- modules:
+       --- structures
+       --- functors
+       --- signatures (for structures and functors)
+
+  - environments
+
+    -- static environments
+       --- finite mappings from symbols (atoms) to static entities
+
+    -- dynamic environments
+       --- runtime _paths_
+
+  - free variables (implicitly bounded?)
+
