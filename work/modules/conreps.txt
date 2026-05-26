@@ -1,0 +1,53 @@
+NewFrontEnd/work/modules/conreps.txt
+
+The "conreps" Problem
+
+This problem concerns the interaction between *optimized* data constructor dynamic representations
+and functor abstraction with respect to a parameter signature.
+
+Here is the standard example:
+
+signature S =
+sig
+  type 'a t
+  datatype 'a List = Nil | Cons of 'a t
+end
+
+structure A : S =
+struct
+  datatype 'a List = Nil | Cons of 'a t
+  withtype 'a t = 'a * 'a L
+end
+
+structure B : S =
+struct
+  datatype List = List.list
+  type 'a t = 'a * 'a List.list
+end
+
+functor F (X: S) =
+struct
+  fun null (l: 'a X.List) =
+      case l
+        of Nil => true
+	 | Cons _ = false
+
+end
+
+structure C = F (A)
+structure D = F (B)
+
+The problem is the determination of the conreps of Nil and Cons for the pattern match in function null
+in the body of functor F.
+
+Three possible solutions:
+
+(1) (MLton) "in-line" expand functor applications so the functor parameter variable is bound to a particular
+structure (A or B in the above example).
+
+(2) (FLINT) Runtime type passing. (details of how it works in SML/NJ?)
+
+(3) Associate a dynamic conrep signature with datatypes that is passed dynamically when a functor
+is applied, and use that conrep signature during dynamic pattern matching somehow.
+[Details to be worked out in NFE project.]
+
