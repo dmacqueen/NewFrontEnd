@@ -42,14 +42,11 @@ in the body of functor F.
 
 Three possible solutions:
 
-(1) (MLton) "in-line" expand functor applications so the functor parameter variable is bound to a particular
-structure (A or B in the above example).
+(1) (MLton) "in-line" expand functor applications so the functor parameter variable is bound to a particular structure (A or B in the above example).
 
-(2) (FLINT) Runtime type passing. (details of how it works in SML/NJ?)
+(2) (FLINT) Runtime type passing. (details of how it works in SML/NJ? documented anywhere?)
 
-(3) Associate a dynamic conrep signature with datatypes that is passed dynamically when a functor
-is applied, and use that conrep signature during dynamic pattern matching somehow.
-[Details to be worked out in NFE project.]
+(3) Associate a dynamic value representing a "conrep signature" with datatypes, and pass this signature dynamically when a functor is applied, and then use that conrep signature value during dynamic pattern matching somehow.  [Details to be worked out in NFE project.]
 
-Question: has this problem been analyzed or addressed in the literature?
+Question: Has this problem been analyzed or addressed in the literature?
 
