@@ -51,3 +51,5 @@ structure (A or B in the above example).
 is applied, and use that conrep signature during dynamic pattern matching somehow.
 [Details to be worked out in NFE project.]
 
+Question: has this problem been analyzed or addressed in the literature?
+
