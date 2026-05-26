@@ -37,8 +37,7 @@ end
 structure C = F (A)
 structure D = F (B)
 
-The problem is the determination of the conreps of Nil and Cons for the pattern match in function null
-in the body of functor F.
+The problem is the determination of the conreps of Nil and Cons for the pattern match in function null in the body of functor F. From the signature S, the conreps of Nil and Cons would be <unboxed, unknown> so the actual conreps would be *taged*. On the other hand, the conreps for Nil, Cons in structures A and B would be <unboxed, boxed>, so there would be an incompatibility with the conreps derived from the signature S.
 
 Three possible solutions:
 
@@ -48,5 +47,9 @@ Three possible solutions:
 
 (3) Associate a dynamic value representing a "conrep signature" with datatypes, and pass this signature dynamically when a functor is applied, and then use that conrep signature value during dynamic pattern matching somehow.  [Details to be worked out in NFE project.]
 
-Question: Has this problem been analyzed or addressed in the literature?
+Questions:
+ (1) Has this problem been analyzed or addressed in the literature?
+
+ (2) Where in the literature is there a full exploration of the conreps optimization? [Cardelli?]
+     This seems to be a kind of folklore issue.
 
