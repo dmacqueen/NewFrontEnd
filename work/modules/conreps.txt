@@ -21,7 +21,7 @@ end
 
 structure B : S =
 struct
-  datatype List = List.list
+  datatype List = datatype List.list (* except for changed datacon names *)
   type 'a t = 'a * 'a List.list
 end
 
@@ -43,14 +43,22 @@ Three possible solutions:
 
 (1) (MLton) "in-line" expand functor applications so the functor parameter variable is bound to a particular structure (A or B in the above example).
 
-(2) (FLINT) Runtime type passing. (details of how it works in SML/NJ? documented anywhere?)
+(2) (FLINT) Runtime type passing. (Where are the details of how this works in SML/NJ? documented?)
 
 (3) Associate a dynamic value representing a "conrep signature" with datatypes, and pass this signature dynamically when a functor is applied, and then use that conrep signature value during dynamic pattern matching somehow.  [Details to be worked out in NFE project.]
 
+(4) Perhaps instead of "dealing with" this problem, we could make it "illegal".  This
+might work if the situation represented by the above example was sufficiently unusual and
+rare, i.e. if it could be considered *pathological*.  Then the question would be how to
+identify this pathology so that it could be detected as an error.
+
 Questions:
+
  (1) Has this problem been analyzed or addressed in the literature?
 
  (2) Where in the literature is there a full exploration of the conreps optimization? [Cardelli?]
-     This seems to be a kind of folklore issue.
+     This seems to be a kind of folklore issue, in which case it requires careful analysis
+     and documentation. [Possible MLFW submission?]
+     
 
 
