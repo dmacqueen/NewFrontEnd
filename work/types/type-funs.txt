@@ -1,13 +1,17 @@
 NewFrontEnd/work/type-funs.txt
 
 Type Functions: 
-"Compiling" type functions to optimize their application with respect
-to duplicating constant type subterms.
 
-The problem is to reduce or minimize reproduction of existing type
-expression structure when applying type functions (e.g. for generic
-instantiation of polytypes). The goal is to eliminate the need
-for drastic measures like FLINT's hash-consing of types.
+Terminology: a defined type function (type lambda abstraction) is called a "tyfun".  These
+are one form of tycon, distinguished from datatype tycons and primitive tycons, which are
+_irreducible_.
+
+* "Compiling" type functions to optimize their application with respect to duplicating
+"immutable" type subterms.
+
+The problem is to reduce or minimize reproduction of existing type expression structure
+when applying type functions (e.g. for generic instantiation of polytypes). The goal is to
+eliminate the need for drastic measures like FLINT's hash-consing of types.
 
 IDEA: compile the body of a type function (a type term) into "code" that builds the
   result out of the parameters and the immutable subterms of the body (the subterms not
@@ -37,3 +41,67 @@ Then only the arrow and times nodes of the body of the defn are copied when appl
 type function. The immutable subterm "int -> string" is not copied and is shared by all
 the contractions ("immutable" in the sense that it is a term that does not contain
 (bound) occurrences of the parameter variables p1 and p2).
+
+We do not need to do this factoring of immutable subterms for primitive atomic tycons like  
+int, string, bool, etc.  
+ 
+This idea addresses the issue of sharing (or avoiding duplication of) immutable subterms
+of the body of a tyfun. But simple reduction of a tyfun may cause duplication of
+parameter type terms.
+
+Defn: a type term is normalized if all applications of type funs in the term have been
+reduced by symbolic application of the type functions.
+ 
+The normal form of a type t is unique, and the operation of normalizing a type t is
+expressed as "norm t".
+
+The fact that t normalizes to t' is expressed by the notation t >> t', so t >> norm t.
+
+
+Normalization would be a bottom-up process, starting with the deepest tyfun applications.  
+ 
+Example:
+
+   type pair X = X * X
+
+   pair (int -> string) >> (int -> string) * (int -> string)  [strings vs dags!]
+
+One approach to avoiding such _duplication_ of argument types is to use some form of
+the calculus of substitutions. But this is overkill because the reduced type
+pair (int -> string) will be a DAG.
+
+Type reduction and type equality.
+
+How do type reduction and type equality interact?
+
+The simplest aproach to testing whether type terms t1 and t2 are equal is to normalize the
+two type terms, yielding t1' and t2' and then perform simple structural equality on the
+normalized terms t1' and t2'.
+
+The SML approach involves the following process
+
+(1) tyfuns are assigned unique identifiers (stamps) when they are defined.
+
+(2) When checking equality of tf1 args1 and tf2 args2
+    (a) check whether tf1 and tf2 are the same tyfun by comparing their unique identifiers
+    (b) if they are the same (implying they have the same arity), check equality of the
+        (corresponding componenets of) arguments arg1 and arg2 as type tuples.
+    (c) if tf1 and tf2 do not have the same unique identifier, then normalize both types
+        and iterate by testing equality of norm (tf1 args1) and norm (tf2 args2).
+
+This seems to work ok because the normalizations of tf1 args1 and tf2 args2 are usually
+cheap, and duplication of argument types is not a serious problem.
+
+A fancy approach to equality in the presence of reduction of tyfun applications might
+involve some sort of interleaving of equality checking and reduction (driven top-down).
+
+OBSERVATION: type terms, whether reduced or not, are generally _small_ data structures.
+(providing, as usual, that we avoid the exponential blowup of types in type inference).	
+
+Generally, the expectation is that reduction/normalization of type terms is inexpensive
+and duplication of arguments is not a serious problem.  In particular, duplicated type
+arguments will "share" as pointer structures in memory (representation of a reduced type
+term will be a DAG). But the equality test cannot make use of the fact that a term is a
+DAG because we don't have a pointer equality test!
+
+
