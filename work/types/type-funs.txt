@@ -123,8 +123,8 @@ parameter type variables where the definition of the tyfun determines which para
 variables are in scope in the body.
 
 Where-When to compile tyfuns?
-1. during elaboration from syntax trees to "absyn" types
-2. as an absyn -> absyn" transformation
+1. during elaboration from syntax trees to "absyn" types, or
+2. as an "tyfun -> tyfun" transformation
 
 
 Strictness
