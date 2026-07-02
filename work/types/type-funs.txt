@@ -107,7 +107,8 @@ DAG because we don't have a pointer equality test!
 
 How to compile Type Functions (tyfuns)
 
-1. identify all maximal "stable" or "immutable" type terms in the body of the tyfun,
+1. identify all maximal "stable" or "immutable" type terms in the body of the tyfun
+   (these are subterms that do not contain occurences of parameter type variables),
 2. name and let-bind those maximal stable subterms (stable environment),
 3. reconstruct body type term in the context of the of the environment (2.) of maximal
    stable subterms.
