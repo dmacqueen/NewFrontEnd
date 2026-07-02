@@ -123,3 +123,51 @@ Terminology: "stable" == "immutable" = contains no parameter type variables
 Where-When to compile tyfuns?
 1. during elaboration from syntax trees to "absyn" types
 2. as an absyn -> absyn" transformation
+
+
+Strictness
+
+Tyfuns may not be "strict", where by "strict" I mean every parameter type variable appears
+in the body (*). For instance, consider the tyfun
+
+    type f X = int
+
+where the parameter variable "X" does not occur in the body of the tyfun. Or consider
+
+    type g Y = f Y
+
+where the body "f Y" involves an application of the non-strict tyfun f. If we "reduce" the
+application, this is equivalent to
+
+    type g Y = int
+
+which also is non-strict. For tyfun compilation, the simplest approach is to first
+"normalize" the body type term before analyzing it to determine its maximal stable
+subterms.
+
+Because tyfuns are "1st order", normalization is terminating and cheap (under the general
+assumption that type terms are "reasonable").
+
+For "shortcut type equality", we need to associate with each tyfun a "strictness
+signature" (a list or vector of booleans) that tells us which parameters the tyfun is
+strict in.
+
+Defn: shortcut type equality
+
+  When comparing two types f1 argtys1 and f2 argtys2, where f1 and f2 are tyfuns, we check
+  whether f1 == f2 (have the same unique identifier) and if so, we check equality only of
+  corresponding "relevant" argument types in argtys1 and argtys2.
+
+We could enforce the (new) rule that all tycons are (fully) strict.  What is the point of
+defining non-strict tyfuns or datatype tycons?  The only reasone I can think of for
+defining a non-strict tyfun is to satisfy a signature specification like
+
+    type f: ty => ty
+
+by declaring a constant tyfun like
+
+    type f X = int.
+
+Is this reasonable?
+
+
