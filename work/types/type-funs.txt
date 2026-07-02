@@ -119,3 +119,7 @@ A maximal stable node of the body type term is a stable node that is not below/w
 stable term.
 
 Terminology: "stable" == "immutable" = contains no parameter type variables
+
+Where-When to compile tyfuns?
+1. during elaboration from syntax trees to "absyn" types
+2. as an absyn -> absyn" transformation
