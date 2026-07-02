@@ -168,6 +168,4 @@ by declaring a constant tyfun like
 
     type f X = int.
 
-Is this reasonable?
-
-
+Is this a reasonable and sufficient justification for allowing non-strict tyfuns?
