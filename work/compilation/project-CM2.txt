@@ -1,0 +1,19 @@
+CM 2: A Project Proposal
+DBM, 2026.6.2
+
+Part 1: design and implement a new model of compilation that would
+ - support both the REPL (interactive system) and a "batch" model of compilation and "linking"
+   to create stand-alone executable binary applications
+ - support binary libraries that could be "statically" linked with program binaries
+   and also "dynamically" loaded into the interactive system.
+ - support compiler bootstrapping
+ - support "autoloading" of source or binary libraries
+ - support "smart recompilation"
+
+Part 2: based on the compilation interfaces designed and implemented in Part 1, create a new,
+   simplified and improved 2nd (3rd?) generation Compilation Manager tool: CM 2
+ - CM 2 would have the "essential" functionality of CM 1 (the current CM)
+   -- description files written in a new "CM language" with a more ML-like style
+   -- define formats, linking mechanisms for bin files and binary library packages
+   -- support processing "secondary" sources (e.g. MLyacc and its .grm files)
+   -- support some form of conditional compilation (based on a simple computational model)
