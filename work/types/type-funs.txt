@@ -172,7 +172,18 @@ by declaring a constant tyfun like
 
 (Or:
 
-    dataype f X = A)
+    dataype f X = A
+
+where the parameter X is not relevant, i.e. f is not strict.)
 
 Is this a reasonable and sufficient justification for allowing non-strict tyfuns and the
 complications in "reduction" and "equality" that come with them?
+
+NOTE: The issue of "strictness" and its relation with type equality is relevant to
+datatype tycons as well as tyfun tycons.  Thus is Y is an irrelevant parameter of a
+datatype tycon d (X,Y), then d(int,bool) = d(int,string). This is probably treated
+incorrectly in SML/NJ, since I don't think that datatype tycons have a strictness
+signature in SML/NJ.
+
+
+
