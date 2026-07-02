@@ -112,3 +112,10 @@ How to compile Type Functions (tyfuns)
 2. name and let-bind those maximal stable subterms (stable environment),
 3. reconstruct body type term in the context of the of the environment (2.) of maximal
    stable subterms.
+
+
+The head node of a _stable subterm_ does not "dominate" a parameter type variable leaf node.
+A maximal stable node of the body type term is a stable node that is not below/within another
+stable term.
+
+Terminology: "stable" == "immutable" = contains no parameter type variables
