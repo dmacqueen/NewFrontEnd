@@ -44,7 +44,11 @@ the contractions ("immutable" in the sense that it is a term that does not conta
 
 We do not need to do this factoring of immutable subterms for primitive atomic tycons like  
 int, string, bool, etc.  
+
+
+**Miniproject**: Implement tyfun compilation as described above.
  
+
 This idea addresses the issue of sharing (or avoiding duplication of) immutable subterms
 of the body of a tyfun. But simple reduction of a tyfun may cause duplication of
 parameter type terms.
