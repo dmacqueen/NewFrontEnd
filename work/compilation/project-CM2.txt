@@ -17,3 +17,5 @@ Part 2: based on the compilation interfaces designed and implemented in Part 1, 
    -- define formats, linking mechanisms for bin files and binary library packages
    -- support processing "secondary" sources (e.g. MLyacc and its .grm files)
    -- support some form of conditional compilation (based on a simple computational model)
+
+Reference: NewFrontEnd/work/compilation/em-etc.txt
