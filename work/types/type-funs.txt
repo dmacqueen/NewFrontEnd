@@ -118,7 +118,9 @@ The head node of a _stable subterm_ does not "dominate" a parameter type variabl
 A maximal stable node of the body type term is a stable node that is not below/within another
 stable term.
 
-Terminology: "stable" == "immutable" = contains no parameter type variables
+Terminology: a subterm of the body of a tyfun is "stable" = "immutable" = contains no
+parameter type variables where the definition of the tyfun determines which parameter type
+variables are in scope in the body.
 
 Where-When to compile tyfuns?
 1. during elaboration from syntax trees to "absyn" types
