@@ -187,7 +187,7 @@ signature in SML/NJ. In SML/NJ, d(int,bool) /= d(int,string).
 
 Example:
 
-	    - datatype ('a, 'b) d = A of 'a;
+    - datatype ('a, 'b) d = A of 'a;
     datatype ('a,'b) d = A of 'a
     - val x : (int, string) d = A 3;
     val x = A 3 : (int,string) d
