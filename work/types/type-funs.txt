@@ -9,7 +9,7 @@ _irreducible_.
 * "Compiling" type functions to optimize their application with respect to duplicating
 "immutable" type subterms.
 
-The problem is to reduce or minimize reproduction of existing type expression structure
+The problem is to reduce or minimize copying of existing type expression structure
 when applying type functions (e.g. for generic instantiation of polytypes). The goal is to
 eliminate the need for drastic measures like FLINT's hash-consing of types.
 
@@ -170,4 +170,9 @@ by declaring a constant tyfun like
 
     type f X = int.
 
-Is this a reasonable and sufficient justification for allowing non-strict tyfuns?
+(Or:
+
+    dataype f X = A)
+
+Is this a reasonable and sufficient justification for allowing non-strict tyfuns and the
+complications in "reduction" and "equality" that come with them?
